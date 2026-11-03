@@ -114,6 +114,9 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
 @keyframes kite{from{transform:rotate(-6deg) translateY(0)}to{transform:rotate(6deg) translateY(-10px)}}
 .ball{transform-box:fill-box;transform-origin:center;animation:ball 6s ease-in-out infinite alternate}
 @keyframes ball{to{transform:translateX(90px) rotate(360deg)}}
+.scene3d{position:absolute;inset:0;touch-action:none;background:linear-gradient(#6ec3ef,#d9f1fb 60%,#8fd16a 60%);cursor:grab}
+.scene3d canvas{display:block;width:100%!important;height:100%!important}
+.scene3d.grabbing{cursor:grabbing}
 /* ---------- GAME ---------- */
 #game{background:radial-gradient(ellipse 140% 40% at 50% 100%,#8fd16a 0 60%,transparent 61%),linear-gradient(#5ab8ea,#cfeefb 70%);background-attachment:local;color:var(--ink)}
 #game .bubble,#game .card,#game .chip,#game .bigbtn.light,#game .badge,#game .target-mini{color:var(--ink)}
@@ -266,6 +269,7 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
 
 <!-- ================= HOME ================= -->
 <section class="screen" id="home">
+ <div class="scene3d" id="scene3d" hidden></div>
  <div class="scene" id="scene">
  <svg id="sceneSvg" viewBox="0 0 2800 600" preserveAspectRatio="xMinYMid meet" role="img" aria-label="Spielplatz mit Spiel-Stationen">
  <defs>
@@ -541,7 +545,11 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
   </div>
 </div>
 
-<script>window.CLIPS={"a": "000.mp3", "ananas": "001.mp3", "ananas hat 3 silben": "002.mp3", "ap": "003.mp3", "apfel": "004.mp3", "apfel hat 2 silben": "005.mp3", "au": "006.mp3", "auto": "007.mp3", "auto hat 2 silben": "008.mp3", "ba": "009.mp3", "ball": "010.mp3", "ball hat eine silbe": "011.mp3", "banane": "012.mp3", "banane hat 3 silben": "013.mp3", "baum": "014.mp3", "baum hat eine silbe": "015.mp3", "bee": "016.mp3", "bel": "017.mp3", "ben": "018.mp3", "ber": "019.mp3", "beweg die zunge hin und her wie ein scheibenwischer": "020.mp3", "bie": "021.mp3", "biene": "022.mp3", "biene hat 2 silben": "023.mp3", "blu": "024.mp3", "bo": "025.mp3", "breit lachen kussmund breit lachen": "026.mp3", "brrr": "027.mp3", "chen": "028.mp3", "cke": "029.mp3", "de": "030.mp3", "dil": "031.mp3", "drück die zunge von innen in die backe wie ein bonbon": "032.mp3", "du hast 0 sterne gesammelt": "033.mp3", "du hast 1 sterne gesammelt": "034.mp3", "du hast 2 sterne gesammelt": "035.mp3", "du hast 3 sterne gesammelt": "036.mp3", "du hast 4 sterne gesammelt": "037.mp3", "du hast 5 sterne gesammelt": "038.mp3", "du hast 6 sterne gesammelt": "039.mp3", "du hast eine neue stufe geschafft": "040.mp3", "du hast einen neuen sticker": "041.mp3", "dy": "042.mp3", "e": "043.mp3", "eis": "044.mp3", "eis hat eine silbe": "045.mp3", "elefant": "046.mp3", "elefant hat 3 silben": "047.mp3", "en": "048.mp3", "ente": "049.mp3", "ente hat 2 silben": "050.mp3", "erd": "051.mp3", "erdbeere": "052.mp3", "erdbeere hat 3 silben": "053.mp3", "fa": "054.mp3", "fant": "055.mp3", "fast": "056.mp3", "fe": "057.mp3", "fel": "058.mp3", "fer": "059.mp3", "fisch": "060.mp3", "fisch hat eine silbe": "061.mp3", "fla": "062.mp3", "flasche": "063.mp3", "flasche hat 2 silben": "064.mp3", "ga": "065.mp3", "gabel": "066.mp3", "gabel hat 2 silben": "067.mp3", "ge": "068.mp3", "gei": "069.mp3", "geige": "070.mp3", "geige hat 2 silben": "071.mp3", "gel": "072.mp3", "gen": "073.mp3", "genau": "074.mp3", "ger": "075.mp3", "geschenk": "076.mp3", "geschenk hat 2 silben": "077.mp3", "gespenst": "078.mp3", "gespenst hat 2 silben": "079.mp3", "gi": "080.mp3", "gitarre": "081.mp3", "gitarre hat 3 silben": "082.mp3", "grimassenspiegel": "083.mp3", "gu": "084.mp3", "gur": "085.mp3", "gurke": "086.mp3", "gurke hat 2 silben": "087.mp3", "ha": "088.mp3", "hallo": "089.mp3", "hallo ich bin mila": "090.mp3", "hase": "091.mp3", "hase hat 2 silben": "092.mp3", "hast du die schaukel schon gefunden": "093.mp3", "haus": "094.mp3", "haus hat eine silbe": "095.mp3", "hi ich bin ben": "096.mp3", "ho": "097.mp3", "hose": "098.mp3", "hose hat 2 silben": "099.mp3", "hub": "100.mp3", "hubschrauber": "101.mp3", "hubschrauber hat 3 silben": "102.mp3", "hund": "103.mp3", "hund hat eine silbe": "104.mp3", "hör mir nochmal zu": "105.mp3", "hör nochmal genau": "106.mp3", "hörrohre": "107.mp3", "i": "108.mp3", "ich bin nuki": "109.mp3", "ich hab dich gehört": "110.mp3", "ich habe dich nicht gehört": "111.mp3", "igel": "112.mp3", "igel hat 2 silben": "113.mp3", "immer abwechselnd": "114.mp3", "in": "115.mp3", "jedes spielgerät ist ein spiel": "116.mp3", "juhu": "117.mp3", "kan": "118.mp3", "kanne": "119.mp3", "kanne hat 2 silben": "120.mp3", "kannst du mit der zunge nach oben zur nase": "121.mp3", "kar": "122.mp3", "kartoffel": "123.mp3", "kartoffel hat 3 silben": "124.mp3", "kat": "125.mp3", "katze": "126.mp3", "katze hat 2 silben": "127.mp3", "ke": "128.mp3", "keks": "129.mp3", "keks hat eine silbe": "130.mp3", "ker": "131.mp3", "kerze": "132.mp3", "kerze hat 2 silben": "133.mp3", "klasse": "134.mp3", "klasse gemacht": "135.mp3", "klick klack": "136.mp3", "ko": "137.mp3", "komm wir spielen zusammen": "138.mp3", "kro": "139.mp3", "krokodil": "140.mp3", "krokodil hat 3 silben": "141.mp3", "krone": "142.mp3", "krone hat 2 silben": "143.mp3", "krö": "144.mp3", "ku": "145.mp3", "kuchen": "146.mp3", "kuchen hat 2 silben": "147.mp3", "kuh": "148.mp3", "kuh hat eine silbe": "149.mp3", "kä": "150.mp3", "käse": "151.mp3", "käse hat 2 silben": "152.mp3", "la": "153.mp3", "lach ganz breit wie ein clown": "154.mp3", "lam": "155.mp3", "lama": "156.mp3", "lama hat 2 silben": "157.mp3", "lampe": "158.mp3", "lampe hat 2 silben": "159.mp3", "lass die lippen flattern wie ein pferd": "160.mp3", "lat": "161.mp3", "lautbuddeln": "162.mp3", "le": "163.mp3", "leck dir rundherum die lippen ab wie nach marmelade": "164.mp3", "lei": "165.mp3", "leiter": "166.mp3", "leiter hat 2 silben": "167.mp3", "ling": "168.mp3", "los": "169.mp3", "lu": "170.mp3", "lupe": "171.mp3", "lupe hat 2 silben": "172.mp3", "lö": "173.mp3", "löf": "174.mp3", "löffel": "175.mp3", "löffel hat 2 silben": "176.mp3", "löwe": "177.mp3", "löwe hat 2 silben": "178.mp3", "ma": "179.mp3", "mach den mund ganz weit auf wie ein löwe": "180.mp3", "mach einen dicken kussmund": "181.mp3", "marienkäfer": "182.mp3", "marienkäfer hat 5 silben": "183.mp3", "maus": "184.mp3", "maus hat eine silbe": "185.mp3", "me": "186.mp3", "mel": "187.mp3", "mila": "188.mp3", "mond": "189.mp3", "mond hat eine silbe": "190.mp3", "mund": "191.mp3", "mund hat eine silbe": "192.mp3", "na": "193.mp3", "nas": "194.mp3", "nase": "195.mp3", "nase hat 2 silben": "196.mp3", "ne": "197.mp3", "nen": "198.mp3", "nuki sitzt oben im baum": "199.mp3", "pe": "200.mp3", "piep piep": "201.mp3", "pin": "202.mp3", "pinguin": "203.mp3", "pinguin hat 3 silben": "204.mp3", "prima": "205.mp3", "probier es nochmal": "206.mp3", "puste deine backen auf wie einen luftballon": "207.mp3", "puste ganz lange als ob du eine kerze auspustest": "208.mp3", "ra": "209.mp3", "rakete": "210.mp3", "rakete hat 3 silben": "211.mp3", "rau": "212.mp3", "raupe": "213.mp3", "raupe hat 2 silben": "214.mp3", "re": "215.mp3", "regen": "216.mp3", "regen hat 2 silben": "217.mp3", "regenbogen": "218.mp3", "regenbogen hat 4 silben": "219.mp3", "reimwippe": "220.mp3", "ri": "221.mp3", "richtig": "222.mp3", "ring": "223.mp3", "ring hat eine silbe": "224.mp3", "ro": "225.mp3", "rose": "226.mp3", "rose hat 2 silben": "227.mp3", "ruck": "228.mp3", "rucksack": "229.mp3", "rucksack hat 2 silben": "230.mp3", "sa": "231.mp3", "sack": "232.mp3", "sag mal": "233.mp3", "salat": "234.mp3", "salat hat 2 silben": "235.mp3", "schaf": "236.mp3", "schaf hat eine silbe": "237.mp3", "schatzkiste": "238.mp3", "sche": "239.mp3", "schenk": "240.mp3", "schere": "241.mp3", "schere hat 2 silben": "242.mp3", "schiff": "243.mp3", "schiff hat eine silbe": "244.mp3", "schild": "245.mp3", "schildkröte": "246.mp3", "schildkröte hat 3 silben": "247.mp3", "schlüs": "248.mp3", "schlüssel": "249.mp3", "schlüssel hat 2 silben": "250.mp3", "schmet": "251.mp3", "schmetterling": "252.mp3", "schmetterling hat 3 silben": "253.mp3", "schnalz mit der zunge": "254.mp3", "schne": "255.mp3", "schnecke": "256.mp3", "schnecke hat 2 silben": "257.mp3", "scho": "258.mp3", "schokolade": "259.mp3", "schokolade hat 4 silben": "260.mp3", "schrau": "261.mp3", "schuh": "262.mp3", "schuh hat eine silbe": "263.mp3", "schön dass du da bist": "264.mp3", "se": "265.mp3", "sei": "266.mp3", "seife": "267.mp3", "seife hat 2 silben": "268.mp3", "sel": "269.mp3", "silbenschaukel": "270.mp3", "so": "271.mp3", "so spricht nuki jetzt": "272.mp3", "socke": "273.mp3", "socke hat 2 silben": "274.mp3", "sofa": "275.mp3", "sofa hat 2 silben": "276.mp3", "son": "277.mp3", "sonne": "278.mp3", "sonne hat 2 silben": "279.mp3", "sonnenblume": "280.mp3", "sonnenblume hat 4 silben": "281.mp3", "spenst": "282.mp3", "spitze": "283.mp3", "sprich mit nuki": "284.mp3", "stern": "285.mp3", "stern hat eine silbe": "286.mp3", "streck die zunge weit heraus": "287.mp3", "super": "288.mp3", "super das klang toll": "289.mp3", "super gemacht": "290.mp3", "super grimasse": "291.mp3", "sä": "292.mp3", "säge": "293.mp3", "säge hat 2 silben": "294.mp3", "ta": "295.mp3", "tan": "296.mp3", "tanne": "297.mp3", "tanne hat 2 silben": "298.mp3", "tar": "299.mp3", "tas": "300.mp3", "tasche": "301.mp3", "tasche hat 2 silben": "302.mp3", "tasse": "303.mp3", "tasse hat 2 silben": "304.mp3", "te": "305.mp3", "ted": "306.mp3", "teddy": "307.mp3", "teddy hat 2 silben": "308.mp3", "ter": "309.mp3", "ti": "310.mp3", "tiger": "311.mp3", "tiger hat 2 silben": "312.mp3", "tipp auf die sachen im baumhaus": "313.mp3", "to": "314.mp3", "tof": "315.mp3", "toll dass du es probiert hast": "316.mp3", "toll gehalten": "317.mp3", "toll gemacht": "318.mp3", "toll gesagt": "319.mp3", "toll probiert": "320.mp3", "tomate": "321.mp3", "tomate hat 3 silben": "322.mp3", "ton ist an": "323.mp3", "trom": "324.mp3", "trommel": "325.mp3", "trommel hat 2 silben": "326.mp3", "tschilp": "327.mp3", "und jetzt die zunge nach unten zum kinn": "328.mp3", "vogel": "329.mp3", "was fängt an wie gabel": "330.mp3", "was fängt an wie katze": "331.mp3", "was fängt an wie löwe": "332.mp3", "was fängt an wie rose": "333.mp3", "was fängt an wie schuh": "334.mp3", "was fängt an wie sonne": "335.mp3", "was fängt an wie tasse": "336.mp3", "was reimt sich auf flasche": "337.mp3", "was reimt sich auf hase": "338.mp3", "was reimt sich auf haus": "339.mp3", "was reimt sich auf hose": "340.mp3", "was reimt sich auf hund": "341.mp3", "was reimt sich auf kanne": "342.mp3", "was reimt sich auf kuh": "343.mp3", "was reimt sich auf maus": "344.mp3", "was reimt sich auf mund": "345.mp3", "was reimt sich auf nase": "346.mp3", "was reimt sich auf rose": "347.mp3", "was reimt sich auf schuh": "348.mp3", "was reimt sich auf tanne": "349.mp3", "was reimt sich auf tasche": "350.mp3", "we": "351.mp3", "willkommen auf dem spielplatz": "352.mp3", "wir üben ananas später nochmal": "353.mp3", "wir üben apfel später nochmal": "354.mp3", "wir üben auto später nochmal": "355.mp3", "wir üben ball später nochmal": "356.mp3", "wir üben banane später nochmal": "357.mp3", "wir üben baum später nochmal": "358.mp3", "wir üben biene später nochmal": "359.mp3", "wir üben eis später nochmal": "360.mp3", "wir üben elefant später nochmal": "361.mp3", "wir üben ente später nochmal": "362.mp3", "wir üben erdbeere später nochmal": "363.mp3", "wir üben fisch später nochmal": "364.mp3", "wir üben flasche später nochmal": "365.mp3", "wir üben gabel später nochmal": "366.mp3", "wir üben geige später nochmal": "367.mp3", "wir üben geschenk später nochmal": "368.mp3", "wir üben gespenst später nochmal": "369.mp3", "wir üben gitarre später nochmal": "370.mp3", "wir üben gurke später nochmal": "371.mp3", "wir üben hase später nochmal": "372.mp3", "wir üben haus später nochmal": "373.mp3", "wir üben hose später nochmal": "374.mp3", "wir üben hubschrauber später nochmal": "375.mp3", "wir üben hund später nochmal": "376.mp3", "wir üben igel später nochmal": "377.mp3", "wir üben kanne später nochmal": "378.mp3", "wir üben kartoffel später nochmal": "379.mp3", "wir üben katze später nochmal": "380.mp3", "wir üben keks später nochmal": "381.mp3", "wir üben kerze später nochmal": "382.mp3", "wir üben krokodil später nochmal": "383.mp3", "wir üben krone später nochmal": "384.mp3", "wir üben kuchen später nochmal": "385.mp3", "wir üben kuh später nochmal": "386.mp3", "wir üben käse später nochmal": "387.mp3", "wir üben lama später nochmal": "388.mp3", "wir üben lampe später nochmal": "389.mp3", "wir üben leiter später nochmal": "390.mp3", "wir üben lupe später nochmal": "391.mp3", "wir üben löffel später nochmal": "392.mp3", "wir üben löwe später nochmal": "393.mp3", "wir üben marienkäfer später nochmal": "394.mp3", "wir üben maus später nochmal": "395.mp3", "wir üben mond später nochmal": "396.mp3", "wir üben mund später nochmal": "397.mp3", "wir üben nase später nochmal": "398.mp3", "wir üben pinguin später nochmal": "399.mp3", "wir üben rakete später nochmal": "400.mp3", "wir üben raupe später nochmal": "401.mp3", "wir üben regen später nochmal": "402.mp3", "wir üben regenbogen später nochmal": "403.mp3", "wir üben ring später nochmal": "404.mp3", "wir üben rose später nochmal": "405.mp3", "wir üben rucksack später nochmal": "406.mp3", "wir üben salat später nochmal": "407.mp3", "wir üben schaf später nochmal": "408.mp3", "wir üben schere später nochmal": "409.mp3", "wir üben schiff später nochmal": "410.mp3", "wir üben schildkröte später nochmal": "411.mp3", "wir üben schlüssel später nochmal": "412.mp3", "wir üben schmetterling später nochmal": "413.mp3", "wir üben schnecke später nochmal": "414.mp3", "wir üben schokolade später nochmal": "415.mp3", "wir üben schuh später nochmal": "416.mp3", "wir üben seife später nochmal": "417.mp3", "wir üben socke später nochmal": "418.mp3", "wir üben sofa später nochmal": "419.mp3", "wir üben sonne später nochmal": "420.mp3", "wir üben sonnenblume später nochmal": "421.mp3", "wir üben stern später nochmal": "422.mp3", "wir üben säge später nochmal": "423.mp3", "wir üben tanne später nochmal": "424.mp3", "wir üben tasche später nochmal": "425.mp3", "wir üben tasse später nochmal": "426.mp3", "wir üben teddy später nochmal": "427.mp3", "wir üben tiger später nochmal": "428.mp3", "wir üben tomate später nochmal": "429.mp3", "wir üben trommel später nochmal": "430.mp3", "wisch zur seite und tipp auf die spielgeräte": "431.mp3", "wortdetektiv": "432.mp3", "wow prima": "433.mp3", "wunderbar gesprochen": "434.mp3", "ze": "435.mp3", "zeig mir": "436.mp3", "zieh die backen nach innen wie ein fisch": "437.mp3"};</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/objects/Sky.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/RGBELoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script>window.CLIPS={"a": "000.mp3", "ananas": "001.mp3", "ananas hat 3 silben": "002.mp3", "ap": "003.mp3", "apfel": "004.mp3", "apfel hat 2 silben": "005.mp3", "au": "006.mp3", "auto": "007.mp3", "auto hat 2 silben": "008.mp3", "ba": "009.mp3", "ball": "010.mp3", "ball hat eine silbe": "011.mp3", "banane": "012.mp3", "banane hat 3 silben": "013.mp3", "baum": "014.mp3", "baum hat eine silbe": "015.mp3", "bee": "016.mp3", "bel": "017.mp3", "ben": "018.mp3", "ber": "019.mp3", "beweg die zunge hin und her wie ein scheibenwischer": "020.mp3", "bie": "021.mp3", "biene": "022.mp3", "biene hat 2 silben": "023.mp3", "blu": "024.mp3", "bo": "025.mp3", "breit lachen kussmund breit lachen": "026.mp3", "brrr": "027.mp3", "chen": "028.mp3", "cke": "029.mp3", "de": "030.mp3", "dil": "031.mp3", "drück die zunge von innen in die backe wie ein bonbon": "032.mp3", "du hast 0 sterne gesammelt": "033.mp3", "du hast 1 sterne gesammelt": "034.mp3", "du hast 2 sterne gesammelt": "035.mp3", "du hast 3 sterne gesammelt": "036.mp3", "du hast 4 sterne gesammelt": "037.mp3", "du hast 5 sterne gesammelt": "038.mp3", "du hast 6 sterne gesammelt": "039.mp3", "du hast eine neue stufe geschafft": "040.mp3", "du hast einen neuen sticker": "041.mp3", "dy": "042.mp3", "e": "043.mp3", "eis": "044.mp3", "eis hat eine silbe": "045.mp3", "elefant": "046.mp3", "elefant hat 3 silben": "047.mp3", "en": "048.mp3", "ente": "049.mp3", "ente hat 2 silben": "050.mp3", "erd": "051.mp3", "erdbeere": "052.mp3", "erdbeere hat 3 silben": "053.mp3", "fa": "054.mp3", "fant": "055.mp3", "fast": "056.mp3", "fe": "057.mp3", "fel": "058.mp3", "fer": "059.mp3", "fisch": "060.mp3", "fisch hat eine silbe": "061.mp3", "fla": "062.mp3", "flasche": "063.mp3", "flasche hat 2 silben": "064.mp3", "ga": "065.mp3", "gabel": "066.mp3", "gabel hat 2 silben": "067.mp3", "ge": "068.mp3", "gei": "069.mp3", "geige": "070.mp3", "geige hat 2 silben": "071.mp3", "gel": "072.mp3", "gen": "073.mp3", "genau": "074.mp3", "ger": "075.mp3", "geschenk": "076.mp3", "geschenk hat 2 silben": "077.mp3", "gespenst": "078.mp3", "gespenst hat 2 silben": "079.mp3", "gi": "080.mp3", "gitarre": "081.mp3", "gitarre hat 3 silben": "082.mp3", "grimassenspiegel": "083.mp3", "gu": "084.mp3", "gur": "085.mp3", "gurke": "086.mp3", "gurke hat 2 silben": "087.mp3", "ha": "088.mp3", "hallo": "089.mp3", "hallo ich bin mila": "090.mp3", "hase": "091.mp3", "hase hat 2 silben": "092.mp3", "hast du die schaukel schon gefunden": "093.mp3", "haus": "094.mp3", "haus hat eine silbe": "095.mp3", "hi ich bin ben": "096.mp3", "ho": "097.mp3", "hose": "098.mp3", "hose hat 2 silben": "099.mp3", "hub": "100.mp3", "hubschrauber": "101.mp3", "hubschrauber hat 3 silben": "102.mp3", "hund": "103.mp3", "hund hat eine silbe": "104.mp3", "hör mir nochmal zu": "105.mp3", "hör nochmal genau": "106.mp3", "hörrohre": "107.mp3", "i": "108.mp3", "ich bin nuki": "109.mp3", "ich hab dich gehört": "110.mp3", "ich habe dich nicht gehört": "111.mp3", "igel": "112.mp3", "igel hat 2 silben": "113.mp3", "immer abwechselnd": "114.mp3", "in": "115.mp3", "jedes spielgerät ist ein spiel": "116.mp3", "juhu": "117.mp3", "kan": "118.mp3", "kanne": "119.mp3", "kanne hat 2 silben": "120.mp3", "kannst du mit der zunge nach oben zur nase": "121.mp3", "kar": "122.mp3", "kartoffel": "123.mp3", "kartoffel hat 3 silben": "124.mp3", "kat": "125.mp3", "katze": "126.mp3", "katze hat 2 silben": "127.mp3", "ke": "128.mp3", "keks": "129.mp3", "keks hat eine silbe": "130.mp3", "ker": "131.mp3", "kerze": "132.mp3", "kerze hat 2 silben": "133.mp3", "klasse": "134.mp3", "klasse gemacht": "135.mp3", "klick klack": "136.mp3", "ko": "137.mp3", "komm wir spielen zusammen": "138.mp3", "kro": "139.mp3", "krokodil": "140.mp3", "krokodil hat 3 silben": "141.mp3", "krone": "142.mp3", "krone hat 2 silben": "143.mp3", "krö": "144.mp3", "ku": "145.mp3", "kuchen": "146.mp3", "kuchen hat 2 silben": "147.mp3", "kuh": "148.mp3", "kuh hat eine silbe": "149.mp3", "kä": "150.mp3", "käse": "151.mp3", "käse hat 2 silben": "152.mp3", "la": "153.mp3", "lach ganz breit wie ein clown": "154.mp3", "lam": "155.mp3", "lama": "156.mp3", "lama hat 2 silben": "157.mp3", "lampe": "158.mp3", "lampe hat 2 silben": "159.mp3", "lass die lippen flattern wie ein pferd": "160.mp3", "lat": "161.mp3", "lautbuddeln": "162.mp3", "le": "163.mp3", "leck dir rundherum die lippen ab wie nach marmelade": "164.mp3", "lei": "165.mp3", "leiter": "166.mp3", "leiter hat 2 silben": "167.mp3", "ling": "168.mp3", "los": "169.mp3", "lu": "170.mp3", "lupe": "171.mp3", "lupe hat 2 silben": "172.mp3", "lö": "173.mp3", "löf": "174.mp3", "löffel": "175.mp3", "löffel hat 2 silben": "176.mp3", "löwe": "177.mp3", "löwe hat 2 silben": "178.mp3", "ma": "179.mp3", "mach den mund ganz weit auf wie ein löwe": "180.mp3", "mach einen dicken kussmund": "181.mp3", "marienkäfer": "182.mp3", "marienkäfer hat 5 silben": "183.mp3", "maus": "184.mp3", "maus hat eine silbe": "185.mp3", "me": "186.mp3", "mel": "187.mp3", "mila": "188.mp3", "mond": "189.mp3", "mond hat eine silbe": "190.mp3", "mund": "191.mp3", "mund hat eine silbe": "192.mp3", "na": "193.mp3", "nas": "194.mp3", "nase": "195.mp3", "nase hat 2 silben": "196.mp3", "ne": "197.mp3", "nen": "198.mp3", "nuki sitzt oben im baum": "199.mp3", "pe": "200.mp3", "piep piep": "201.mp3", "pin": "202.mp3", "pinguin": "203.mp3", "pinguin hat 3 silben": "204.mp3", "prima": "205.mp3", "probier es nochmal": "206.mp3", "puste deine backen auf wie einen luftballon": "207.mp3", "puste ganz lange als ob du eine kerze auspustest": "208.mp3", "ra": "209.mp3", "rakete": "210.mp3", "rakete hat 3 silben": "211.mp3", "rau": "212.mp3", "raupe": "213.mp3", "raupe hat 2 silben": "214.mp3", "re": "215.mp3", "regen": "216.mp3", "regen hat 2 silben": "217.mp3", "regenbogen": "218.mp3", "regenbogen hat 4 silben": "219.mp3", "reimwippe": "220.mp3", "ri": "221.mp3", "richtig": "222.mp3", "ring": "223.mp3", "ring hat eine silbe": "224.mp3", "ro": "225.mp3", "rose": "226.mp3", "rose hat 2 silben": "227.mp3", "ruck": "228.mp3", "rucksack": "229.mp3", "rucksack hat 2 silben": "230.mp3", "sa": "231.mp3", "sack": "232.mp3", "sag mal": "233.mp3", "salat": "234.mp3", "salat hat 2 silben": "235.mp3", "schaf": "236.mp3", "schaf hat eine silbe": "237.mp3", "schatzkiste": "238.mp3", "sche": "239.mp3", "schenk": "240.mp3", "schere": "241.mp3", "schere hat 2 silben": "242.mp3", "schiff": "243.mp3", "schiff hat eine silbe": "244.mp3", "schild": "245.mp3", "schildkröte": "246.mp3", "schildkröte hat 3 silben": "247.mp3", "schlüs": "248.mp3", "schlüssel": "249.mp3", "schlüssel hat 2 silben": "250.mp3", "schmet": "251.mp3", "schmetterling": "252.mp3", "schmetterling hat 3 silben": "253.mp3", "schnalz mit der zunge": "254.mp3", "schne": "255.mp3", "schnecke": "256.mp3", "schnecke hat 2 silben": "257.mp3", "scho": "258.mp3", "schokolade": "259.mp3", "schokolade hat 4 silben": "260.mp3", "schrau": "261.mp3", "schuh": "262.mp3", "schuh hat eine silbe": "263.mp3", "schön dass du da bist": "264.mp3", "se": "265.mp3", "sei": "266.mp3", "seife": "267.mp3", "seife hat 2 silben": "268.mp3", "sel": "269.mp3", "silbenschaukel": "270.mp3", "so": "271.mp3", "so spricht nuki jetzt": "272.mp3", "socke": "273.mp3", "socke hat 2 silben": "274.mp3", "sofa": "275.mp3", "sofa hat 2 silben": "276.mp3", "son": "277.mp3", "sonne": "278.mp3", "sonne hat 2 silben": "279.mp3", "sonnenblume": "280.mp3", "sonnenblume hat 4 silben": "281.mp3", "spenst": "282.mp3", "spitze": "283.mp3", "sprich mit nuki": "284.mp3", "stern": "285.mp3", "stern hat eine silbe": "286.mp3", "streck die zunge weit heraus": "287.mp3", "super": "288.mp3", "super das klang toll": "289.mp3", "super gemacht": "290.mp3", "super grimasse": "291.mp3", "sä": "292.mp3", "säge": "293.mp3", "säge hat 2 silben": "294.mp3", "ta": "295.mp3", "tan": "296.mp3", "tanne": "297.mp3", "tanne hat 2 silben": "298.mp3", "tar": "299.mp3", "tas": "300.mp3", "tasche": "301.mp3", "tasche hat 2 silben": "302.mp3", "tasse": "303.mp3", "tasse hat 2 silben": "304.mp3", "te": "305.mp3", "ted": "306.mp3", "teddy": "307.mp3", "teddy hat 2 silben": "308.mp3", "ter": "309.mp3", "ti": "310.mp3", "tiger": "311.mp3", "tiger hat 2 silben": "312.mp3", "tipp auf die spielgeräte": "313.mp3", "to": "314.mp3", "tof": "315.mp3", "toll dass du es probiert hast": "316.mp3", "toll gehalten": "317.mp3", "toll gemacht": "318.mp3", "toll gesagt": "319.mp3", "toll probiert": "320.mp3", "tomate": "321.mp3", "tomate hat 3 silben": "322.mp3", "ton ist an": "323.mp3", "trom": "324.mp3", "trommel": "325.mp3", "trommel hat 2 silben": "326.mp3", "tschilp": "327.mp3", "und jetzt die zunge nach unten zum kinn": "328.mp3", "vogel": "329.mp3", "was fängt an wie gabel": "330.mp3", "was fängt an wie katze": "331.mp3", "was fängt an wie löwe": "332.mp3", "was fängt an wie rose": "333.mp3", "was fängt an wie schuh": "334.mp3", "was fängt an wie sonne": "335.mp3", "was fängt an wie tasse": "336.mp3", "was reimt sich auf flasche": "337.mp3", "was reimt sich auf hase": "338.mp3", "was reimt sich auf haus": "339.mp3", "was reimt sich auf hose": "340.mp3", "was reimt sich auf hund": "341.mp3", "was reimt sich auf kanne": "342.mp3", "was reimt sich auf kuh": "343.mp3", "was reimt sich auf maus": "344.mp3", "was reimt sich auf mund": "345.mp3", "was reimt sich auf nase": "346.mp3", "was reimt sich auf rose": "347.mp3", "was reimt sich auf schuh": "348.mp3", "was reimt sich auf tanne": "349.mp3", "was reimt sich auf tasche": "350.mp3", "we": "351.mp3", "willkommen auf dem spielplatz": "352.mp3", "wir üben ananas später nochmal": "353.mp3", "wir üben apfel später nochmal": "354.mp3", "wir üben auto später nochmal": "355.mp3", "wir üben ball später nochmal": "356.mp3", "wir üben banane später nochmal": "357.mp3", "wir üben baum später nochmal": "358.mp3", "wir üben biene später nochmal": "359.mp3", "wir üben eis später nochmal": "360.mp3", "wir üben elefant später nochmal": "361.mp3", "wir üben ente später nochmal": "362.mp3", "wir üben erdbeere später nochmal": "363.mp3", "wir üben fisch später nochmal": "364.mp3", "wir üben flasche später nochmal": "365.mp3", "wir üben gabel später nochmal": "366.mp3", "wir üben geige später nochmal": "367.mp3", "wir üben geschenk später nochmal": "368.mp3", "wir üben gespenst später nochmal": "369.mp3", "wir üben gitarre später nochmal": "370.mp3", "wir üben gurke später nochmal": "371.mp3", "wir üben hase später nochmal": "372.mp3", "wir üben haus später nochmal": "373.mp3", "wir üben hose später nochmal": "374.mp3", "wir üben hubschrauber später nochmal": "375.mp3", "wir üben hund später nochmal": "376.mp3", "wir üben igel später nochmal": "377.mp3", "wir üben kanne später nochmal": "378.mp3", "wir üben kartoffel später nochmal": "379.mp3", "wir üben katze später nochmal": "380.mp3", "wir üben keks später nochmal": "381.mp3", "wir üben kerze später nochmal": "382.mp3", "wir üben krokodil später nochmal": "383.mp3", "wir üben krone später nochmal": "384.mp3", "wir üben kuchen später nochmal": "385.mp3", "wir üben kuh später nochmal": "386.mp3", "wir üben käse später nochmal": "387.mp3", "wir üben lama später nochmal": "388.mp3", "wir üben lampe später nochmal": "389.mp3", "wir üben leiter später nochmal": "390.mp3", "wir üben lupe später nochmal": "391.mp3", "wir üben löffel später nochmal": "392.mp3", "wir üben löwe später nochmal": "393.mp3", "wir üben marienkäfer später nochmal": "394.mp3", "wir üben maus später nochmal": "395.mp3", "wir üben mond später nochmal": "396.mp3", "wir üben mund später nochmal": "397.mp3", "wir üben nase später nochmal": "398.mp3", "wir üben pinguin später nochmal": "399.mp3", "wir üben rakete später nochmal": "400.mp3", "wir üben raupe später nochmal": "401.mp3", "wir üben regen später nochmal": "402.mp3", "wir üben regenbogen später nochmal": "403.mp3", "wir üben ring später nochmal": "404.mp3", "wir üben rose später nochmal": "405.mp3", "wir üben rucksack später nochmal": "406.mp3", "wir üben salat später nochmal": "407.mp3", "wir üben schaf später nochmal": "408.mp3", "wir üben schere später nochmal": "409.mp3", "wir üben schiff später nochmal": "410.mp3", "wir üben schildkröte später nochmal": "411.mp3", "wir üben schlüssel später nochmal": "412.mp3", "wir üben schmetterling später nochmal": "413.mp3", "wir üben schnecke später nochmal": "414.mp3", "wir üben schokolade später nochmal": "415.mp3", "wir üben schuh später nochmal": "416.mp3", "wir üben seife später nochmal": "417.mp3", "wir üben socke später nochmal": "418.mp3", "wir üben sofa später nochmal": "419.mp3", "wir üben sonne später nochmal": "420.mp3", "wir üben sonnenblume später nochmal": "421.mp3", "wir üben stern später nochmal": "422.mp3", "wir üben säge später nochmal": "423.mp3", "wir üben tanne später nochmal": "424.mp3", "wir üben tasche später nochmal": "425.mp3", "wir üben tasse später nochmal": "426.mp3", "wir üben teddy später nochmal": "427.mp3", "wir üben tiger später nochmal": "428.mp3", "wir üben tomate später nochmal": "429.mp3", "wir üben trommel später nochmal": "430.mp3", "wisch zur seite und tipp auf die spielgeräte": "431.mp3", "wortdetektiv": "432.mp3", "wow prima": "433.mp3", "wunderbar gesprochen": "434.mp3", "ze": "435.mp3", "zeig mir": "436.mp3", "zieh die backen nach innen wie ein fisch": "437.mp3"};</script>
 <script>
 /* ================= DATA ================= */
 // l = Anlaut-Gruppe (für Laut-Jagd). "X" = nicht für Anlaut-Aufgaben.
@@ -640,7 +648,7 @@ async function say(text,rate){
   const tok=sayToken;
   if(CLIPS){
     const parts=chunks(text),files=parts.map(p=>CLIPS[ckey(p)]);
-    if(files.every(Boolean)||!hasTTS){
+    if(!(hasTTS&&deVoice)&&(files.every(Boolean)||!hasTTS)){
       const r=((rate||S.rate)/0.85);const pr=Math.min(1.4,Math.max(.7,r));
       for(const f of files){if(tok!==sayToken)return;if(f)await playFile('a/'+f,pr,tok)}
       return;
@@ -690,7 +698,7 @@ function mascotSVG(mood){
 function setMood(el,mood){el.innerHTML=mascotSVG(mood);if(mood==='happy'){el.classList.remove('jump');void el.offsetWidth;el.classList.add('jump')}}
 
 /* ================= HOME (Szene) ================= */
-const NAMES={mund:'Grimassen-Spiegel',hoeren:'Wort-Detektiv',anlaut:'Laut-Buddeln',silben:'Silben-Schaukel',reime:'Reim-Wippe',paare:'Hör-Rohre',sprechen:'Sprich mit Nuki',treasure:'Schatzkiste',mila:'Mila',ben:'Ben',bird:'Vogel'};
+const NAMES={nuki:'Nuki',mund:'Grimassen-Spiegel',hoeren:'Wort-Detektiv',anlaut:'Laut-Buddeln',silben:'Silben-Schaukel',reime:'Reim-Wippe',paare:'Hör-Rohre',sprechen:'Sprich mit Nuki',treasure:'Schatzkiste',mila:'Mila',ben:'Ben',bird:'Vogel'};
 const scene=$('#scene'),svgEl=$('#sceneSvg');
 function fitScene(){const h=scene.clientHeight;svgEl.style.height=h+'px';svgEl.style.width=Math.max(scene.clientWidth,h*2800/600)+'px';pagers()}
 function pagers(){const m=scene.scrollWidth-scene.clientWidth;$('#pgL').hidden=scene.scrollLeft<20;$('#pgR').hidden=scene.scrollLeft>m-20}
@@ -702,18 +710,19 @@ let toastT=0;
 function toast(t,speak=true){$('#toastText').textContent=t;setMood($('#toastNuki'),'happy');$('#toast').hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>$('#toast').hidden=true,3200);if(speak)say(t)}
 function boing(el){el.classList.remove('boing');void el.getBoundingClientRect();el.classList.add('boing')}
 let opening=false;
-svgEl.querySelectorAll('.hot').forEach(g=>{
-  g.setAttribute('role','button');g.setAttribute('tabindex','0');
-  const act=async()=>{
-    if(opening)return; const id=g.dataset.g; boing(g); hush();
+async function activate(id,bounce){
+    if(opening)return; bounce&&bounce(); hush();
     if(id==='bird'){tone([1800,2200,1900,2400],.06,'sine',.07);toast(rnd(['Piep piep!','Tschilp! Schön, dass du da bist!']));return}
-    if(id==='mila'){toast(rnd(['Hallo, ich bin Mila! Tipp auf die Sachen im Baumhaus.','Hast du die Schaukel schon gefunden?']));return}
+    if(id==='mila'){toast(rnd(['Hallo, ich bin Mila! Tipp auf die Spielgeräte.','Hast du die Schaukel schon gefunden?']));return}
     if(id==='ben'){toast(rnd(['Hi, ich bin Ben! Komm, wir spielen zusammen!','Nuki sitzt oben im Baum!']));return}
     if(id==='treasure'){tone([523,659,784],.1,'triangle');openTreasure();return}
     if(id==='paare')tone([392,494,587,784],.13,'triangle',.1);
     opening=true;tone([523,784],.08,'triangle');
     toast(NAMES[id],false);await say(NAMES[id]);await wait(150);opening=false;$('#toast').hidden=true;startGame(id);
-  };
+}
+svgEl.querySelectorAll('.hot').forEach(g=>{
+  g.setAttribute('role','button');g.setAttribute('tabindex','0');
+  const act=()=>activate(g.dataset.g,()=>boing(g));
   g.addEventListener('click',act);g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();act()}});
 });
 function renderHome(){$('#starCount').textContent=S.stars;setMood($('#sceneNuki'),'normal');requestAnimationFrame(fitScene)}
@@ -1047,6 +1056,281 @@ $('#btnReset').onclick=()=>{
   if(!resetArmed){resetArmed=true;$('#btnReset').textContent='Wirklich löschen? Nochmal tippen';setTimeout(()=>{resetArmed=false;$('#btnReset').textContent='Sterne & Fortschritt löschen'},4000);return}
   S.stars=0;S.perGame={};S.practice={};S.lvl={};save();resetArmed=false;$('#btnReset').textContent='Gelöscht ✓';renderParents();
 };
+
+/* ================= 3D-SPIELPLATZ (realistisch) ================= */
+let USE3D=false;
+(function init3D(){
+  if(!window.THREE)return;
+  const host=$('#scene3d');
+  let renderer;
+  try{renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'})}catch(e){return}
+  if(!renderer||!renderer.getContext())return;
+  USE3D=true;host.hidden=false;$('#scene').hidden=true;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+  renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=0.62;
+  renderer.physicallyCorrectLights=true;
+  host.appendChild(renderer.domElement);
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(48,1,0.1,600);
+  const lin=c=>new THREE.Color(c).convertSRGBToLinear();
+  const rnd2=(a,b)=>a+Math.random()*(b-a);
+  const SUN_DIR=new THREE.Vector3().setFromSphericalCoords(1,THREE.MathUtils.degToRad(90-38),THREE.MathUtils.degToRad(155));
+
+  /* --- Himmel: physikalisches Himmelsmodell, sonst Verlauf --- */
+  if(THREE.Sky){
+    const sky=new THREE.Sky();sky.scale.setScalar(4500);scene.add(sky);
+    const u=sky.material.uniforms;u.turbidity.value=2.2;u.rayleigh.value=2.6;u.mieCoefficient.value=0.003;u.mieDirectionalG.value=0.8;u.sunPosition.value.copy(SUN_DIR);
+  }else{
+    const g=new THREE.SphereGeometry(500,32,16),col=[],top=lin('#3a8fd6'),hor=lin('#cfe9f7'),p=g.attributes.position;
+    for(let i=0;i<p.count;i++){const y=Math.max(0,p.getY(i)/500);const c=hor.clone().lerp(top,Math.pow(y,.55));col.push(c.r,c.g,c.b)}
+    g.setAttribute('color',new THREE.Float32BufferAttribute(col,3));scene.add(new THREE.Mesh(g,new THREE.MeshBasicMaterial({vertexColors:true,side:THREE.BackSide,fog:false})));
+  }
+  scene.fog=new THREE.FogExp2(lin('#b9d6e8'),0.011);
+
+  /* --- Licht --- */
+  const pm=new THREE.PMREMGenerator(renderer);
+  const hemi=new THREE.HemisphereLight(lin('#cfe6ff'),lin('#4a6a32'),1.1);scene.add(hemi);
+  const sun=new THREE.DirectionalLight(lin('#fff1dc'),5.2);sun.castShadow=true;
+  sun.shadow.mapSize.set(2048,2048);const sc=sun.shadow.camera;sc.left=-16;sc.right=16;sc.top=14;sc.bottom=-10;sc.near=1;sc.far=90;sun.shadow.bias=-0.0003;sun.shadow.normalBias=0.025;sun.shadow.radius=3;
+  scene.add(sun,sun.target);
+  if(THREE.RGBELoader){new THREE.RGBELoader().setDataType(THREE.UnsignedByteType).load('tex/quarry_01_1k.hdr',t=>{const e=pm.fromEquirectangular(t).texture;scene.environment=e;t.dispose()},undefined,()=>{})}
+
+  /* --- Texturen: echte Fotos, prozedurale Reserve --- */
+  const TL=new THREE.TextureLoader();
+  function canvasTex(w,h,draw,rep,srgb=true){const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');draw(x,w,h);const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;if(rep)t.repeat.set(rep[0],rep[1]);if(srgb)t.encoding=THREE.sRGBEncoding;t.anisotropy=8;return t}
+  function photo(mat,slot,url,rep,srgb){TL.load(url,t=>{t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rep[0],rep[1]);if(srgb)t.encoding=THREE.sRGBEncoding;t.anisotropy=8;mat[slot]=t;if(slot==='map')mat.color.set('#ffffff');mat.needsUpdate=true},undefined,()=>{})}
+  const noiseTex=(base,vary,rep,n=6000,sz=2)=>canvasTex(256,256,(x,w,h)=>{x.fillStyle=base;x.fillRect(0,0,w,h);for(let i=0;i<n;i++){const v=Math.floor(rnd2(-vary,vary));x.fillStyle=`rgba(${v>0?255:0},${v>0?255:0},${v>0?255:0},${Math.abs(v)/255})`;x.fillRect(rnd2(0,w),rnd2(0,h),sz,sz)}},rep);
+  const sandTex=noiseTex('#d8c08a',60,[5,5],9000,1.5),sandBump=noiseTex('#808080',90,[5,5],9000,1.5);
+  const rubberTex=canvasTex(512,512,(x,w,h)=>{x.fillStyle='#a8442f';x.fillRect(0,0,w,h);const cs=['#c2533a','#8a3624','#b04a33','#6f2c1f','#d8705a'];for(let i=0;i<22000;i++){x.fillStyle=cs[i%5];x.beginPath();x.arc(rnd2(0,w),rnd2(0,h),rnd2(.6,1.6),0,7);x.fill()}},[4,4]);
+  const rubberBump=noiseTex('#808080',110,[4,4],16000,1.5);
+  const barkTex=canvasTex(256,512,(x,w,h)=>{x.fillStyle='#5a4130';x.fillRect(0,0,w,h);for(let i=0;i<140;i++){x.strokeStyle=`rgba(${rnd2(10,40)},${rnd2(8,25)},${rnd2(4,15)},${rnd2(.3,.7)})`;x.lineWidth=rnd2(1,5);const px=rnd2(0,w);x.beginPath();x.moveTo(px,0);x.bezierCurveTo(px+rnd2(-14,14),h*.3,px+rnd2(-14,14),h*.7,px+rnd2(-6,6),h);x.stroke()}for(let i=0;i<1500;i++){x.fillStyle=`rgba(140,120,100,${rnd2(.05,.2)})`;x.fillRect(rnd2(0,w),rnd2(0,h),2,4)}},[2,2]);
+  const leafTex=canvasTex(256,256,(x,w,h)=>{x.clearRect(0,0,w,h);for(let i=0;i<46;i++){const cx=rnd2(30,226),cy=rnd2(30,226),r=rnd2(14,26),a=rnd2(0,6.3);x.save();x.translate(cx,cy);x.rotate(a);
+      const g=Math.floor(rnd2(90,150));x.fillStyle=`rgb(${Math.floor(g*.45)},${g},${Math.floor(g*.3)})`;x.beginPath();x.moveTo(0,-r);x.quadraticCurveTo(r*.65,-r*.2,0,r);x.quadraticCurveTo(-r*.65,-r*.2,0,-r);x.fill();
+      x.strokeStyle='rgba(30,60,20,.45)';x.lineWidth=1;x.beginPath();x.moveTo(0,-r);x.lineTo(0,r);x.stroke();x.restore()}});
+  const paint=(c,r=.42)=>new THREE.MeshStandardMaterial({color:lin(c),roughness:r,metalness:.15,bumpMap:noiseTex('#808080',40,[2,2],3000,1),bumpScale:.002});
+  const MAT={
+    green:paint('#2f6b3a'),blue:paint('#285f9e'),red:paint('#b8352b'),yellow:paint('#e8b21f',.38),
+    steel:new THREE.MeshStandardMaterial({color:lin('#d4d9de'),roughness:.18,metalness:1}),
+    brushed:new THREE.MeshStandardMaterial({color:lin('#c9ced3'),roughness:.32,metalness:1}),
+    wood:new THREE.MeshStandardMaterial({color:lin('#9a6b3f'),roughness:.8}),
+    darkwood:new THREE.MeshStandardMaterial({color:lin('#6e4a2b'),roughness:.85}),
+    bark:new THREE.MeshStandardMaterial({map:barkTex,roughness:.95,bumpMap:barkTex,bumpScale:.03}),
+    rubber:new THREE.MeshStandardMaterial({color:lin('#1d1d1d'),roughness:.9}),
+    brass:new THREE.MeshStandardMaterial({color:lin('#c9a24a'),roughness:.28,metalness:1}),
+    leaf:new THREE.MeshStandardMaterial({map:leafTex,alphaTest:.45,side:THREE.DoubleSide,roughness:.75}),
+    white:new THREE.MeshStandardMaterial({color:lin('#ece7dd'),roughness:.7})
+  };
+  ['wood','darkwood'].forEach(k=>{photo(MAT[k],'map','tex/wood.jpg',[1,1],true);photo(MAT[k],'bumpMap','tex/wood_b.jpg',[1,1]);photo(MAT[k],'roughnessMap','tex/wood_r.jpg',[1,1]);MAT[k].bumpScale=.01});
+  MAT.darkwood.color=lin('#8a6a4a');
+
+  function mesh(geo,mat,x,y,z,parent){const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;(parent||scene).add(m);return m}
+  const up=new THREE.Vector3(0,1,0);
+  function rod(a,b,r,mat,parent,seg=16){a=new THREE.Vector3(...a);b=new THREE.Vector3(...b);const d=b.clone().sub(a);const m=mesh(new THREE.CylinderGeometry(r,r,d.length(),seg),mat,0,0,0,parent);
+    m.position.copy(a).add(b).multiplyScalar(.5);m.quaternion.setFromUnitVectors(up,d.normalize());return m}
+  function beam(a,b,w,mat,parent){a=new THREE.Vector3(...a);b=new THREE.Vector3(...b);const d=b.clone().sub(a);const m=mesh(new THREE.BoxGeometry(w,d.length(),w),mat,0,0,0,parent);
+    m.position.copy(a).add(b).multiplyScalar(.5);m.quaternion.setFromUnitVectors(up,d.normalize());return m}
+  const stations=[];
+  function station(id,x,z){const g=new THREE.Group();g.position.set(x,0,z||0);g.userData.g=id;scene.add(g);stations.push(g);return g}
+  function marker(g,x,y,z){const s=new THREE.Mesh(new THREE.OctahedronGeometry(.13,0),new THREE.MeshStandardMaterial({color:lin('#fff6c0'),emissive:lin('#ffd54a'),emissiveIntensity:3,roughness:.3}));s.position.set(x,y,z);g.add(s);g.userData.marker=s;g.userData.my=y}
+
+  /* --- Boden --- */
+  const groundMat=new THREE.MeshStandardMaterial({color:lin('#5f8d3a'),roughness:1,map:noiseTex('#5f8d3a',50,[360,360],9000,2)});
+  photo(groundMat,'map','tex/grass.jpg',[420,420],true);photo(groundMat,'normalMap','tex/grass_n.jpg',[420,420]);
+  const ground=mesh(new THREE.PlaneGeometry(3000,3000),groundMat,30,0,0);ground.rotation.x=-Math.PI/2;ground.castShadow=false;
+  const pathMat=new THREE.MeshStandardMaterial({map:sandTex,bumpMap:sandBump,bumpScale:.02,roughness:1,color:lin('#cdb98f')});
+  const path=mesh(new THREE.PlaneGeometry(100,2.2),pathMat,30,0.012,3.6);path.rotation.x=-Math.PI/2;path.castShadow=false;
+  const rubMat=new THREE.MeshStandardMaterial({map:rubberTex,bumpMap:rubberBump,bumpScale:.015,roughness:.95});
+  const mats=[];function mat3(x,z,r){const m=mesh(new THREE.CircleGeometry(r,64),rubMat,x,0.02,z);m.rotation.x=-Math.PI/2;m.castShadow=false;mats.push([x,z,r])}
+
+  /* --- Bäume aus einzelnen Blättern --- */
+  const leafGeo=new THREE.PlaneGeometry(1.1,1.1);
+  function tree(x,z,s,parent){
+    const g=new THREE.Group();g.position.set(x,0,z);(parent||scene).add(g);
+    const h=2.6*s;mesh(new THREE.CylinderGeometry(.16*s,.27*s,h,14),MAT.bark,0,h/2,0,g);
+    for(let i=0;i<4;i++){const a=i*1.6+rnd2(0,.6);rod([0,h*.75,0],[Math.cos(a)*1.0*s,h*(1.05+rnd2(0,.2)),Math.sin(a)*1.0*s],.07*s,MAT.bark,g,8)}
+    const n=Math.floor(260*Math.min(1.6,s));const im=new THREE.InstancedMesh(leafGeo,MAT.leaf,n);const o=new THREE.Object3D();const col=new THREE.Color();
+    for(let i=0;i<n;i++){const u=Math.random(),v=Math.random(),th=u*6.283,ph=Math.acos(2*v-1),r=Math.pow(Math.random(),.35);
+      o.position.set(Math.sin(ph)*Math.cos(th)*1.65*s*r,h+.55*s+Math.cos(ph)*1.35*s*r,Math.sin(ph)*Math.sin(th)*1.55*s*r);
+      o.rotation.set(rnd2(0,6.3),rnd2(0,6.3),rnd2(0,6.3));o.scale.setScalar(rnd2(.7,1.25)*s*.8);o.updateMatrix();im.setMatrixAt(i,o.matrix);
+      const k=.75+(o.position.y-h)/(3*s)*.35+rnd2(-.08,.08);col.setRGB(k,k*1.02,k*.9);im.setColorAt(i,col)}
+    im.castShadow=true;im.receiveShadow=true;g.add(im);return g}
+
+  /* --- Gras-Halme mit Wind --- */
+  const windU={value:0};
+  function plantGrass(){
+    const bg=new THREE.PlaneGeometry(.05,.28,1,4);const p=bg.attributes.position;for(let i=0;i<p.count;i++){const y=p.getY(i)+.14;p.setX(i,p.getX(i)*(1-y/.3));p.setY(i,y)}bg.computeVertexNormals();
+    const gm=new THREE.MeshStandardMaterial({color:lin('#6f9e3e'),roughness:.9,side:THREE.DoubleSide});
+    gm.onBeforeCompile=sh=>{sh.uniforms.uWind=windU;sh.vertexShader='uniform float uWind;\n'+sh.vertexShader.replace('#include <begin_vertex>',`#include <begin_vertex>
+      float hh=position.y/0.28; vec3 ip=vec3(instanceMatrix[3][0],0.,instanceMatrix[3][2]);
+      transformed.x+=sin(uWind*1.7+ip.x*.7+ip.z*.4)*.06*hh*hh; transformed.z+=cos(uWind*1.3+ip.x*.5)*.03*hh*hh;`)};
+    const N=26000;const im=new THREE.InstancedMesh(bg,gm,N);const o=new THREE.Object3D(),c=new THREE.Color();let k=0;
+    for(let t=0;t<N*1.6&&k<N;t++){const x=rnd2(-8,66),z=rnd2(-5.6,7.2);
+      if(z>2.4&&z<4.8)continue;if(mats.some(([mx,mz,r])=>(x-mx)**2+(z-mz)**2<r*r))continue;if(x>15.4&&x<19.8&&z>-.6&&z<2.2)continue;
+      o.position.set(x,0,z);o.rotation.set(rnd2(-.25,.25),rnd2(0,6.3),rnd2(-.25,.25));o.scale.setScalar(rnd2(.55,1.2)*(z>4.8?.7:1));o.updateMatrix();im.setMatrixAt(k,o.matrix);
+      const v=rnd2(.75,1.15);c.setRGB(v*.9,v,v*.75);im.setColorAt(k,c);k++}
+    im.count=k;im.receiveShadow=true;scene.add(im)}
+
+  /* --- Station: Kletterturm + Edelstahl-Rutsche (Wort-Detektiv) --- */
+  ;(()=>{const g=station('hoeren',8.5,0);mat3(9.6,0,3.9);
+    [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([x,z])=>{beam([x,0,z],[x,3.4,z],.13,MAT.wood,g);mesh(new THREE.SphereGeometry(.09,12,8),MAT.green,x,3.47,z,g)});
+    for(let i=0;i<8;i++)mesh(new THREE.BoxGeometry(.24,.05,2.15),MAT.wood,-.92+i*.265,1.6,0,g);
+    [-1.05,1.05].forEach(z=>{for(let i=0;i<5;i++)mesh(new THREE.BoxGeometry(.33,.55,.03),MAT.green,-.8+i*.4,2.02,z*(z<0?1:1),g)});
+    for(let i=0;i<5;i++)mesh(new THREE.BoxGeometry(.03,.55,.33),MAT.green,-1.05,2.02,-.8+i*.4,g);
+    const roof=mesh(new THREE.ConeGeometry(1.72,1.05,4,1),new THREE.MeshStandardMaterial({color:lin('#a32f25'),roughness:.6,map:noiseTex('#a32f25',30,[3,3],4000,2)}),0,3.95,0,g);roof.rotation.y=Math.PI/4;
+    beam([-2.0,0,.45],[-1.1,1.62,.45],.07,MAT.wood,g);beam([-2.0,0,-.45],[-1.1,1.62,-.45],.07,MAT.wood,g);
+    for(let i=1;i<6;i++){const t=i/6;rod([-2.0+.9*t,1.62*t,.45],[-2.0+.9*t,1.62*t,-.45],.025,MAT.brushed,g,10)}
+    const curve=new THREE.CatmullRomCurve3([new THREE.Vector3(1.05,1.62,0),new THREE.Vector3(2.0,1.36,0),new THREE.Vector3(3.2,.64,0),new THREE.Vector3(4.3,.32,0),new THREE.Vector3(4.95,.3,0)]);
+    const N=80,sec=[[-.42,.32],[-.42,.04],[-.36,0],[0,-.02],[.36,0],[.42,.04],[.42,.32]],pos=[],idx=[];const side=new THREE.Vector3(0,0,1);
+    for(let i=0;i<=N;i++){const t=i/N,c=curve.getPoint(t),tg=curve.getTangent(t),u=new THREE.Vector3().crossVectors(side,tg).normalize();sec.forEach(([sx,sy])=>{const p=c.clone().addScaledVector(side,sx).addScaledVector(u,sy);pos.push(p.x,p.y,p.z)})}
+    for(let i=0;i<N;i++)for(let j=0;j<sec.length-1;j++){const a=i*sec.length+j,b=a+sec.length;idx.push(a,b,a+1,b,b+1,a+1)}
+    const sg=new THREE.BufferGeometry();sg.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));sg.setIndex(idx);sg.computeVertexNormals();
+    const sl=new THREE.Mesh(sg,new THREE.MeshStandardMaterial({color:lin('#dfe4e8'),roughness:.12,metalness:1,side:THREE.DoubleSide}));sl.castShadow=sl.receiveShadow=true;g.add(sl);
+    rod([4.55,0,-.3],[4.55,.3,-.3],.04,MAT.brushed,g);rod([4.55,0,.3],[4.55,.3,.3],.04,MAT.brushed,g);
+    const tel=new THREE.Group();tel.position.set(.5,2.42,1.06);g.add(tel);rod([-.32,0,0],[.42,.3,.12],.075,MAT.brass,tel);rod([.4,.29,.115],[.52,.34,.14],.11,MAT.brass,tel);rod([0,-.3,0],[0,.02,0],.03,MAT.brushed,tel);
+    marker(g,0,4.75,0)})();
+
+  /* --- Station: Sandkasten (Laut-Buddeln) --- */
+  ;(()=>{const g=station('anlaut',17.6,.8);
+    [[0,-1.15,3.6,.22],[0,1.15,3.6,.22],[-1.69,0,.22,2.52],[1.69,0,.22,2.52]].forEach(([x,z,w,d])=>{mesh(new THREE.BoxGeometry(w,.32,d),MAT.darkwood,x,.16,z,g)});
+    const sandMat=new THREE.MeshStandardMaterial({map:sandTex,bumpMap:sandBump,bumpScale:.04,roughness:1,color:lin('#e4d2a6')});
+    const sg=new THREE.PlaneGeometry(3.15,2.08,40,28);const p=sg.attributes.position;for(let i=0;i<p.count;i++)p.setZ(i,Math.sin(p.getX(i)*2.3)*.025+Math.cos(p.getY(i)*3.1)*.02+Math.random()*.01);sg.computeVertexNormals();
+    const s=mesh(sg,sandMat,0,.24,0,g);s.rotation.x=-Math.PI/2;
+    const pl=c=>new THREE.MeshPhysicalMaterial({color:lin(c),roughness:.22,clearcoat:1,side:THREE.DoubleSide});
+    mesh(new THREE.CylinderGeometry(.24,.18,.32,28,1,true),pl('#d23a2f'),-.7,.42,.2,g);mesh(new THREE.CircleGeometry(.18,24),pl('#d23a2f'),-.7,.265,.2,g).rotation.x=-Math.PI/2;
+    mesh(new THREE.TorusGeometry(.24,.012,6,24,Math.PI),pl('#d23a2f'),-.7,.58,.2,g);
+    rod([.55,.27,-.25],[1.05,.6,.25],.022,pl('#2a6fc4'),g);const sh=mesh(new THREE.BoxGeometry(.2,.025,.26),pl('#2a6fc4'),.5,.27,-.32,g);sh.rotation.set(-.1,.8,0);
+    mesh(new THREE.CylinderGeometry(.17,.21,.24,20),sandMat,.25,.34,.5,g);mesh(new THREE.ConeGeometry(.1,.2,16),sandMat,.25,.55,.5,g);
+    marker(g,0,1.3,0)})();
+
+  /* --- Großer Baum mit Nuki (Sprich mit Nuki) --- */
+  tree(25.5,-1.6,1.75);
+  ;(()=>{const g=station('sprechen',25.5,-1.6);
+    rod([.2,1.95,.25],[1.5,2.06,1.05],.11,MAT.bark,g,10);
+    const nk=new THREE.Group();nk.position.set(1.25,2.14,.97);g.add(nk);g.userData.nuki=nk;nk.scale.setScalar(.85);
+    const fur=c=>new THREE.MeshStandardMaterial({color:lin(c),roughness:.95,bumpMap:noiseTex('#808080',120,[3,3],12000,1),bumpScale:.01});
+    const O=fur('#a4552a'),C=fur('#e8d6bd');
+    mesh(new THREE.SphereGeometry(.24,24,18),O,0,.2,0,nk).scale.set(1,1.25,.95);mesh(new THREE.SphereGeometry(.15,18,14),C,0,.17,.13,nk).scale.set(1,1.25,.6);
+    mesh(new THREE.SphereGeometry(.18,24,18),O,0,.55,.05,nk).scale.set(1,.95,1.05);mesh(new THREE.SphereGeometry(.085,16,12),C,0,.5,.19,nk).scale.set(1.2,.85,1);
+    [-.085,.085].forEach(ex=>{const e=mesh(new THREE.ConeGeometry(.045,.15,10),O,ex,.75,.02,nk);e.rotation.z=-ex*1.8;
+      mesh(new THREE.SphereGeometry(.032,14,10),new THREE.MeshStandardMaterial({color:'#050505',roughness:.05}),ex*.95,.58,.17,nk)});
+    mesh(new THREE.SphereGeometry(.022,10,8),new THREE.MeshStandardMaterial({color:'#1a1210',roughness:.3}),0,.52,.27,nk);
+    const tc=new THREE.CatmullRomCurve3([new THREE.Vector3(0,.05,-.18),new THREE.Vector3(0,.3,-.48),new THREE.Vector3(0,.82,-.52),new THREE.Vector3(0,1.02,-.28),new THREE.Vector3(0,.92,-.08)]);
+    const tail=new THREE.Mesh(new THREE.TubeGeometry(tc,40,.13,14,false),O);tail.castShadow=true;nk.add(tail);
+    mesh(new THREE.SphereGeometry(.065,12,10),MAT.darkwood,0,.27,.25,nk);
+    marker(g,1.25,3.0,.97)})();
+
+  /* --- Station: Holz-Schaukel mit Ketten (Silben-Schaukel) --- */
+  ;(()=>{const g=station('silben',32.5,0);mat3(32.5,.9,3.1);
+    [[-1.75,-1],[1.75,1]].forEach(([x,s])=>{beam([x,3.05,0],[x-s*.55,0,.95],.15,MAT.wood,g);beam([x,3.05,0],[x-s*.55,0,-.95],.15,MAT.wood,g);beam([x-s*.3,1.2,-.55],[x-s*.3,1.2,.55],.08,MAT.wood,g)});
+    beam([-1.95,3.1,0],[1.95,3.1,0],.18,MAT.wood,g);g.children[g.children.length-1].rotation.z=Math.PI/2;
+    const link=new THREE.TorusGeometry(.028,.007,6,12);
+    [[-.7,'seat'],[.8,'seat2']].forEach(([x],k)=>{const p=new THREE.Group();p.position.set(x,3.0,0);g.add(p);
+      [-.24,.24].forEach(z=>{const n=26,im=new THREE.InstancedMesh(link,MAT.steel,n),o=new THREE.Object3D();for(let i=0;i<n;i++){o.position.set(0,-.05-i*.092,z);o.rotation.set(0,i%2?Math.PI/2:0,Math.PI/2);o.updateMatrix();im.setMatrixAt(i,o.matrix)}im.castShadow=true;p.add(im)});
+      const seat=mesh(new THREE.BoxGeometry(.24,.05,.62),MAT.rubber,0,-2.47,0,p);seat.rotation.y=Math.PI/2;seat.rotation.set(0,0,0);seat.scale.set(1,1,1);
+      seat.geometry=new THREE.BoxGeometry(.3,.05,.64);
+      if(k===0)g.userData.swing=p;else g.userData.swing2=p});
+    marker(g,0,3.7,0)})();
+
+  /* --- Station: Wippe (Reim-Wippe) --- */
+  ;(()=>{const g=station('reime',39.6,.6);mat3(39.6,.6,2.6);
+    mesh(new THREE.BoxGeometry(.3,.55,.5),MAT.green,0,.27,0,g);rod([0,.58,-.3],[0,.58,.3],.05,MAT.brushed,g);
+    const p=new THREE.Group();p.position.set(0,.6,0);g.add(p);g.userData.seesaw=p;
+    mesh(new THREE.BoxGeometry(4.0,.09,.32),MAT.wood,0,.05,0,p);
+    [-1.75,1.75].forEach(x=>{mesh(new THREE.BoxGeometry(.42,.07,.36),MAT.rubber,x,.13,0,p);const hx=x+(x<0?.34:-.34);rod([hx,.05,0],[hx,.5,0],.025,MAT.brushed,p);rod([hx,.5,-.16],[hx,.5,.16],.025,MAT.brushed,p)});
+    [-1.75,1.75].forEach(x=>{const t=mesh(new THREE.TorusGeometry(.17,.07,12,24),MAT.rubber,x,.07,0,g);t.rotation.x=Math.PI/2});
+    marker(g,0,1.6,0)})();
+
+  /* --- Station: Hör-Rohre aus Edelstahl (Hör genau) --- */
+  ;(()=>{const g=station('paare',47.6,0);
+    [-1.25,1.25].forEach(x=>{rod([x,0,0],[x,1.35,0],.05,MAT.brushed,g);
+      const f=mesh(new THREE.ConeGeometry(.36,.62,36,1,true),new THREE.MeshStandardMaterial({color:lin('#e4e8ec'),roughness:.1,metalness:1,side:THREE.DoubleSide}),x,1.5,.22,g);f.rotation.x=-Math.PI/2;
+      const r=mesh(new THREE.TorusGeometry(.36,.025,10,36),MAT.steel,x,1.5,.53,g)});
+    const tc=new THREE.CatmullRomCurve3([new THREE.Vector3(-1.25,.06,0),new THREE.Vector3(-.5,-.08,.25),new THREE.Vector3(.5,-.08,.25),new THREE.Vector3(1.25,.06,0)]);
+    const t=new THREE.Mesh(new THREE.TubeGeometry(tc,40,.06,12,false),MAT.brushed);t.castShadow=true;g.add(t);
+    marker(g,0,2.2,0)})();
+
+  /* --- Schatzkiste --- */
+  ;(()=>{const g=station('treasure',52.4,1.2);
+    mesh(new THREE.BoxGeometry(1.1,.55,.72),MAT.darkwood,0,.28,0,g);
+    const lid=mesh(new THREE.CylinderGeometry(.36,.36,1.1,24,1,false,0,Math.PI),MAT.darkwood,0,.55,0,g);lid.rotation.set(Math.PI/2,0,Math.PI/2);
+    [-.38,.38].forEach(x=>{mesh(new THREE.BoxGeometry(.07,.57,.75),MAT.brass,x,.28,0,g);const b=mesh(new THREE.CylinderGeometry(.375,.375,.07,24,1,false,0,Math.PI),MAT.brass,x,.55,0,g);b.rotation.set(Math.PI/2,0,Math.PI/2)});
+    mesh(new THREE.BoxGeometry(.15,.18,.05),MAT.brass,0,.5,.38,g);
+    marker(g,0,1.35,0)})();
+
+  /* --- Station: Grimassen-Spiegel --- */
+  ;(()=>{const g=station('mund',56.3,0);
+    rod([0,0,0],[0,1.25,0],.06,MAT.brushed,g);mesh(new THREE.CylinderGeometry(.3,.34,.06,24),MAT.brushed,0,.03,0,g);
+    const fr=mesh(new THREE.TorusGeometry(.62,.06,16,64),MAT.steel,0,1.95,0,g);fr.scale.set(1,1.35,1);
+    const mr=mesh(new THREE.CircleGeometry(.62,64),new THREE.MeshStandardMaterial({color:lin('#f4f8fb'),roughness:.01,metalness:1,envMapIntensity:1.5}),0,1.95,.005,g);mr.scale.set(1,1.35,1);
+    marker(g,0,3.0,0)})();
+
+  plantGrass();
+  /* --- Umgebung: Bänke, Laterne, Mülleimer, Hecke, Baumreihe --- */
+  function bench(x,z,ry){const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=ry||0;scene.add(g);
+    for(let i=0;i<3;i++)mesh(new THREE.BoxGeometry(1.8,.04,.11),MAT.wood,0,.46,-.13+i*.13,g);for(let i=0;i<2;i++)mesh(new THREE.BoxGeometry(1.8,.1,.035),MAT.wood,0,.68+i*.14,-.24,g);
+    [-.75,.75].forEach(x=>{mesh(new THREE.BoxGeometry(.05,.46,.05),MAT.green,x,.23,.12,g);mesh(new THREE.BoxGeometry(.05,.85,.05),MAT.green,x,.42,-.24,g);mesh(new THREE.BoxGeometry(.05,.05,.4),MAT.green,x,.44,-.06,g)})}
+  bench(13.5,-3.4);bench(36.5,-3.4);bench(50,-3.4);
+  (function lamp(x){rod([x,0,-3.6],[x,3.3,-3.6],.05,MAT.green);mesh(new THREE.CylinderGeometry(.12,.2,.35,12),MAT.green,x,3.4,-3.6);mesh(new THREE.SphereGeometry(.13,16,12),new THREE.MeshStandardMaterial({color:'#fff8e0',emissive:lin('#fff0c0'),emissiveIntensity:.3,roughness:.2}),x,3.2,-3.6)})(29);
+  (function bin(x){mesh(new THREE.CylinderGeometry(.24,.22,.75,20),MAT.green,x,.38,-3.5);mesh(new THREE.CylinderGeometry(.26,.26,.04,20),MAT.brushed,x,.77,-3.5)})(21);
+  const hedgeLeaf=new THREE.InstancedMesh(leafGeo,MAT.leaf,2600);{const o=new THREE.Object3D(),c=new THREE.Color();for(let i=0;i<2600;i++){o.position.set(rnd2(-12,72),rnd2(.05,1.2),-5.2+rnd2(-.45,.45));o.rotation.set(rnd2(0,6.3),rnd2(0,6.3),rnd2(0,6.3));o.scale.setScalar(rnd2(.45,.8));o.updateMatrix();hedgeLeaf.setMatrixAt(i,o.matrix);const k=rnd2(.6,.95);c.setRGB(k,k,k*.9);hedgeLeaf.setColorAt(i,c)}}
+  hedgeLeaf.castShadow=hedgeLeaf.receiveShadow=true;scene.add(hedgeLeaf);
+  for(let x=-12;x<76;x+=rnd2(5,8))tree(x,rnd2(-11,-7.5),rnd2(1.1,1.6));
+  for(let x=-25;x<95;x+=rnd2(6,10))tree(x,rnd2(-30,-20),rnd2(1.6,2.4));
+
+  /* --- Ball --- */
+  const ballTex=canvasTex(256,128,(x,w,h)=>{x.fillStyle='#f4f1ea';x.fillRect(0,0,w,h);x.fillStyle='#c8372d';for(let i=0;i<4;i++)x.fillRect(i*64,0,32,h);x.fillStyle='#2a63b5';x.fillRect(0,h*.45,w,h*.1)});
+  const ball=mesh(new THREE.SphereGeometry(.22,32,20),new THREE.MeshPhysicalMaterial({map:ballTex,roughness:.35,clearcoat:.6}),35.5,.22,2.6);
+
+  /* --- Vögel (animiert) --- */
+  const mixers=[],birds=[];
+  if(THREE.GLTFLoader){const gl=new THREE.GLTFLoader();['Stork','Flamingo'].forEach((n,k)=>gl.load('m/'+n+'.glb',gt=>{const b=gt.scene.children[0];b.scale.setScalar(.012);b.position.set(-10+k*30,13+k*3,-18-k*6);b.rotation.y=Math.PI/2;b.castShadow=true;scene.add(b);
+      const mx=new THREE.AnimationMixer(b);mx.clipAction(gt.animations[0]).setDuration(1.2).play();mixers.push(mx);birds.push(b)},undefined,()=>{}))}
+
+  /* --- Kamera-Steuerung (wischen) --- */
+  const X0=4,X1=55.5;let camX=9.2,velX=0,targetX=null;let W=1,H=1;
+  function resize(){W=host.clientWidth||innerWidth;H=host.clientHeight||innerHeight;renderer.setSize(W,H,false);camera.aspect=W/H;camera.fov=camera.aspect<1?60:46;camera.updateProjectionMatrix()}
+  function camDist(){return camera.aspect<1?Math.min(20,8.5/camera.aspect*.62):9.4}
+  function visW(){return 2*camDist()*Math.tan(camera.fov*Math.PI/360)*camera.aspect}
+  window.addEventListener('resize',resize);
+  let down=null,moved=0,lastX=0,lastT=0;
+  host.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY,cx:camX};moved=0;lastX=e.clientX;lastT=performance.now();velX=0;targetX=null;host.classList.add('grabbing');try{host.setPointerCapture(e.pointerId)}catch(_){}});
+  host.addEventListener('pointermove',e=>{if(!down){hover(e);return}
+    const dx=e.clientX-down.x;moved=Math.max(moved,Math.abs(dx),Math.abs(e.clientY-down.y));const wpp=visW()/W;camX=Math.min(X1,Math.max(X0,down.cx-dx*wpp));
+    const now=performance.now();velX=-(e.clientX-lastX)*wpp/Math.max(1,now-lastT)*16;lastX=e.clientX;lastT=now});
+  const ray=new THREE.Raycaster(),ndc=new THREE.Vector2();
+  function pick(e){const r=host.getBoundingClientRect();ndc.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(ndc,camera);
+    const hits=ray.intersectObjects(stations,true);for(const h of hits){let o=h.object;while(o&&!o.userData.g)o=o.parent;if(o)return o}return null}
+  function hover(e){if(e.pointerType!=='mouse')return;host.style.cursor=pick(e)?'pointer':''}
+  host.addEventListener('pointerup',e=>{host.classList.remove('grabbing');if(!down)return;const wasTap=moved<10;down=null;
+    if(wasTap){velX=0;const o=pick(e);if(o)activate(o.userData.g,()=>{o.userData.boing=performance.now()})}});
+  host.addEventListener('pointercancel',()=>{down=null;host.classList.remove('grabbing')});
+  $('#pgL').onclick=()=>{targetX=Math.max(X0,(targetX??camX)-visW()*.7)};
+  $('#pgR').onclick=()=>{targetX=Math.min(X1,(targetX??camX)+visW()*.7)};
+  window.pagers=function(){};
+  function pagers3(){$('#pgL').hidden=camX<=X0+.3;$('#pgR').hidden=camX>=X1-.3}
+
+  /* --- Animation --- */
+  const clock=new THREE.Clock();let last=0;
+  function frame(){
+    requestAnimationFrame(frame);
+    if($('#home').hidden)return;
+    const t=clock.getElapsedTime(),dt=Math.min(.05,t-last);last=t;windU.value=t;
+    if(!down){if(targetX!=null){camX+=(targetX-camX)*.1;if(Math.abs(targetX-camX)<.02)targetX=null}else if(Math.abs(velX)>.001){camX=Math.min(X1,Math.max(X0,camX+velX));velX*=.92}}
+    const d=camDist();camera.position.set(camX,camera.aspect<1?3.2:2.15,d);camera.lookAt(camX,camera.aspect<1?2.1:1.35,0);
+    sun.position.copy(SUN_DIR).multiplyScalar(40).add(new THREE.Vector3(camX,0,0));sun.target.position.set(camX,0,0);
+    stations.forEach(g=>{const u=g.userData;
+      if(u.marker){u.marker.rotation.y=t*1.8;u.marker.position.y=u.my+Math.sin(t*2.2+g.position.x)*.1}
+      if(u.boing){const k=(performance.now()-u.boing)/600;if(k>1){u.boing=0;g.scale.set(1,1,1)}else{const s=Math.sin(k*Math.PI*3)*(1-k)*.06;g.scale.set(1+s,1-s,1+s)}}
+      if(u.swing){u.swing.rotation.x=Math.sin(t*1.6)*.38;u.swing2.rotation.x=Math.sin(t*1.6+1.7)*.18}
+      if(u.seesaw)u.seesaw.rotation.z=Math.sin(t*1.0)*.17;
+      if(u.nuki)u.nuki.position.y=2.14+Math.abs(Math.sin(t*2.2))*.05});
+    mixers.forEach(m=>m.update(dt));birds.forEach((b,i)=>{b.position.x+=dt*(3+i);if(b.position.x>90)b.position.x=-20});
+    ball.position.x=35.5+Math.sin(t*.45)*1.3;ball.rotation.z=-Math.sin(t*.45)*1.3/.22;
+    pagers3();renderer.render(scene,camera);
+  }
+  resize();frame();
+})();
 
 paintMute();renderHome();show('home');
 setTimeout(()=>{if(!$('#home').hidden)toast('Hallo! Ich bin Nuki. Willkommen auf dem Spielplatz!',false)},700);
