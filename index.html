@@ -1080,7 +1080,7 @@ let USE3D=false;
   /* --- Himmel: physikalisches Himmelsmodell, sonst Verlauf --- */
   if(THREE.Sky){
     const sky=new THREE.Sky();sky.scale.setScalar(4500);scene.add(sky);
-    const u=sky.material.uniforms;u.turbidity.value=2.2;u.rayleigh.value=2.6;u.mieCoefficient.value=0.003;u.mieDirectionalG.value=0.8;u.sunPosition.value.copy(SUN_DIR);
+    const u=sky.material.uniforms;u.turbidity.value=2.0;u.rayleigh.value=3.2;u.mieCoefficient.value=0.003;u.mieDirectionalG.value=0.8;u.sunPosition.value.copy(SUN_DIR);
   }else{
     const g=new THREE.SphereGeometry(500,32,16),col=[],top=lin('#3a8fd6'),hor=lin('#cfe9f7'),p=g.attributes.position;
     for(let i=0;i<p.count;i++){const y=Math.max(0,p.getY(i)/500);const c=hor.clone().lerp(top,Math.pow(y,.55));col.push(c.r,c.g,c.b)}
@@ -1135,9 +1135,9 @@ let USE3D=false;
   function marker(g,x,y,z){const s=new THREE.Mesh(new THREE.OctahedronGeometry(.13,0),new THREE.MeshStandardMaterial({color:lin('#fff6c0'),emissive:lin('#ffd54a'),emissiveIntensity:3,roughness:.3}));s.position.set(x,y,z);g.add(s);g.userData.marker=s;g.userData.my=y}
 
   /* --- Boden --- */
-  const groundMat=new THREE.MeshStandardMaterial({color:lin('#5f8d3a'),roughness:1,map:noiseTex('#5f8d3a',50,[360,360],9000,2)});
-  photo(groundMat,'map','tex/grass.jpg',[420,420],true);photo(groundMat,'normalMap','tex/grass_n.jpg',[420,420]);
-  const ground=mesh(new THREE.PlaneGeometry(3000,3000),groundMat,30,0,0);ground.rotation.x=-Math.PI/2;ground.castShadow=false;
+  const groundMat=new THREE.MeshStandardMaterial({polygonOffset:true,polygonOffsetFactor:4,polygonOffsetUnits:4,color:lin('#5f8d3a'),roughness:1,map:noiseTex('#5f8d3a',50,[150,150],9000,2)});
+  photo(groundMat,'map','tex/grass.jpg',[170,170],true);photo(groundMat,'normalMap','tex/grass_n.jpg',[170,170]);
+  const ground=mesh(new THREE.PlaneGeometry(1200,1200),groundMat,30,0,0);ground.rotation.x=-Math.PI/2;ground.castShadow=false;
   const pathMat=new THREE.MeshStandardMaterial({map:sandTex,bumpMap:sandBump,bumpScale:.02,roughness:1,color:lin('#cdb98f')});
   const path=mesh(new THREE.PlaneGeometry(100,2.2),pathMat,30,0.012,3.6);path.rotation.x=-Math.PI/2;path.castShadow=false;
   const rubMat=new THREE.MeshStandardMaterial({map:rubberTex,bumpMap:rubberBump,bumpScale:.015,roughness:.95});
