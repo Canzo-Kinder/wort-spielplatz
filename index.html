@@ -936,9 +936,9 @@ function fitStage(){const st=$('#stage'),g=$('#game');if(!st||!g||g.hidden)retur
   const avail=g.clientHeight-(st.getBoundingClientRect().top-g.getBoundingClientRect().top+g.scrollTop)-4,need=st.scrollHeight;
   if(need>avail+2&&avail>120){let z=Math.max(.5,Math.floor(avail/need*100)/100);st.style.zoom=String(z);
     for(let k=0;k<8&&g.scrollHeight>g.clientHeight+1&&z>.5;k++){z=Math.max(.5,z-.03);st.style.zoom=String(z)}}}
-let fitRaf=0;const fitSoon=()=>{cancelAnimationFrame(fitRaf);fitRaf=requestAnimationFrame(()=>requestAnimationFrame(fitStage))};
+let fitRaf=0,fitT1=0,fitT2=0;const fitSoon=()=>{cancelAnimationFrame(fitRaf);clearTimeout(fitT1);clearTimeout(fitT2);fitRaf=requestAnimationFrame(()=>requestAnimationFrame(fitStage));fitT1=setTimeout(fitStage,450);fitT2=setTimeout(fitStage,1500)};
 try{new MutationObserver(fitSoon).observe(document.getElementById('stage'),{childList:true})}catch(e){}
-addEventListener('resize',fitSoon);addEventListener('orientationchange',()=>setTimeout(fitStage,350));try{document.fonts&&document.fonts.ready.then(fitSoon)}catch(e){}
+addEventListener('resize',fitSoon);addEventListener('orientationchange',()=>setTimeout(fitStage,350));try{document.fonts&&(document.fonts.ready.then(fitSoon),document.fonts.addEventListener('loadingdone',fitSoon))}catch(e){}
 function nextTask(){
   if(G.i>=(G.R||ROUND))return finish();
   stopCam(); G.task=makeTask(G.id,G.i); G.tries=0; G.busy=false; renderDots(); setMood($('#gameMascot'),'normal');
