@@ -1680,7 +1680,7 @@ let USE3D=false;
       [-.075,.075].forEach(ex=>mesh(new THREE.TorusGeometry(.045,.01,6,18),dark,ex,.02,.2,head));rod([-.03,.02,.205],[.03,.02,.205],.008,dark,head,6);
       const book=mesh(new THREE.BoxGeometry(.2,.26,.05),P('#ef5a45'),0,.72,.2,b);book.rotation.x=-.25;aL.rotation.set(-.9,0,.5);aR.rotation.set(-.9,0,-.5)}
     g.userData.wave=o.wave?aR:null;marker(g,0,2.25,0);return g}
-  kid('mila',4.6,1.9,.35,{skin:'#7a4a2e',shirt:'#8566db',skirt:'#ffc63a',shoe:'#d9473c',hair:'puffs',wave:1});
+  kid('mila',6.15,2.3,.3,{skin:'#7a4a2e',shirt:'#8566db',skirt:'#ffc63a',shoe:'#d9473c',hair:'puffs',wave:1});
   kid('ben',44.2,1.6,-.25,{skin:'#f6cfae',shirt:'#2f86e0',stripes:1,shorts:'#36a96b',shoe:'#8a5a33',hair:'short'});
   (function flowers(){const fg=new THREE.SphereGeometry(.07,8,6),cols=['#ffffff','#ffd84f','#ff8fb0','#b58cff'];cols.forEach((c,k)=>{const n=45,im=new THREE.InstancedMesh(fg,new THREE.MeshStandardMaterial({color:lin(c),roughness:.8}),n),o=new THREE.Object3D();let i=0;
     for(let t=0;t<600&&i<n;t++){const x=rnd2(-6,70),z=rnd2(-4.6,7);if(z>2.2&&z<5)continue;if(mats.some(([mx,mz,r])=>(x-mx)**2+(z-mz)**2<(r+.3)**2))continue;o.position.set(x,.05,z);o.scale.set(1,.5,1);o.updateMatrix();im.setMatrixAt(i++,o.matrix)}im.count=i;scene.add(im)})})();
@@ -1768,7 +1768,7 @@ let USE3D=false;
     clouds.forEach((c,i)=>{c.position.x+=dt*.25;if(c.position.x>110)c.position.x=-30});ball.position.x=35.5+Math.sin(t*.45)*1.3;ball.rotation.z=-Math.sin(t*.45)*1.3/.22;
     pagers3();renderer.render(scene,camera);
   }
-  resize();frame();
+  resize();if(camera.aspect<1)camX=7.5;frame();
 })();
 
 paintMute();renderHome();show('home');
