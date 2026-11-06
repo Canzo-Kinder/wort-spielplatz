@@ -1602,13 +1602,12 @@ let USE3D=false;
 
   /* --- Station: Holz-Schaukel mit Ketten (Silben-Schaukel) --- */
   ;(()=>{const g=station('silben',32.5,0);mat3(32.5,.9,3.1);
-    [[-1.75,-1],[1.75,1]].forEach(([x,s])=>{beam([x,3.05,0],[x-s*.55,0,.95],.15,MAT.wood,g);beam([x,3.05,0],[x-s*.55,0,-.95],.15,MAT.wood,g);beam([x-s*.3,1.2,-.55],[x-s*.3,1.2,.55],.08,MAT.wood,g)});
-    beam([-1.95,3.1,0],[1.95,3.1,0],.18,MAT.wood,g);g.children[g.children.length-1].rotation.z=Math.PI/2;
-    const link=new THREE.TorusGeometry(.028,.007,6,12);
-    [[-.7,'seat'],[.8,'seat2']].forEach(([x],k)=>{const p=new THREE.Group();p.position.set(x,3.0,0);g.add(p);
-      [-.24,.24].forEach(z=>rod([0,0,z],[0,-2.45,z],.022,MAT.rubber,p,6));
-      const seat=mesh(new THREE.BoxGeometry(.24,.05,.62),MAT.rubber,0,-2.47,0,p);seat.rotation.y=Math.PI/2;seat.rotation.set(0,0,0);seat.scale.set(1,1,1);
-      seat.geometry=new THREE.BoxGeometry(.3,.05,.64);
+    [-1.75,1.75].forEach(x=>{beam([x,3.05,0],[x,0,.95],.15,MAT.wood,g);beam([x,3.05,0],[x,0,-.95],.15,MAT.wood,g);beam([x,1.2,-.55],[x,1.2,.55],.08,MAT.wood,g)});
+    beam([-1.95,3.1,0],[1.95,3.1,0],.18,MAT.wood,g);
+    const chainM=new THREE.MeshStandardMaterial({color:lin('#c9d3dc'),roughness:.5});chainM.userData.noLine=1;
+    [[-.75,MAT.red],[.8,MAT.blue]].forEach(([x,sm],k)=>{const p=new THREE.Group();p.position.set(x,3.0,0);g.add(p);
+      [-.26,.26].forEach(dx=>{const r=rod([dx,0,0],[dx,-2.45,0],.014,chainM,p,6);r.userData.noLine=1});
+      mesh(new THREE.BoxGeometry(.66,.06,.3),sm,0,-2.47,0,p);
       if(k===0)g.userData.swing=p;else g.userData.swing2=p});
     marker(g,0,3.7,0)})();
 
@@ -1716,7 +1715,7 @@ let USE3D=false;
   function toonify(root){root.traverse(o=>{if(o.isMesh){o.material=Array.isArray(o.material)?o.material.map(toonMat):toonMat(o.material)}})}
   const lineMat=new THREE.MeshBasicMaterial({color:lin('#26303a'),side:THREE.BackSide});
   lineMat.onBeforeCompile=sh=>{sh.vertexShader=sh.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\n transformed+=normalize(normal)*0.03;')};
-  function outline(root){const list=[];root.traverse(o=>{if(o.isMesh&&!o.isInstancedMesh&&o!==root.userData.marker&&o.geometry&&o.geometry.attributes.normal)list.push(o)});
+  function outline(root){const list=[];root.traverse(o=>{if(o.isMesh&&!o.isInstancedMesh&&!o.userData.noLine&&o!==root.userData.marker&&o.geometry&&o.geometry.attributes.normal)list.push(o)});
     list.forEach(o=>{const l=new THREE.Mesh(o.geometry,lineMat);l.castShadow=false;l.receiveShadow=false;l.raycast=()=>{};o.add(l)})}
   stations.forEach(outline);
   scene.traverse(o=>{if(o.isMesh&&o.material&&o.material.metalness>.5&&o.material.roughness<.05&&!o.material.map){o.material=new THREE.MeshToonMaterial({color:lin('#bfe8ff'),emissive:lin('#4aa8d8'),emissiveIntensity:.25,gradientMap:grad})}});
