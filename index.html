@@ -147,6 +147,7 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
 .cards{display:grid;gap:14px;padding-block:6px 24px;grid-template-columns:repeat(2,minmax(0,1fr))}
 .cards.n2{max-width:520px;margin:0 auto;width:100%}
 .cards.n3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (orientation:portrait){.cards:not(.n2){max-width:min(100%,calc(100dvh - 290px));margin-inline:auto;width:100%}}
 @media(max-width:420px){.cards.n3{grid-template-columns:repeat(2,minmax(0,1fr))}.cards.n3 .card:last-child{grid-column:1/-1;justify-self:center;width:calc(50% - 7px)}}
 .card{background:var(--paper);border-radius:26px;aspect-ratio:1/1;max-width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;box-shadow:0 7px 0 #c5d6e1;border:4px solid transparent;transition:transform .15s,border-color .2s}
 .card:active{transform:scale(.96)}
@@ -267,6 +268,29 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 /* ---------- NEU: Laut-Leiter, Nuki versteht dich, Bericht ---------- */
+.leiter2{display:flex;flex-direction:column;align-items:center;gap:8px;padding-bottom:4px}
+.ladder.lh{flex-direction:row;gap:4px;padding:4px 10px;max-width:100%;background:linear-gradient(#b07a46 0 4px,transparent 4px calc(100% - 4px),#b07a46 calc(100% - 4px))}
+.ladder.lh li{min-width:0;padding:3px 7px;font-size:12px;gap:4px;box-shadow:0 2px 0 #c9a77a}.ladder.lh li b{width:19px;height:19px;font-size:12px}
+.ladder.lh li.now{transform:scale(1.08)}
+.lmain{display:flex;gap:10px;align-items:center;justify-content:center;width:100%}
+.leiter2 .hero{padding:0}.leiter2 .hero .frame{width:min(190px,44vw,26dvh);border-radius:26px}.leiter2 .hero .frame .em{font-size:min(110px,26vw,15dvh)}
+.leiter2 .mundbox{width:min(190px,44vw,26dvh);gap:6px}.leiter2 .mundpic{border-radius:16px}
+.mrow{display:flex;gap:6px;width:100%}.mrow .bigbtn.small{flex:1;min-height:40px;padding:4px 6px;font-size:14px}
+.lword{text-align:center}.lword .word{font-family:var(--f-display);font-weight:800;font-size:clamp(22px,4.2dvh,32px);line-height:1.05}.lword .syl{font-size:16px;font-weight:800;color:#5b43a8}
+.lctl{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}
+.leiter2 .speak{padding:0}.leiter2 .pbox{flex-direction:row;flex-wrap:wrap;justify-content:center;gap:8px}
+.leiter2 .pbox .stage-note{width:100%;order:3;margin:0;font-size:13px}.leiter2 .micbtn{width:64px;height:64px}.leiter2 .micbtn svg{width:32px;height:32px}
+@media (orientation:portrait) and (max-height:700px){#game .gbar{padding-block:6px 2px}#game .round{width:44px;height:44px}.ask .mascot{width:58px!important;height:auto}.ask .bubble{font-size:17px;padding:8px 12px}.dots{padding-block:0 2px}}
+.raterow{position:sticky;bottom:0;z-index:3;width:100%;padding:6px 0 max(10px,env(safe-area-inset-bottom,0px))}
+@media (orientation:landscape) and (max-height:560px){
+  .leiter2{display:grid;grid-template-columns:auto minmax(0,320px);grid-template-areas:'lad ctl' 'main ctl' 'word ctl';justify-content:center;align-content:start;align-items:start;column-gap:18px;row-gap:6px}
+  .leiter2 .ladder{grid-area:lad;justify-self:center}.leiter2 .lmain{grid-area:main;width:auto}.leiter2 .lword{grid-area:word}.leiter2 .lctl{grid-area:ctl;width:100%;align-self:center;gap:8px}
+  .leiter2 .hero .frame,.leiter2 .mundbox{width:min(140px,30dvh)}.leiter2 .hero .frame .em{font-size:min(80px,18dvh)}
+  .leiter2 .stage-note{display:none}.leiter2 .lword .word{font-size:22px}
+  .leiter2 .raterow .row{flex-wrap:nowrap;gap:8px}.leiter2 .raterow .bigbtn{min-height:48px;font-size:16px;padding:6px 12px}
+  .leiter2 .speak .bigbtn{min-height:46px;font-size:16px}
+  .raterow{padding-bottom:6px}
+}
 .hud-r{display:flex;gap:8px}.chip.goal{font-size:17px}.chip.goal.full{background:#fff3c2;box-shadow:0 4px 0 #e0b43a}
 .split.leiter{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start;justify-content:center;padding-bottom:16px}
 .lcol{display:flex;gap:12px;align-items:flex-start}
@@ -908,6 +932,13 @@ function startGame(id){
 }
 function renderDots(){ $('#dots').innerHTML=Array.from({length:G.R||ROUND},(_,k)=>`<i class="${k<G.i?'done':k===G.i?'now':''}"></i>`).join('') }
 function bubble(t){$('#gBubble').textContent=t}
+function fitStage(){const st=$('#stage'),g=$('#game');if(!st||!g||g.hidden)return;st.style.zoom='';
+  const avail=g.clientHeight-(st.getBoundingClientRect().top-g.getBoundingClientRect().top+g.scrollTop)-4,need=st.scrollHeight;
+  if(need>avail+2&&avail>120){let z=Math.max(.5,Math.floor(avail/need*100)/100);st.style.zoom=String(z);
+    for(let k=0;k<8&&g.scrollHeight>g.clientHeight+1&&z>.5;k++){z=Math.max(.5,z-.03);st.style.zoom=String(z)}}}
+let fitRaf=0;const fitSoon=()=>{cancelAnimationFrame(fitRaf);fitRaf=requestAnimationFrame(()=>requestAnimationFrame(fitStage))};
+try{new MutationObserver(fitSoon).observe(document.getElementById('stage'),{childList:true})}catch(e){}
+addEventListener('resize',fitSoon);addEventListener('orientationchange',()=>setTimeout(fitStage,350));try{document.fonts&&document.fonts.ready.then(fitSoon)}catch(e){}
 function nextTask(){
   if(G.i>=(G.R||ROUND))return finish();
   stopCam(); G.task=makeTask(G.id,G.i); G.tries=0; G.busy=false; renderDots(); setMood($('#gameMascot'),'normal');
@@ -999,7 +1030,7 @@ function renderSprechen(){
      <p class="stage-note" id="micNote">Tipp aufs Mikrofon und sag das Wort!</p>
      <p class="heard" id="heard"></p>`:''}
    <p class="stage-note" style="margin:0">${mic?'Oder Erwachsene bewerten selbst:':'Für Erwachsene: Wie hat es geklappt?'}</p>
-   <div class="row ${mic?'small':''}" style="padding-bottom:20px"><button class="bigbtn green" id="btnGood">😊 Gut gesagt</button><button class="bigbtn orange" id="btnPractice">💪 Üben wir noch</button></div>
+   <div class="row raterow ${mic?'small':''}"><button class="bigbtn green" id="btnGood">😊 Gut gesagt</button><button class="bigbtn orange" id="btnPractice">💪 Üben wir noch</button></div>
    </div></div>`;
   $('#btnListen').onclick=()=>{hush();say(T.target.w)};
   $('#btnSlow').onclick=()=>{hush();saySyllables(T.target)};
@@ -1256,7 +1287,7 @@ function wireRecord(id,after){
     btn.classList.remove('on');busy=false;if(!url){note.textContent='Ich habe nichts gehört. Nochmal!';return}
     me.disabled=false;note.textContent='So klingst du:';await wait(150);await playUrl(url);note.textContent='Klang es wie bei Nuki? Hör nochmal oder bewerte unten.';after&&after()};
   me.onclick=()=>{if(url){hush();playUrl(url)}}}
-function rateRow(id){return `<p class="stage-note" style="margin:6px 0 0">Wie hat es geklappt?</p><div class="row" style="padding-bottom:18px"><button class="bigbtn green" id="${id}Good">😊 Gut gesagt</button><button class="bigbtn orange" id="${id}Again">💪 Üben wir noch</button></div>`}
+function rateRow(id){return `<div class="raterow"><p class="stage-note" style="margin:0 0 4px">Wie hat es geklappt?</p><div class="row"><button class="bigbtn green" id="${id}Good">😊 Gut gesagt</button><button class="bigbtn orange" id="${id}Again">💪 Üben wir noch</button></div></div>`}
 
 /* --- Spiel: Laut-Leiter --- */
 function leiterItem(z,st,i){
@@ -1270,24 +1301,24 @@ function leiterItem(z,st,i){
 }
 function renderLeiter(){
   const T=G.task,z=G.z,Z=ZIEL[z],st=G.st;
-  const rungs=STUFEN.map((n,k)=>`<li class="${k+1===st?'now':k+1<st?'done':''}"><b>${k+1}</b><span>${n}</span></li>`).reverse().join('');
-  $('#stage').innerHTML=`<div class="split leiter">
-   <div class="lcol">
-     <ol class="ladder" aria-label="Stufen">${rungs}</ol>
-     <div class="mundbox"><div class="mundpic">${mundSVG(Z.mund)}</div><button class="bigbtn light small" id="lTipp">👄 So geht's</button>
-       <button class="bigbtn light small" id="lMirror">🪞 Spiegel</button><video id="lVideo" class="mirrorcam" playsinline muted hidden></video></div>
+  const rungs2=STUFEN.map((n,k)=>`<li class="${k+1===st?'now':k+1<st?'done':''}"><b>${k+1}</b><span>${n}</span></li>`).join('');
+  $('#stage').innerHTML=`<div class="leiter2">
+   <ol class="ladder lh" aria-label="Stufen">${rungs2}</ol>
+   <div class="lmain">
+     <div class="hero"><div class="frame ${T.kind==='silbe'?'syl-frame':''}"><span class="em">${T.show}</span></div></div>
+     <div class="mundbox"><div class="mundpic">${mundSVG(Z.mund)}</div>
+       <div class="mrow"><button class="bigbtn light small" id="lTipp" aria-label="So geht's">👄 So geht's</button><button class="bigbtn light small" id="lMirror" aria-label="Spiegel">🪞 Spiegel</button></div>
+       <video id="lVideo" class="mirrorcam" playsinline muted hidden></video></div>
    </div>
-   <div class="mctl">
-     <div class="hero"><div class="frame ${T.kind==='silbe'?'syl-frame':''}"><span class="em ${T.kind==='silbe'||T.kind==='laut'&&false?'txt':''}">${T.show}</span></div><div class="word">${T.kind==='laut'?Z.bildText:T.label}</div>
-       ${T.word&&T.kind==='wort'&&G.L<5?`<div class="syl">${T.word.s.split('-').join(' · ')}</div>`:''}</div>
-     <div class="speak"><button class="bigbtn" id="lModel">🔊 Nuki zeigt es</button>${T.word?'<button class="bigbtn light" id="lSlow">🐢 Langsam</button>':''}</div>
-     ${practiceBox('l')}${rateRow('l')}
-   </div></div>`;
+   <div class="lword"><div class="word">${T.kind==='laut'?Z.bildText:T.label}</div>${T.word&&T.kind==='wort'&&G.L<5?`<div class="syl">${T.word.s.split('-').join(' · ')}</div>`:''}</div>
+   <div class="lctl"><div class="speak"><button class="bigbtn" id="lModel">🔊 Nuki zeigt es</button>${T.word?'<button class="bigbtn light" id="lSlow">🐢 Langsam</button>':''}</div>
+   ${practiceBox('l')}${rateRow('l')}</div>
+  </div>`;
   $('#lModel').onclick=()=>{hush();T.model()};
   if(T.word)$('#lSlow').onclick=()=>{hush();saySyllables(T.word)};
   $('#lTipp').onclick=()=>{hush();bubble(Z.tipp);say(Z.tipp)};
-  $('#lMirror').onclick=async()=>{const v=$('#lVideo');if(MED.lock)return;if(!v.hidden){v.hidden=true;stopCam();return}
-    MED.lock=true;try{v.hidden=false;await mirrorOn(v);if(v.hidden||!document.body.contains(v))stopCam()}catch(e){v.hidden=true;toast('Die Kamera ist nicht erlaubt. Nimm einfach einen Spiegel!',false)}MED.lock=false};
+  $('#lMirror').onclick=async()=>{const v=$('#lVideo');if(MED.lock)return;if(!v.hidden){v.hidden=true;stopCam();fitSoon();return}
+    MED.lock=true;try{v.hidden=false;fitSoon();await mirrorOn(v);if(v.hidden||!document.body.contains(v))stopCam()}catch(e){v.hidden=true;toast('Die Kamera ist nicht erlaubt. Nimm einfach einen Spiegel!',false)}MED.lock=false};
   wireRecord('l');
   const done=async good=>{if(G.busy)return;G.busy=true;hush();logTrial(z,good);if(good){G.first++;G.good++}
     addStar();fxRight();setMood($('#gameMascot'),'happy');
