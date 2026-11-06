@@ -289,13 +289,13 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
 .goods .cap{font-weight:800;font-size:14px}
 .tray{min-height:96px;min-width:min(220px,60vw);display:grid;place-items:center;background:#fff;border:4px dashed #c5d6e1;border-radius:24px}
 .tray .em{font-size:72px;line-height:1}.tray .pop{animation:pop .45s cubic-bezier(.2,1.6,.4,1)}.trayhint{color:var(--ink-soft);font-weight:700;font-size:14px;padding:8px}
-.heardrow .bigbtn{min-height:56px;font-size:19px}
+.heardrow .bigbtn{min-height:56px;font-size:19px}.heardrow .bigbtn.sugg{outline:4px solid #ffc63a;outline-offset:2px}
 .rchart{display:flex;gap:4px;align-items:flex-end;height:110px;padding:6px 0}.rcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;height:100%;justify-content:flex-end}
 .rcol i{display:block;width:100%;min-height:2px;background:#9fd3b4;border-radius:6px 6px 2px 2px}.rcol i.ok{background:var(--leaf)}.rcol span{font-size:10px;color:var(--ink-soft);font-weight:700}
 .rtab{width:100%;border-collapse:collapse;font-size:14px}.rtab th,.rtab td{text-align:left;padding:6px 6px;border-bottom:1px solid #e3edf3}.rtab th{font-size:12px;color:var(--ink-soft)}
 .src{font-size:12px;color:var(--ink-soft)}
 #reportPrint{display:none}
-@media print{body>*:not(#reportPrint){display:none!important}#reportPrint{display:block!important;color:#000;font-family:Arial,sans-serif;padding:10mm}#reportPrint h1{font-size:20px}.rcol i{background:#888!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+@media print{html,body{height:auto!important;overflow:visible!important;position:static!important}body>*:not(#reportPrint){display:none!important}#reportPrint{display:block!important;color:#000;font-family:Arial,sans-serif;padding:10mm}#reportPrint h1{font-size:20px}.rcol i{background:#888!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 @media (max-height:500px) and (orientation:landscape){.nvshop{flex-direction:row;justify-content:center;gap:14px}.goods{width:min(92px,20dvh*1.2)}.goods .em{font-size:52px}.shelf{padding:8px 12px 10px;gap:10px}.tray{min-height:70px;min-width:120px}.tray .em{font-size:54px}.heardrow .bigbtn{min-height:46px;font-size:16px}.mundbox{width:min(170px,40dvh)}.ladder li{padding:3px 8px}}
 @media (max-width:560px){.lcol{width:100%;justify-content:center}.ladder li{min-width:88px;font-size:12px}.mundbox{width:min(200px,46vw)}}
 
@@ -306,7 +306,7 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
 <section class="screen" id="home">
  <div class="scene3d" id="scene3d" hidden></div>
  <div class="scene" id="scene">
- <svg id="sceneSvg" viewBox="0 0 2800 600" preserveAspectRatio="xMinYMid meet" role="img" aria-label="Spielplatz mit Spiel-Stationen">
+ <svg id="sceneSvg" viewBox="0 0 3300 600" preserveAspectRatio="xMinYMid meet" role="img" aria-label="Spielplatz mit Spiel-Stationen">
  <defs>
   <linearGradient id="gSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5ab8ea"/><stop offset="1" stop-color="#cfeefb"/></linearGradient>
   <linearGradient id="gGrass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fd16a"/><stop offset="1" stop-color="#74bd55"/></linearGradient>
@@ -471,6 +471,29 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
   <g transform="translate(2770 300)"><path class="spark" d="M0 -16 Q3 -3 16 0 Q3 3 0 16 Q-3 3 -16 0 Q-3 -3 0 -16Z" fill="#fff"/></g>
   <rect class="hit" x="2620" y="270" width="170" height="310"/>
  </g>
+ <!-- ===== Erweiterung rechts: Marktstand + Laut-Leiter ===== -->
+ <rect x="2800" width="510" height="420" fill="url(#gSky)"/>
+ <path d="M2790 300 Q3040 236 3310 296 V420 H2790Z" fill="#a9dc84"/><path d="M2790 300 Q3040 236 3310 296" fill="none" stroke="#26303a" stroke-width="4"/><path d="M2790 344 Q3060 300 3310 340 V420 H2790Z" fill="#94d06f"/><path d="M2790 344 Q3060 300 3310 340" fill="none" stroke="#26303a" stroke-width="4"/>
+ <path d="M2790 358 H3310 M2790 384 H3310" stroke="#26303a" stroke-width="13" stroke-linecap="round"/><path d="M2790 358 H3310 M2790 384 H3310" stroke="#e2c99c" stroke-width="6"/>
+ <path d="M2812 398 V344 l9 -10 9 10 V398Z" fill="#f4e3c4" stroke="#26303a" stroke-width="3" stroke-linejoin="round"/><path d="M2846 398 V344 l9 -10 9 10 V398Z" fill="#f4e3c4" stroke="#26303a" stroke-width="3" stroke-linejoin="round"/><path d="M2880 398 V344 l9 -10 9 10 V398Z" fill="#f4e3c4" stroke="#26303a" stroke-width="3" stroke-linejoin="round"/><path d="M2914 398 V344 l9 -10 9 10 V398Z" fill="#f4e3c4" stroke="#26303a" stroke-width="3" stroke-linejoin="round"/><path d="M2948 398 V344 l9 -10 9 10 V398Z" fill="#f4e3c4" stroke="#26303a" stroke-width="3" stroke-linejoin="round"/><path d="M2982 398 V344 l9 -10 9 10 V398Z" fill="#f4e3c4" stroke="#26303a" stroke-width="3" stroke-linejoin="round"/><path d="M3016 398 V344 l9 -10 9 10 V398Z" fill="#f4e3c4" stroke="#26303a" stroke-width="3" stroke-linejoin="round"/><path d="M3050 398 V344 l9 -10 9 10 V398Z" fill="#f4e3c4" stroke="#26303a" stroke-width="3" stroke-linejoin="round"/><path d="M3084 398 V344 l9 -10 9 10 V398Z" fill="#f4e3c4" stroke="#26303a" stroke-width="3" stroke-linejoin="round"/><path d="M3118 398 V344 l9 -10 9 10 V398Z" fill="#f4e3c4" stroke="#26303a" stroke-width="3" stroke-linejoin="round"/><path d="M3152 398 V344 l9 -10 9 10 V398Z" fill="#f4e3c4" stroke="#26303a" stroke-width="3" stroke-linejoin="round"/><path d="M3186 398 V344 l9 -10 9 10 V398Z" fill="#f4e3c4" stroke="#26303a" stroke-width="3" stroke-linejoin="round"/><path d="M3220 398 V344 l9 -10 9 10 V398Z" fill="#f4e3c4" stroke="#26303a" stroke-width="3" stroke-linejoin="round"/><path d="M3254 398 V344 l9 -10 9 10 V398Z" fill="#f4e3c4" stroke="#26303a" stroke-width="3" stroke-linejoin="round"/><path d="M3288 398 V344 l9 -10 9 10 V398Z" fill="#f4e3c4" stroke="#26303a" stroke-width="3" stroke-linejoin="round"/>
+ <path d="M2790 398 H3310 V610 H2790Z" fill="url(#gGrass)"/><path d="M2790 398 H3310" stroke="#26303a" stroke-width="4"/>
+ <path d="M2790 506 Q3050 496 3310 504 V556 Q3050 552 2790 560Z" fill="#f2dca6"/><path d="M2790 506 Q3050 496 3310 504 M3310 556 Q3050 552 2790 560" fill="none" stroke="#26303a" stroke-width="4"/>
+ <g class="hot" data-g="versteht" aria-label="Nuki versteht dich">
+  <path d="M2850 560 V300 M3050 560 V300" stroke="#26303a" stroke-width="13" stroke-linecap="round"/><path d="M2850 560 V300 M3050 560 V300" stroke="#c98d55" stroke-width="7" stroke-linecap="round"/>
+  <path d="M2830 300 L2850 250 H3050 L3070 300Z" fill="#fff" stroke="#26303a" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M2850 250 L2836 300 H2870 L2880 250Z M2910 250 L2904 300 H2938 L2940 250Z M2970 250 L2972 300 H3006 L3000 250Z M3030 250 L3040 300 H3070 L3050 250Z" fill="#e9553f"/>
+  <path d="M2830 300 Q2847 318 2864 300 Q2881 318 2898 300 Q2915 318 2932 300 Q2949 318 2966 300 Q2983 318 3000 300 Q3017 318 3034 300 Q3051 318 3070 300" fill="#e9553f" stroke="#26303a" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+  <rect x="2840" y="440" width="220" height="110" rx="6" fill="#e8b872" stroke="#26303a" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/><path d="M2840 476 H3060 M2840 512 H3060" stroke="#26303a" stroke-width="3" opacity=".5"/>
+  <circle cx="2885" cy="424" r="18" fill="#e9553f" stroke="#26303a" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="2925" cy="426" r="16" fill="#ffc63a" stroke="#26303a" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/><rect x="2955" y="408" width="30" height="32" rx="5" fill="#2f7fd1" stroke="#26303a" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/><rect x="2998" y="418" width="40" height="22" rx="4" fill="#36a96b" stroke="#26303a" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+  <rect x="2880" y="350" width="140" height="44" rx="12" fill="#fff" stroke="#26303a" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/><text x="2950" y="381" text-anchor="middle" font-family="Nunito,Arial,sans-serif" font-weight="900" font-size="21" fill="#26303a">Nukis Laden</text>
+  <rect class="hit" x="2820" y="240" width="260" height="330"/>
+ </g>
+ <g class="hot" data-g="leiter" aria-label="Laut-Leiter">
+  <path d="M3150 566 V240 M3250 566 V240" stroke="#26303a" stroke-width="15" stroke-linecap="round"/><path d="M3150 566 V240 M3250 566 V240" stroke="#9aa6b2" stroke-width="8" stroke-linecap="round"/>
+  <path d="M3150 520 H3250" stroke="#26303a" stroke-width="13" stroke-linecap="round"/><path d="M3150 520 H3250" stroke="#e9553f" stroke-width="7" stroke-linecap="round"/><path d="M3150 460 H3250" stroke="#26303a" stroke-width="13" stroke-linecap="round"/><path d="M3150 460 H3250" stroke="#ffc63a" stroke-width="7" stroke-linecap="round"/><path d="M3150 400 H3250" stroke="#26303a" stroke-width="13" stroke-linecap="round"/><path d="M3150 400 H3250" stroke="#36a96b" stroke-width="7" stroke-linecap="round"/><path d="M3150 340 H3250" stroke="#26303a" stroke-width="13" stroke-linecap="round"/><path d="M3150 340 H3250" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/><path d="M3150 280 H3250" stroke="#26303a" stroke-width="13" stroke-linecap="round"/><path d="M3150 280 H3250" stroke="#8566db" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="3200" cy="226" r="16" fill="#ffd84f" stroke="#26303a" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+  <rect class="hit" x="3120" y="200" width="160" height="370"/>
+ </g>
  </svg>
  </div>
  <div class="hud hud-l">
@@ -565,8 +588,8 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
        <tr><td>Silben fallen weg</td><td>„Nane“ statt Banane</td><td>4 Jahre</td></tr>
        <tr><td>Zwei Laute werden zu einem</td><td>„Bume“ statt Blume</td><td>4 – 4½ Jahre</td></tr>
        <tr><td>sch wird zu s</td><td>„Suh“ statt Schuh</td><td>4½ – 5 Jahre</td></tr>
-       <tr><td>Lispeln (Zunge zwischen den Zähnen)</td><td>„Thonne“</td><td>oft bis 5 Jahre, nach dem Zahnwechsel prüfen</td></tr></table>
-      <p><b>Bitte immer abklären lassen</b> (Kinderarzt, Logopädie): wenn t/d zu k/g wird („Kasse“ statt Tasse), wenn Anfangslaute weggelassen werden („Aus“ statt Haus), wenn ein Kind ab 4 Jahren für Fremde schwer verständlich ist, oder wenn es sich selbst über sein Sprechen ärgert. Bei Verdacht auf Hörprobleme zuerst das Gehör prüfen lassen.</p>
+       <tr><td>Lispeln (Zunge zwischen den Zähnen)</td><td>„Thonne“</td><td>etwa 4½ – 5 Jahre, danach abklären lassen (nicht auf den Zahnwechsel warten)</td></tr></table>
+      <p><b>Bitte immer abklären lassen</b> (Kinderarzt, Logopädie): wenn t/d zu k/g wird („Kasse“ statt Tasse), wenn Anfangslaute weggelassen werden („Aus“ statt Haus), wenn das s seitlich „schlürfend“ klingt (seitliches Lispeln, in keinem Alter normal), wenn ein Kind ab 4 Jahren für Fremde schwer verständlich ist, oder wenn es sich selbst über sein Sprechen ärgert. Bei Verdacht auf Hörprobleme zuerst das Gehör prüfen lassen.</p>
       <p><b>Richtig reagieren im Alltag:</b> Nicht „Sag das nochmal richtig!“, sondern das Wort freundlich richtig wiederholen: Kind: „Da ist ein Tuh.“ – Sie: „Ja, ein Schuh!“ Das nennt man korrektives Feedback. Nicht bei jedem Fehler, die Sprechfreude geht vor.</p>
       <p><b>Wie die neuen Spiele helfen:</b> „Nuki versteht dich“ folgt dem Minimalpaar-Ansatz aus der Logopädie: erst den Unterschied hören, dann selbst sagen, und erleben, dass Nuki etwas anderes bringt, wenn der Laut nicht stimmt. Die „Laut-Leiter“ geht die Stufen der Lautanbahnung: Laut, Silbe, Wort, Satz. Mit „Mich hören“ vergleicht Ihr Kind die eigene Aufnahme mit Nuki. Aufnahmen und Kamera-Spiegel bleiben nur auf diesem Gerät und werden nicht gespeichert oder gesendet.</p>
       <p class="src">Quellen (Auswahl): Fox-Boyer, Kindliche Aussprachestörungen · Ulster University: Conventional Minimal Pairs · Hair u. a. 2020 (CHI): Sprachtherapie-Spiele und Spracherkennung bei Kindern · Lof 2009/ASHA: Mundmotorik-Übungen ohne Nachweis für bessere Aussprache · Siegmüller (DBL): Inputspezifizierung · AOK: Lispeln.</p>
@@ -723,7 +746,7 @@ async function say(text,rate){
   }
   return sayTTS(text,rate);
 }
-function hush(){sayToken++;try{player.pause()}catch(e){}if(hasTTS)try{speechSynthesis.cancel()}catch(e){}}
+function hush(){sayToken++;try{player.pause()}catch(e){}try{MED.p&&MED.p.pause()}catch(e){}try{noiseSrc&&noiseSrc.stop()}catch(e){}noiseSrc=null;if(hasTTS)try{speechSynthesis.cancel()}catch(e){}}
 async function saySyllables(word){
   await say(word.w);
   for(const s of word.s.split('-')){await say(s,Math.max(.6,S.rate-.1));await wait(180)}
@@ -767,7 +790,7 @@ function setMood(el,mood){el.innerHTML=mascotSVG(mood);if(mood==='happy'){el.cla
 /* ================= HOME (Szene) ================= */
 const NAMES={versteht:'Nuki versteht dich',leiter:'Laut-Leiter',nuki:'Nuki',mund:'Grimassen-Spiegel',hoeren:'Wort-Detektiv',anlaut:'Laut-Buddeln',silben:'Silben-Schaukel',reime:'Reim-Wippe',paare:'Hör-Rohre',sprechen:'Sprich mit Nuki',treasure:'Schatzkiste',mila:'Mila',ben:'Ben',bird:'Vogel'};
 const scene=$('#scene'),svgEl=$('#sceneSvg');
-function fitScene(){const h=scene.clientHeight;svgEl.style.height=h+'px';svgEl.style.width=Math.max(scene.clientWidth,h*2800/600)+'px';pagers()}
+function fitScene(){const h=scene.clientHeight;svgEl.style.height=h+'px';svgEl.style.width=Math.max(scene.clientWidth,h*3300/600)+'px';pagers()}
 function pagers(){const m=scene.scrollWidth-scene.clientWidth;$('#pgL').hidden=scene.scrollLeft<20;$('#pgR').hidden=scene.scrollLeft>m-20}
 window.addEventListener('resize',fitScene);scene.addEventListener('scroll',pagers,{passive:true});
 $('#pgL').onclick=()=>scene.scrollBy({left:-scene.clientWidth*.7,behavior:'smooth'});
@@ -874,7 +897,7 @@ function renderDots(){ $('#dots').innerHTML=Array.from({length:G.R||ROUND},(_,k)
 function bubble(t){$('#gBubble').textContent=t}
 function nextTask(){
   if(G.i>=(G.R||ROUND))return finish();
-  G.task=makeTask(G.id,G.i); G.tries=0; G.busy=false; renderDots(); setMood($('#gameMascot'),'normal');
+  stopCam(); G.task=makeTask(G.id,G.i); G.tries=0; G.busy=false; renderDots(); setMood($('#gameMascot'),'normal');
   const T=G.task; bubble(T.text);
   if(G.id==='silben')return renderSilben();
   if(G.id==='sprechen')return renderSprechen();
@@ -969,7 +992,7 @@ function renderSprechen(){
   $('#btnSlow').onclick=()=>{hush();saySyllables(T.target)};
   const done=async(good,msg)=>{
     if(G.busy)return;G.busy=true;hush();
-    if(good&&!tries)G.first++;logTrial(S.ziel,good);const k=T.target.w;S.practice[k]=Math.max(0,(S.practice[k]||0)+(good?-1:1));if(!S.practice[k])delete S.practice[k];
+    if(good&&!tries)G.first++;logTrial(zOf(T.target.w),good);const k=T.target.w;S.practice[k]=Math.max(0,(S.practice[k]||0)+(good?-1:1));if(!S.practice[k])delete S.practice[k];
     addStar();fxRight();setMood($('#gameMascot'),'happy');
     const t=msg||(good?rnd(['Wunderbar gesprochen!','Super, das klang toll!','Klasse!']):'Toll, dass du es probiert hast!');
     bubble(t);if(good)confetti(18);await say(t);await wait(250);G.i++;nextTask();
@@ -1130,10 +1153,11 @@ const NV=[ // Nuki versteht dich: Minimalpaare mit Alltags-Situation für jedes 
 S.ziel=S.ziel||'ALLE';S.pos=S.pos||'alle';S.goal=S.goal||30;S.leiter=S.leiter||{};S.log=S.log||{};S.ear=S.ear||'erwachsen';
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 function todayN(){return (S.log[today()]||{n:0}).n}
+function zOf(w){if(S.ziel!=='ALLE'&&ZIEL[S.ziel]&&Object.values(ZIEL[S.ziel].pos).some(l=>l.includes(w)))return S.ziel;return Object.keys(ZIEL).find(z=>Object.values(ZIEL[z].pos).some(l=>l.includes(w)))||null}
 function logTrial(z,good){
-  const d=today();const L=S.log[d]=S.log[d]||{n:0,g:0,by:{}};L.n++;if(good)L.g++;const b=L.by[z]=L.by[z]||[0,0];b[0]++;if(good)b[1]++;
+  const d=today();const L=S.log[d]=S.log[d]||{n:0,g:0,by:{}};L.n++;if(good)L.g++;if(z&&ZIEL[z]){const b=L.by[z]=L.by[z]||[0,0];b[0]++;if(good)b[1]++}
   const keys=Object.keys(S.log).sort();while(keys.length>90)delete S.log[keys.shift()];save();paintGoal();
-  if(L.n===S.goal){setTimeout(()=>{confetti(60);tone([523,659,784,1047],.12,'triangle');toast('Tagesziel geschafft! Die Sonnenblume blüht.')},600)}
+  if(L.n===S.goal){setTimeout(()=>{confetti(60);tone([523,659,784,1047],.12,'triangle');toast('Tagesziel geschafft! Die Sonnenblume blüht.',false)},600)}
 }
 function paintGoal(){const el=$('#goalCount');if(el){const n=todayN();el.textContent=Math.min(n,S.goal)+'/'+S.goal;$('#goalChip').classList.toggle('full',n>=S.goal)}}
 function zielKeys(){return S.ziel==='ALLE'?Object.keys(ZIEL):[S.ziel]}
@@ -1141,9 +1165,9 @@ function zielWords(z){const P=ZIEL[z].pos;const ks=S.pos==='alle'?['an','mitte',
 
 /* --- Geräusch-Laute (S, Sch, F) künstlich erzeugt: klingt wie echtes Zischen --- */
 function lautNoise(type){return new Promise(res=>{
-  if(!S.sound||S.mute)return res();try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();
+  if(S.mute)return res();try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();
    const dur=1.3,buf=ac.createBuffer(1,ac.sampleRate*dur,ac.sampleRate),d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
-   const src=ac.createBufferSource();src.buffer=buf;const f=ac.createBiquadFilter(),g=ac.createGain(),t=ac.currentTime;
+   const src=noiseSrc=ac.createBufferSource();src.buffer=buf;const f=ac.createBiquadFilter(),g=ac.createGain(),t=ac.currentTime;
    if(type==='s'){f.type='bandpass';f.frequency.value=6800;f.Q.value=1.4}else if(type==='sch'){f.type='bandpass';f.frequency.value=2700;f.Q.value=1.1}else{f.type='highpass';f.frequency.value=1400}
    const v=type==='f'?.16:.32;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.12);g.gain.setValueAtTime(v,t+dur-.25);g.gain.linearRampToValueAtTime(0,t+dur);
    src.connect(f).connect(g).connect(ac.destination);src.start(t);src.stop(t+dur);setTimeout(res,dur*1000+80)}catch(e){res()}})}
@@ -1186,19 +1210,23 @@ function mundSVG(t){
 }
 
 /* --- Mikrofon-Aufnahme „Hör dich selbst“ und Kamera-Spiegel (nur auf diesem Gerät, nichts wird gesendet) --- */
-let MED={a:null,v:null};
+var noiseSrc=null;
+var MED={a:null,v:null,p:null,u:null,lock:false};
 async function micStream(){if(MED.a&&MED.a.active)return MED.a;MED.a=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});return MED.a}
-function stopMedia(){['a','v'].forEach(k=>{if(MED[k]){MED[k].getTracks().forEach(t=>t.stop());MED[k]=null}})}
+function stopMedia(){['a','v'].forEach(k=>{if(MED[k]){MED[k].getTracks().forEach(t=>t.stop());MED[k]=null}});try{MED.p&&MED.p.pause()}catch(e){}}
+document.addEventListener('visibilitychange',()=>{if(document.hidden){stopMedia();hush()}});
 function canRecord(){return !!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder)}
 async function recordClip(ms,onLevel){
   const st=await micStream();let mime='';['audio/webm','audio/mp4','audio/ogg'].some(m=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(m)&&(mime=m));
-  const mr=new MediaRecorder(st,mime?{mimeType:mime}:undefined),ch=[];let an=null,raf=0;
-  try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')await ac.resume();const src=ac.createMediaStreamSource(st);an=ac.createAnalyser();an.fftSize=512;src.connect(an)}catch(e){}
+  const mr=new MediaRecorder(st,mime?{mimeType:mime}:undefined),ch=[];let an=null,raf=0,msrc=null;
+  const free=()=>{try{msrc&&msrc.disconnect()}catch(e){}if(MED.a){MED.a.getTracks().forEach(t=>t.stop());MED.a=null}};
+  try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')await ac.resume();msrc=ac.createMediaStreamSource(st);an=ac.createAnalyser();an.fftSize=512;msrc.connect(an)}catch(e){}
   const buf=an?new Uint8Array(an.fftSize):null;
   const meter=()=>{if(an&&onLevel){an.getByteTimeDomainData(buf);let m=0;for(const v of buf)m=Math.max(m,Math.abs(v-128));onLevel(Math.min(1,m/70))}raf=requestAnimationFrame(meter)};
-  return new Promise(res=>{mr.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};mr.onstop=()=>{cancelAnimationFrame(raf);onLevel&&onLevel(0);res(ch.length?URL.createObjectURL(new Blob(ch,{type:mr.mimeType||mime||'audio/webm'})):null)};
-    mr.start();meter();setTimeout(()=>{try{mr.stop()}catch(e){res(null)}},ms)})}
-function playUrl(u){return new Promise(r=>{const a=new Audio(u);a.onended=a.onerror=()=>r();a.play().catch(()=>r())})}
+  return new Promise(res=>{mr.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};mr.onstop=()=>{cancelAnimationFrame(raf);onLevel&&onLevel(0);free();if(MED.u){URL.revokeObjectURL(MED.u);MED.u=null}res(ch.length?URL.createObjectURL(new Blob(ch,{type:mr.mimeType||mime||'audio/webm'})):null)};
+    mr.start();meter();setTimeout(()=>{try{mr.stop()}catch(e){free();res(null)}},ms)})}
+function playUrl(u){MED.u=u;return new Promise(r=>{const a=MED.p=MED.p||new Audio();a.onended=a.onerror=()=>r();a.src=u;a.play().catch(()=>r())})}
+function stopCam(){if(MED.v){MED.v.getTracks().forEach(t=>t.stop());MED.v=null}}
 async function mirrorOn(video){MED.v=MED.v||await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:480},height:{ideal:480}},audio:false});video.srcObject=MED.v;try{await video.play()}catch(e){}}
 
 /* --- Gemeinsames Bedien-Element: Aufnehmen, Spiegel, Bewerten --- */
@@ -1245,8 +1273,8 @@ function renderLeiter(){
   $('#lModel').onclick=()=>{hush();T.model()};
   if(T.word)$('#lSlow').onclick=()=>{hush();saySyllables(T.word)};
   $('#lTipp').onclick=()=>{hush();bubble(Z.tipp);say(Z.tipp)};
-  $('#lMirror').onclick=async()=>{const v=$('#lVideo');if(!v.hidden){v.hidden=true;if(MED.v){MED.v.getTracks().forEach(t=>t.stop());MED.v=null}return}
-    try{v.hidden=false;await mirrorOn(v)}catch(e){v.hidden=true;toast('Die Kamera ist nicht erlaubt. Nimm einfach einen Spiegel!',false)}};
+  $('#lMirror').onclick=async()=>{const v=$('#lVideo');if(MED.lock)return;if(!v.hidden){v.hidden=true;stopCam();return}
+    MED.lock=true;try{v.hidden=false;await mirrorOn(v);if(v.hidden||!document.body.contains(v))stopCam()}catch(e){v.hidden=true;toast('Die Kamera ist nicht erlaubt. Nimm einfach einen Spiegel!',false)}MED.lock=false};
   wireRecord('l');
   const done=async good=>{if(G.busy)return;G.busy=true;hush();logTrial(z,good);if(good){G.first++;G.good++}
     addStar();fxRight();setMood($('#gameMascot'),'happy');
@@ -1288,9 +1316,10 @@ function renderNV(){
   const deliver=async h=>{
     if(G.busy)return;G.busy=true;hush();const tray=$('#tray');const got=WX[h];
     tray.innerHTML=`<span class="em pop">${got.e}</span>`;
-    if(h===a.w){logTrial(S.ziel,true);if(!G.tries)G.first++;fxRight();setMood($('#gameMascot'),'happy');addStar();confetti(16);
+    const zz=zOf(a.w)||(T.pr.k.includes(S.ziel)?S.ziel:T.pr.k[0]);if(!G.tries)logTrial(zz,h===a.w);
+    if(h===a.w){if(!G.tries)G.first++;fxRight();setMood($('#gameMascot'),'happy');addStar();confetti(16);
       const t=`Genau! Hier ist ${ein(a.w)} ${a.w}.`.replace('  ',' ');bubble(t);await say(t);await wait(300);G.i++;nextTask();return}
-    logTrial(S.ziel,false);G.tries++;setMood($('#gameMascot'),'think');tone([392,330],.13,'triangle',.1);
+    G.tries++;setMood($('#gameMascot'),'think');tone([392,330],.13,'triangle',.1);
     const t1=`Oh, ich habe ${h} verstanden.`,t2=`Hier ist ${ein(h)} ${h}!`.replace('  ',' ');bubble(t1+' '+t2);await say(t1);await say(t2);await wait(200);
     if(G.tries>=2){const t3=`Das passt aber nicht. Hör mal: ${a.w}.`;bubble(t3+' Toll probiert!');await say(t3);await say('Toll probiert!');tray.innerHTML=`<span class="em pop">${a.e}</span>`;addStar();await wait(500);G.i++;nextTask();return}
     const t3=`Das passt aber nicht. Hör mal: ${a.w}.`;bubble(t3+' Sag es nochmal!');await say(t3);await say('Sag es nochmal!');tray.innerHTML='<span class="trayhint">Nuki bringt, was er hört …</span>';G.busy=false};
@@ -1302,7 +1331,9 @@ function renderNV(){
       if(!r.alts.length){note.textContent='Ich habe nichts gehört. Tipp nochmal!';say('Ich habe dich nicht gehört.');return}
       const sa=similarity(r.alts,a.w),sb=similarity(r.alts,b.w);heard.textContent='Gehört: „'+r.alts[0]+'“';
       if(Math.max(sa,sb)<.5||Math.abs(sa-sb)<.08){note.textContent='Nicht ganz sicher – Erwachsene, bitte unten tippen, was Sie gehört haben.';return}
-      deliver(sa>sb?a.w:b.w)}}
+      const best=sa>sb?a.w:b.w;
+      if(S.ear==='erwachsen'){$('#stage').querySelectorAll('[data-h]').forEach(x=>x.classList.toggle('sugg',x.dataset.h===best));note.textContent='Erwachsene: Stimmt das? Bitte unten antippen, was Sie gehört haben.';return}
+      deliver(best)}}
   wait(250).then(ctxSay);
 }
 
@@ -1392,7 +1423,7 @@ $('#btnBack').onclick=goHome;
 let resetArmed=false;
 $('#btnReset').onclick=()=>{
   if(!resetArmed){resetArmed=true;$('#btnReset').textContent='Wirklich löschen? Nochmal tippen';setTimeout(()=>{resetArmed=false;$('#btnReset').textContent='Sterne & Fortschritt löschen'},4000);return}
-  S.stars=0;S.perGame={};S.practice={};S.lvl={};S.leiter={};S.log={};save();paintGoal();resetArmed=false;$('#btnReset').textContent='Gelöscht ✓';renderParents();
+  S.stars=0;S.perGame={};S.practice={};S.lvl={};S.leiter={};S.log={};save();paintGoal();resetArmed=false;$('#btnReset').textContent='Gelöscht ✓';renderParents();renderParents2();
 };
 
 /* ================= 3D-SPIELPLATZ (realistisch) ================= */
