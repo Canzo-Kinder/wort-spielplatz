@@ -264,6 +264,41 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
   .micbtn{width:72px;height:72px}.micbtn svg{width:36px;height:36px}.speak{flex-wrap:nowrap;padding-bottom:4px}.speak .bigbtn{min-height:50px;font-size:17px;padding:6px 14px}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+/* ---------- NEU: Laut-Leiter, Nuki versteht dich, Bericht ---------- */
+.hud-r{display:flex;gap:8px}.chip.goal{font-size:17px}.chip.goal.full{background:#fff3c2;box-shadow:0 4px 0 #e0b43a}
+.split.leiter{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start;justify-content:center;padding-bottom:16px}
+.lcol{display:flex;gap:12px;align-items:flex-start}
+.ladder{list-style:none;margin:0;padding:8px 10px;display:flex;flex-direction:column;gap:6px;background:linear-gradient(90deg,#b07a46 0 8px,transparent 8px calc(100% - 8px),#b07a46 calc(100% - 8px));border-radius:10px}
+.ladder li{display:flex;align-items:center;gap:6px;background:#f3e2c4;border-radius:10px;padding:5px 9px;font-weight:800;font-size:13px;color:var(--ink-soft);min-width:104px;box-shadow:0 3px 0 #c9a77a}
+.ladder li b{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#fff;font-family:var(--f-display);font-size:14px}
+.ladder li.done{background:#d9f2e3;color:#2a7f50;box-shadow:0 3px 0 #9fd3b4}.ladder li.done b{background:var(--leaf);color:#fff}
+.ladder li.now{background:var(--sun);color:var(--ink);transform:scale(1.06)}.ladder li.now b{background:var(--ink);color:#fff}
+.mundbox{display:flex;flex-direction:column;align-items:center;gap:8px;width:min(230px,52vw)}
+.mundpic{width:100%;aspect-ratio:220/180;background:#fff;border-radius:20px;box-shadow:var(--shadow);overflow:hidden}.mundpic svg{width:100%;height:100%;display:block}
+.mspot{animation:mspot 1.3s ease-in-out infinite;transform-box:fill-box;transform-origin:center}@keyframes mspot{50%{transform:scale(1.35);opacity:.55}}
+.bigbtn.small{min-height:44px;font-size:15px;padding:6px 14px;width:100%}
+.mirrorcam{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:50%;border:8px solid var(--grape);transform:scaleX(-1);background:#cdeefb}
+.syl-frame .em{font-family:var(--f-display);font-weight:800;font-size:min(96px,24vw)!important;color:var(--grape)}
+.pbox{display:flex;flex-direction:column;align-items:center;gap:8px}
+.micbtn.rec{background:var(--teal);box-shadow:0 6px 0 #158077}.micbtn.rec.on{background:var(--coral);box-shadow:0 6px 0 #c4513a}
+.lvlring{position:absolute;inset:-10px;border-radius:50%;border:6px solid rgba(255,117,89,.8);opacity:0;transition:transform .08s,opacity .08s;pointer-events:none}
+.nvshop{display:flex;flex-direction:column;align-items:center;gap:10px;padding-top:4px}
+.shelf{display:flex;gap:16px;justify-content:center;background:linear-gradient(#ffe9b8,#f7d48a);border-radius:22px;padding:14px 18px 18px;box-shadow:0 7px 0 #c9a456;border-top:14px solid var(--coral);position:relative}
+.shelf::before{content:"";position:absolute;left:0;right:0;top:-14px;height:14px;background:repeating-linear-gradient(90deg,var(--coral) 0 22px,#fff 22px 44px);border-radius:16px 16px 0 0}
+.goods{background:#fff;border-radius:20px;width:min(120px,30vw);aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 5px 0 #d8c08a}.goods .em{font-size:min(68px,17vw);line-height:1}
+.goods .cap{font-weight:800;font-size:14px}
+.tray{min-height:96px;min-width:min(220px,60vw);display:grid;place-items:center;background:#fff;border:4px dashed #c5d6e1;border-radius:24px}
+.tray .em{font-size:72px;line-height:1}.tray .pop{animation:pop .45s cubic-bezier(.2,1.6,.4,1)}.trayhint{color:var(--ink-soft);font-weight:700;font-size:14px;padding:8px}
+.heardrow .bigbtn{min-height:56px;font-size:19px}
+.rchart{display:flex;gap:4px;align-items:flex-end;height:110px;padding:6px 0}.rcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;height:100%;justify-content:flex-end}
+.rcol i{display:block;width:100%;min-height:2px;background:#9fd3b4;border-radius:6px 6px 2px 2px}.rcol i.ok{background:var(--leaf)}.rcol span{font-size:10px;color:var(--ink-soft);font-weight:700}
+.rtab{width:100%;border-collapse:collapse;font-size:14px}.rtab th,.rtab td{text-align:left;padding:6px 6px;border-bottom:1px solid #e3edf3}.rtab th{font-size:12px;color:var(--ink-soft)}
+.src{font-size:12px;color:var(--ink-soft)}
+#reportPrint{display:none}
+@media print{body>*:not(#reportPrint){display:none!important}#reportPrint{display:block!important;color:#000;font-family:Arial,sans-serif;padding:10mm}#reportPrint h1{font-size:20px}.rcol i{background:#888!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+@media (max-height:500px) and (orientation:landscape){.nvshop{flex-direction:row;justify-content:center;gap:14px}.goods{width:min(92px,20dvh*1.2)}.goods .em{font-size:52px}.shelf{padding:8px 12px 10px;gap:10px}.tray{min-height:70px;min-width:120px}.tray .em{font-size:54px}.heardrow .bigbtn{min-height:46px;font-size:16px}.mundbox{width:min(170px,40dvh)}.ladder li{padding:3px 8px}}
+@media (max-width:560px){.lcol{width:100%;justify-content:center}.ladder li{min-width:88px;font-size:12px}.mundbox{width:min(200px,46vw)}}
+
 </style>
 
 
@@ -443,7 +478,7 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
   <button class="hbtn" id="btnHelp" aria-label="Hilfe"><svg viewBox="0 0 24 24"><path d="M9.2 9a3 3 0 1 1 4.3 2.7c-1 .5-1.5 1.2-1.5 2.3"/><circle cx="12" cy="18" r=".6"/></svg></button>
   <button class="hbtn" id="btnMute" aria-label="Ton an oder aus"><svg viewBox="0 0 24 24"><path d="M4 10v4h4l5 4V6L8 10Z"/><path id="muteWaves" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/><path id="muteX" d="M16 9l5 6M21 9l-5 6" style="display:none"/></svg></button>
  </div>
- <div class="hud hud-r"><div class="chip" aria-label="Sterne"><span>⭐</span><span id="starCount">0</span></div></div>
+ <div class="hud hud-r"><div class="chip goal" id="goalChip" aria-label="Tagesziel"><span>🌻</span><span id="goalCount">0/30</span></div><div class="chip" aria-label="Sterne"><span>⭐</span><span id="starCount">0</span></div></div>
  <button class="pager pl" id="pgL" aria-label="Nach links"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
  <button class="pager pr" id="pgR" aria-label="Nach rechts"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
  <div class="toast" id="toast" hidden><div class="tNuki" id="toastNuki"></div><div class="tText" id="toastText"></div></div>
@@ -475,10 +510,19 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
     </div>
     <div id="voiceWarn"></div>
     <div class="sec">
-      <h3>Übungseinstellungen</h3>
-      <div class="lbl">Ziellaut</div>
-      <div class="seg" id="segLaut"></div>
-      <p>Wählen Sie den Laut, an dem Ihr Kind gerade in der Logopädie arbeitet. Laut-Buddeln, Wort-Detektiv, Silben-Schaukel und „Sprich mit Nuki“ nutzen dann vor allem Wörter mit diesem Anlaut.</p>
+      <h3>Mein Übe-Laut</h3>
+      <div class="seg" id="segZiel"></div>
+      <div class="seg" id="segLaut" hidden></div>
+      <p id="zielInfo"></p>
+      <div class="lbl">Wo steht der Laut im Wort?</div>
+      <div class="seg" id="segPos"></div>
+      <p>Wählen Sie den Laut, an dem Ihr Kind gerade in der Logopädie arbeitet, am besten nach Absprache mit der Logopädin. „Laut-Leiter“ und „Nuki versteht dich“ üben dann genau diesen Laut, die anderen Spiele bevorzugen Wörter mit diesem Anfangslaut.</p>
+      <div class="lbl">Tagesziel (Übungen pro Tag)</div>
+      <div class="seg" id="segGoal"></div>
+      <p>Viele kurze Wiederholungen helfen am meisten. 20 bis 50 Übungen am Tag schaffen Kinder meist in 5 bis 10 Minuten. Die Sonnenblume auf dem Spielplatz zeigt den Stand.</p>
+      <div class="lbl">Bei „Nuki versteht dich“ entscheidet</div>
+      <div class="seg" id="segEar"></div>
+      <p>Spracherkennung irrt bei Kinderstimmen oft. Deshalb hören Erwachsene mit und tippen, welches Wort sie wirklich gehört haben. Nuki bringt genau das – auch wenn es das falsche ist. Genau daran merkt Ihr Kind, dass der Laut den Unterschied macht.</p>
       <div class="lbl">Altersgruppe</div>
       <div class="seg" id="segAge"></div>
       <p>Jedes Spiel hat 5 Stufen. Die Altersgruppe legt fest, bei welcher Stufe es losgeht und wie weit es steigen kann (3–4 J.: Stufe 1–3, 5–6 J.: 2–4, 7–8 J.: 3–5). Schafft Ihr Kind 5 von 6 Aufgaben im ersten Versuch, steigt die Stufe. Bei 2 oder weniger geht sie eine Stufe zurück, ohne dass das Kind davon etwas merkt.</p>
@@ -492,6 +536,11 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
       <p id="micInfo">Mit Mikrofon hört die App, ob Ihr Kind das Wort gesagt hat. Die Erkennung ist großzügig eingestellt, weil Spracherkennung für Erwachsenen-Stimmen gebaut ist und Kinder mit Aussprachestörungen oft nicht sicher erkennt. Die Knöpfe zum Selbst-Bewerten bleiben deshalb immer da. <b>Datenschutz:</b> In Chrome und Edge wird die Aufnahme zur Erkennung an den Browser-Anbieter (Google bzw. Microsoft) geschickt, in Safari teils an Apple. Gespeichert wird in der App nichts.</p>
       <div class="lbl">Spiel-Töne</div>
       <div class="seg" id="segSound"></div>
+    </div>
+    <div class="sec">
+      <h3>Übungsbericht</h3>
+      <div id="bericht"></div>
+      <button class="bigbtn light" id="btnPrint">🖨 Bericht für die Logopädin drucken</button>
     </div>
     <div class="sec">
       <h3>Fortschritt</h3>
@@ -508,6 +557,21 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
       <p>Der Wort-Spielplatz ersetzt keine logopädische Therapie. Fortschritt und Einstellungen bleiben nur auf diesem Gerät.</p>
     </div>
     <div class="sec">
+      <h3>Gut zu wissen: Bis wann ist was normal?</h3>
+      <p>Viele „Fehler“ gehören zur normalen Sprachentwicklung und verschwinden von selbst. Ungefähre Richtwerte für Deutsch (nach Fox-Boyer). Sie ersetzen keine Untersuchung:</p>
+      <table class="rtab norm"><tr><th>Das Kind sagt …</th><th>Beispiel</th><th>normal bis etwa</th></tr>
+       <tr><td>s, f oder sch wird zu t/d</td><td>„Tonne“ statt Sonne</td><td>3 Jahre</td></tr>
+       <tr><td>k/g wird zu t/d (Vorverlagerung)</td><td>„Tatze“ statt Katze</td><td>3½ – 4 Jahre</td></tr>
+       <tr><td>Silben fallen weg</td><td>„Nane“ statt Banane</td><td>4 Jahre</td></tr>
+       <tr><td>Zwei Laute werden zu einem</td><td>„Bume“ statt Blume</td><td>4 – 4½ Jahre</td></tr>
+       <tr><td>sch wird zu s</td><td>„Suh“ statt Schuh</td><td>4½ – 5 Jahre</td></tr>
+       <tr><td>Lispeln (Zunge zwischen den Zähnen)</td><td>„Thonne“</td><td>oft bis 5 Jahre, nach dem Zahnwechsel prüfen</td></tr></table>
+      <p><b>Bitte immer abklären lassen</b> (Kinderarzt, Logopädie): wenn t/d zu k/g wird („Kasse“ statt Tasse), wenn Anfangslaute weggelassen werden („Aus“ statt Haus), wenn ein Kind ab 4 Jahren für Fremde schwer verständlich ist, oder wenn es sich selbst über sein Sprechen ärgert. Bei Verdacht auf Hörprobleme zuerst das Gehör prüfen lassen.</p>
+      <p><b>Richtig reagieren im Alltag:</b> Nicht „Sag das nochmal richtig!“, sondern das Wort freundlich richtig wiederholen: Kind: „Da ist ein Tuh.“ – Sie: „Ja, ein Schuh!“ Das nennt man korrektives Feedback. Nicht bei jedem Fehler, die Sprechfreude geht vor.</p>
+      <p><b>Wie die neuen Spiele helfen:</b> „Nuki versteht dich“ folgt dem Minimalpaar-Ansatz aus der Logopädie: erst den Unterschied hören, dann selbst sagen, und erleben, dass Nuki etwas anderes bringt, wenn der Laut nicht stimmt. Die „Laut-Leiter“ geht die Stufen der Lautanbahnung: Laut, Silbe, Wort, Satz. Mit „Mich hören“ vergleicht Ihr Kind die eigene Aufnahme mit Nuki. Aufnahmen und Kamera-Spiegel bleiben nur auf diesem Gerät und werden nicht gespeichert oder gesendet.</p>
+      <p class="src">Quellen (Auswahl): Fox-Boyer, Kindliche Aussprachestörungen · Ulster University: Conventional Minimal Pairs · Hair u. a. 2020 (CHI): Sprachtherapie-Spiele und Spracherkennung bei Kindern · Lof 2009/ASHA: Mundmotorik-Übungen ohne Nachweis für bessere Aussprache · Siegmüller (DBL): Inputspezifizierung · AOK: Lispeln.</p>
+    </div>
+    <div class="sec">
       <h3>Zurücksetzen</h3>
       <button class="danger" id="btnReset">Sterne &amp; Fortschritt löschen</button>
     </div>
@@ -515,6 +579,7 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
   </div>
 </section>
 
+<div id="reportPrint"></div>
 <!-- ================= OVERLAYS ================= -->
 <div class="overlay" id="menuOv" hidden>
   <div class="panel menu">
@@ -549,7 +614,7 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/objects/Sky.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/RGBELoader.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-<script>window.CLIPS={"a": "000.mp3", "ananas": "001.mp3", "ananas hat 3 silben": "002.mp3", "ap": "003.mp3", "apfel": "004.mp3", "apfel hat 2 silben": "005.mp3", "au": "006.mp3", "auto": "007.mp3", "auto hat 2 silben": "008.mp3", "ba": "009.mp3", "ball": "010.mp3", "ball hat eine silbe": "011.mp3", "banane": "012.mp3", "banane hat 3 silben": "013.mp3", "baum": "014.mp3", "baum hat eine silbe": "015.mp3", "bee": "016.mp3", "bel": "017.mp3", "ben": "018.mp3", "ber": "019.mp3", "beweg die zunge hin und her wie ein scheibenwischer": "020.mp3", "bie": "021.mp3", "biene": "022.mp3", "biene hat 2 silben": "023.mp3", "blu": "024.mp3", "bo": "025.mp3", "breit lachen kussmund breit lachen": "026.mp3", "brrr": "027.mp3", "chen": "028.mp3", "cke": "029.mp3", "de": "030.mp3", "dil": "031.mp3", "drück die zunge von innen in die backe wie ein bonbon": "032.mp3", "du hast 0 sterne gesammelt": "033.mp3", "du hast 1 sterne gesammelt": "034.mp3", "du hast 2 sterne gesammelt": "035.mp3", "du hast 3 sterne gesammelt": "036.mp3", "du hast 4 sterne gesammelt": "037.mp3", "du hast 5 sterne gesammelt": "038.mp3", "du hast 6 sterne gesammelt": "039.mp3", "du hast eine neue stufe geschafft": "040.mp3", "du hast einen neuen sticker": "041.mp3", "dy": "042.mp3", "e": "043.mp3", "eis": "044.mp3", "eis hat eine silbe": "045.mp3", "elefant": "046.mp3", "elefant hat 3 silben": "047.mp3", "en": "048.mp3", "ente": "049.mp3", "ente hat 2 silben": "050.mp3", "erd": "051.mp3", "erdbeere": "052.mp3", "erdbeere hat 3 silben": "053.mp3", "fa": "054.mp3", "fant": "055.mp3", "fast": "056.mp3", "fe": "057.mp3", "fel": "058.mp3", "fer": "059.mp3", "fisch": "060.mp3", "fisch hat eine silbe": "061.mp3", "fla": "062.mp3", "flasche": "063.mp3", "flasche hat 2 silben": "064.mp3", "ga": "065.mp3", "gabel": "066.mp3", "gabel hat 2 silben": "067.mp3", "ge": "068.mp3", "gei": "069.mp3", "geige": "070.mp3", "geige hat 2 silben": "071.mp3", "gel": "072.mp3", "gen": "073.mp3", "genau": "074.mp3", "ger": "075.mp3", "geschenk": "076.mp3", "geschenk hat 2 silben": "077.mp3", "gespenst": "078.mp3", "gespenst hat 2 silben": "079.mp3", "gi": "080.mp3", "gitarre": "081.mp3", "gitarre hat 3 silben": "082.mp3", "grimassenspiegel": "083.mp3", "gu": "084.mp3", "gur": "085.mp3", "gurke": "086.mp3", "gurke hat 2 silben": "087.mp3", "ha": "088.mp3", "hallo": "089.mp3", "hallo ich bin mila": "090.mp3", "hase": "091.mp3", "hase hat 2 silben": "092.mp3", "hast du die schaukel schon gefunden": "093.mp3", "haus": "094.mp3", "haus hat eine silbe": "095.mp3", "hi ich bin ben": "096.mp3", "ho": "097.mp3", "hose": "098.mp3", "hose hat 2 silben": "099.mp3", "hub": "100.mp3", "hubschrauber": "101.mp3", "hubschrauber hat 3 silben": "102.mp3", "hund": "103.mp3", "hund hat eine silbe": "104.mp3", "hör mir nochmal zu": "105.mp3", "hör nochmal genau": "106.mp3", "hörrohre": "107.mp3", "i": "108.mp3", "ich bin nuki": "109.mp3", "ich hab dich gehört": "110.mp3", "ich habe dich nicht gehört": "111.mp3", "igel": "112.mp3", "igel hat 2 silben": "113.mp3", "immer abwechselnd": "114.mp3", "in": "115.mp3", "jedes spielgerät ist ein spiel": "116.mp3", "juhu": "117.mp3", "kan": "118.mp3", "kanne": "119.mp3", "kanne hat 2 silben": "120.mp3", "kannst du mit der zunge nach oben zur nase": "121.mp3", "kar": "122.mp3", "kartoffel": "123.mp3", "kartoffel hat 3 silben": "124.mp3", "kat": "125.mp3", "katze": "126.mp3", "katze hat 2 silben": "127.mp3", "ke": "128.mp3", "keks": "129.mp3", "keks hat eine silbe": "130.mp3", "ker": "131.mp3", "kerze": "132.mp3", "kerze hat 2 silben": "133.mp3", "klasse": "134.mp3", "klasse gemacht": "135.mp3", "klick klack": "136.mp3", "ko": "137.mp3", "komm wir spielen zusammen": "138.mp3", "kro": "139.mp3", "krokodil": "140.mp3", "krokodil hat 3 silben": "141.mp3", "krone": "142.mp3", "krone hat 2 silben": "143.mp3", "krö": "144.mp3", "ku": "145.mp3", "kuchen": "146.mp3", "kuchen hat 2 silben": "147.mp3", "kuh": "148.mp3", "kuh hat eine silbe": "149.mp3", "kä": "150.mp3", "käse": "151.mp3", "käse hat 2 silben": "152.mp3", "la": "153.mp3", "lach ganz breit wie ein clown": "154.mp3", "lam": "155.mp3", "lama": "156.mp3", "lama hat 2 silben": "157.mp3", "lampe": "158.mp3", "lampe hat 2 silben": "159.mp3", "lass die lippen flattern wie ein pferd": "160.mp3", "lat": "161.mp3", "lautbuddeln": "162.mp3", "le": "163.mp3", "leck dir rundherum die lippen ab wie nach marmelade": "164.mp3", "lei": "165.mp3", "leiter": "166.mp3", "leiter hat 2 silben": "167.mp3", "ling": "168.mp3", "los": "169.mp3", "lu": "170.mp3", "lupe": "171.mp3", "lupe hat 2 silben": "172.mp3", "lö": "173.mp3", "löf": "174.mp3", "löffel": "175.mp3", "löffel hat 2 silben": "176.mp3", "löwe": "177.mp3", "löwe hat 2 silben": "178.mp3", "ma": "179.mp3", "mach den mund ganz weit auf wie ein löwe": "180.mp3", "mach einen dicken kussmund": "181.mp3", "marienkäfer": "182.mp3", "marienkäfer hat 5 silben": "183.mp3", "maus": "184.mp3", "maus hat eine silbe": "185.mp3", "me": "186.mp3", "mel": "187.mp3", "mila": "188.mp3", "mond": "189.mp3", "mond hat eine silbe": "190.mp3", "mund": "191.mp3", "mund hat eine silbe": "192.mp3", "na": "193.mp3", "nas": "194.mp3", "nase": "195.mp3", "nase hat 2 silben": "196.mp3", "ne": "197.mp3", "nen": "198.mp3", "nuki sitzt oben im baum": "199.mp3", "pe": "200.mp3", "piep piep": "201.mp3", "pin": "202.mp3", "pinguin": "203.mp3", "pinguin hat 3 silben": "204.mp3", "prima": "205.mp3", "probier es nochmal": "206.mp3", "puste deine backen auf wie einen luftballon": "207.mp3", "puste ganz lange als ob du eine kerze auspustest": "208.mp3", "ra": "209.mp3", "rakete": "210.mp3", "rakete hat 3 silben": "211.mp3", "rau": "212.mp3", "raupe": "213.mp3", "raupe hat 2 silben": "214.mp3", "re": "215.mp3", "regen": "216.mp3", "regen hat 2 silben": "217.mp3", "regenbogen": "218.mp3", "regenbogen hat 4 silben": "219.mp3", "reimwippe": "220.mp3", "ri": "221.mp3", "richtig": "222.mp3", "ring": "223.mp3", "ring hat eine silbe": "224.mp3", "ro": "225.mp3", "rose": "226.mp3", "rose hat 2 silben": "227.mp3", "ruck": "228.mp3", "rucksack": "229.mp3", "rucksack hat 2 silben": "230.mp3", "sa": "231.mp3", "sack": "232.mp3", "sag mal": "233.mp3", "salat": "234.mp3", "salat hat 2 silben": "235.mp3", "schaf": "236.mp3", "schaf hat eine silbe": "237.mp3", "schatzkiste": "238.mp3", "sche": "239.mp3", "schenk": "240.mp3", "schere": "241.mp3", "schere hat 2 silben": "242.mp3", "schiff": "243.mp3", "schiff hat eine silbe": "244.mp3", "schild": "245.mp3", "schildkröte": "246.mp3", "schildkröte hat 3 silben": "247.mp3", "schlüs": "248.mp3", "schlüssel": "249.mp3", "schlüssel hat 2 silben": "250.mp3", "schmet": "251.mp3", "schmetterling": "252.mp3", "schmetterling hat 3 silben": "253.mp3", "schnalz mit der zunge": "254.mp3", "schne": "255.mp3", "schnecke": "256.mp3", "schnecke hat 2 silben": "257.mp3", "scho": "258.mp3", "schokolade": "259.mp3", "schokolade hat 4 silben": "260.mp3", "schrau": "261.mp3", "schuh": "262.mp3", "schuh hat eine silbe": "263.mp3", "schön dass du da bist": "264.mp3", "se": "265.mp3", "sei": "266.mp3", "seife": "267.mp3", "seife hat 2 silben": "268.mp3", "sel": "269.mp3", "silbenschaukel": "270.mp3", "so": "271.mp3", "so spricht nuki jetzt": "272.mp3", "socke": "273.mp3", "socke hat 2 silben": "274.mp3", "sofa": "275.mp3", "sofa hat 2 silben": "276.mp3", "son": "277.mp3", "sonne": "278.mp3", "sonne hat 2 silben": "279.mp3", "sonnenblume": "280.mp3", "sonnenblume hat 4 silben": "281.mp3", "spenst": "282.mp3", "spitze": "283.mp3", "sprich mit nuki": "284.mp3", "stern": "285.mp3", "stern hat eine silbe": "286.mp3", "streck die zunge weit heraus": "287.mp3", "super": "288.mp3", "super das klang toll": "289.mp3", "super gemacht": "290.mp3", "super grimasse": "291.mp3", "sä": "292.mp3", "säge": "293.mp3", "säge hat 2 silben": "294.mp3", "ta": "295.mp3", "tan": "296.mp3", "tanne": "297.mp3", "tanne hat 2 silben": "298.mp3", "tar": "299.mp3", "tas": "300.mp3", "tasche": "301.mp3", "tasche hat 2 silben": "302.mp3", "tasse": "303.mp3", "tasse hat 2 silben": "304.mp3", "te": "305.mp3", "ted": "306.mp3", "teddy": "307.mp3", "teddy hat 2 silben": "308.mp3", "ter": "309.mp3", "ti": "310.mp3", "tiger": "311.mp3", "tiger hat 2 silben": "312.mp3", "tipp auf die spielgeräte": "313.mp3", "to": "314.mp3", "tof": "315.mp3", "toll dass du es probiert hast": "316.mp3", "toll gehalten": "317.mp3", "toll gemacht": "318.mp3", "toll gesagt": "319.mp3", "toll probiert": "320.mp3", "tomate": "321.mp3", "tomate hat 3 silben": "322.mp3", "ton ist an": "323.mp3", "trom": "324.mp3", "trommel": "325.mp3", "trommel hat 2 silben": "326.mp3", "tschilp": "327.mp3", "und jetzt die zunge nach unten zum kinn": "328.mp3", "vogel": "329.mp3", "was fängt an wie gabel": "330.mp3", "was fängt an wie katze": "331.mp3", "was fängt an wie löwe": "332.mp3", "was fängt an wie rose": "333.mp3", "was fängt an wie schuh": "334.mp3", "was fängt an wie sonne": "335.mp3", "was fängt an wie tasse": "336.mp3", "was reimt sich auf flasche": "337.mp3", "was reimt sich auf hase": "338.mp3", "was reimt sich auf haus": "339.mp3", "was reimt sich auf hose": "340.mp3", "was reimt sich auf hund": "341.mp3", "was reimt sich auf kanne": "342.mp3", "was reimt sich auf kuh": "343.mp3", "was reimt sich auf maus": "344.mp3", "was reimt sich auf mund": "345.mp3", "was reimt sich auf nase": "346.mp3", "was reimt sich auf rose": "347.mp3", "was reimt sich auf schuh": "348.mp3", "was reimt sich auf tanne": "349.mp3", "was reimt sich auf tasche": "350.mp3", "we": "351.mp3", "willkommen auf dem spielplatz": "352.mp3", "wir üben ananas später nochmal": "353.mp3", "wir üben apfel später nochmal": "354.mp3", "wir üben auto später nochmal": "355.mp3", "wir üben ball später nochmal": "356.mp3", "wir üben banane später nochmal": "357.mp3", "wir üben baum später nochmal": "358.mp3", "wir üben biene später nochmal": "359.mp3", "wir üben eis später nochmal": "360.mp3", "wir üben elefant später nochmal": "361.mp3", "wir üben ente später nochmal": "362.mp3", "wir üben erdbeere später nochmal": "363.mp3", "wir üben fisch später nochmal": "364.mp3", "wir üben flasche später nochmal": "365.mp3", "wir üben gabel später nochmal": "366.mp3", "wir üben geige später nochmal": "367.mp3", "wir üben geschenk später nochmal": "368.mp3", "wir üben gespenst später nochmal": "369.mp3", "wir üben gitarre später nochmal": "370.mp3", "wir üben gurke später nochmal": "371.mp3", "wir üben hase später nochmal": "372.mp3", "wir üben haus später nochmal": "373.mp3", "wir üben hose später nochmal": "374.mp3", "wir üben hubschrauber später nochmal": "375.mp3", "wir üben hund später nochmal": "376.mp3", "wir üben igel später nochmal": "377.mp3", "wir üben kanne später nochmal": "378.mp3", "wir üben kartoffel später nochmal": "379.mp3", "wir üben katze später nochmal": "380.mp3", "wir üben keks später nochmal": "381.mp3", "wir üben kerze später nochmal": "382.mp3", "wir üben krokodil später nochmal": "383.mp3", "wir üben krone später nochmal": "384.mp3", "wir üben kuchen später nochmal": "385.mp3", "wir üben kuh später nochmal": "386.mp3", "wir üben käse später nochmal": "387.mp3", "wir üben lama später nochmal": "388.mp3", "wir üben lampe später nochmal": "389.mp3", "wir üben leiter später nochmal": "390.mp3", "wir üben lupe später nochmal": "391.mp3", "wir üben löffel später nochmal": "392.mp3", "wir üben löwe später nochmal": "393.mp3", "wir üben marienkäfer später nochmal": "394.mp3", "wir üben maus später nochmal": "395.mp3", "wir üben mond später nochmal": "396.mp3", "wir üben mund später nochmal": "397.mp3", "wir üben nase später nochmal": "398.mp3", "wir üben pinguin später nochmal": "399.mp3", "wir üben rakete später nochmal": "400.mp3", "wir üben raupe später nochmal": "401.mp3", "wir üben regen später nochmal": "402.mp3", "wir üben regenbogen später nochmal": "403.mp3", "wir üben ring später nochmal": "404.mp3", "wir üben rose später nochmal": "405.mp3", "wir üben rucksack später nochmal": "406.mp3", "wir üben salat später nochmal": "407.mp3", "wir üben schaf später nochmal": "408.mp3", "wir üben schere später nochmal": "409.mp3", "wir üben schiff später nochmal": "410.mp3", "wir üben schildkröte später nochmal": "411.mp3", "wir üben schlüssel später nochmal": "412.mp3", "wir üben schmetterling später nochmal": "413.mp3", "wir üben schnecke später nochmal": "414.mp3", "wir üben schokolade später nochmal": "415.mp3", "wir üben schuh später nochmal": "416.mp3", "wir üben seife später nochmal": "417.mp3", "wir üben socke später nochmal": "418.mp3", "wir üben sofa später nochmal": "419.mp3", "wir üben sonne später nochmal": "420.mp3", "wir üben sonnenblume später nochmal": "421.mp3", "wir üben stern später nochmal": "422.mp3", "wir üben säge später nochmal": "423.mp3", "wir üben tanne später nochmal": "424.mp3", "wir üben tasche später nochmal": "425.mp3", "wir üben tasse später nochmal": "426.mp3", "wir üben teddy später nochmal": "427.mp3", "wir üben tiger später nochmal": "428.mp3", "wir üben tomate später nochmal": "429.mp3", "wir üben trommel später nochmal": "430.mp3", "wisch zur seite und tipp auf die spielgeräte": "431.mp3", "wortdetektiv": "432.mp3", "wow prima": "433.mp3", "wunderbar gesprochen": "434.mp3", "ze": "435.mp3", "zeig mir": "436.mp3", "zieh die backen nach innen wie ein fisch": "437.mp3"};</script>
+<script>window.CLIPS={"a": "000.mp3", "ananas": "001.mp3", "ananas hat 3 silben": "002.mp3", "ap": "003.mp3", "apfel": "004.mp3", "apfel hat 2 silben": "005.mp3", "au": "006.mp3", "auto": "007.mp3", "auto hat 2 silben": "008.mp3", "ba": "009.mp3", "ball": "010.mp3", "ball hat eine silbe": "011.mp3", "banane": "012.mp3", "banane hat 3 silben": "013.mp3", "baum": "014.mp3", "baum hat eine silbe": "015.mp3", "bee": "016.mp3", "bel": "017.mp3", "ben": "018.mp3", "ber": "019.mp3", "beweg die zunge hin und her wie ein scheibenwischer": "020.mp3", "bie": "021.mp3", "biene": "022.mp3", "biene hat 2 silben": "023.mp3", "blu": "024.mp3", "bo": "025.mp3", "breit lachen kussmund breit lachen": "026.mp3", "brrr": "027.mp3", "chen": "028.mp3", "cke": "029.mp3", "de": "030.mp3", "dil": "031.mp3", "drück die zunge von innen in die backe wie ein bonbon": "032.mp3", "du hast 0 sterne gesammelt": "033.mp3", "du hast 1 sterne gesammelt": "034.mp3", "du hast 2 sterne gesammelt": "035.mp3", "du hast 3 sterne gesammelt": "036.mp3", "du hast 4 sterne gesammelt": "037.mp3", "du hast 5 sterne gesammelt": "038.mp3", "du hast 6 sterne gesammelt": "039.mp3", "du hast eine neue stufe geschafft": "040.mp3", "du hast einen neuen sticker": "041.mp3", "dy": "042.mp3", "e": "043.mp3", "eis": "044.mp3", "eis hat eine silbe": "045.mp3", "elefant": "046.mp3", "elefant hat 3 silben": "047.mp3", "en": "048.mp3", "ente": "049.mp3", "ente hat 2 silben": "050.mp3", "erd": "051.mp3", "erdbeere": "052.mp3", "erdbeere hat 3 silben": "053.mp3", "fa": "054.mp3", "fant": "055.mp3", "fast": "056.mp3", "fe": "057.mp3", "fel": "058.mp3", "fer": "059.mp3", "fisch": "060.mp3", "fisch hat eine silbe": "061.mp3", "fla": "062.mp3", "flasche": "063.mp3", "flasche hat 2 silben": "064.mp3", "ga": "065.mp3", "gabel": "066.mp3", "gabel hat 2 silben": "067.mp3", "ge": "068.mp3", "gei": "069.mp3", "geige": "070.mp3", "geige hat 2 silben": "071.mp3", "gel": "072.mp3", "gen": "073.mp3", "genau": "074.mp3", "ger": "075.mp3", "geschenk": "076.mp3", "geschenk hat 2 silben": "077.mp3", "gespenst": "078.mp3", "gespenst hat 2 silben": "079.mp3", "gi": "080.mp3", "gitarre": "081.mp3", "gitarre hat 3 silben": "082.mp3", "grimassenspiegel": "083.mp3", "gu": "084.mp3", "gur": "085.mp3", "gurke": "086.mp3", "gurke hat 2 silben": "087.mp3", "ha": "088.mp3", "hallo": "089.mp3", "hallo ich bin mila": "090.mp3", "hase": "091.mp3", "hase hat 2 silben": "092.mp3", "hast du die schaukel schon gefunden": "093.mp3", "haus": "094.mp3", "haus hat eine silbe": "095.mp3", "hi ich bin ben": "096.mp3", "ho": "097.mp3", "hose": "098.mp3", "hose hat 2 silben": "099.mp3", "hub": "100.mp3", "hubschrauber": "101.mp3", "hubschrauber hat 3 silben": "102.mp3", "hund": "103.mp3", "hund hat eine silbe": "104.mp3", "hör mir nochmal zu": "105.mp3", "hör nochmal genau": "106.mp3", "hörrohre": "107.mp3", "i": "108.mp3", "ich bin nuki": "109.mp3", "ich hab dich gehört": "110.mp3", "ich habe dich nicht gehört": "111.mp3", "igel": "112.mp3", "igel hat 2 silben": "113.mp3", "immer abwechselnd": "114.mp3", "in": "115.mp3", "jedes spielgerät ist ein spiel": "116.mp3", "juhu": "117.mp3", "kan": "118.mp3", "kanne": "119.mp3", "kanne hat 2 silben": "120.mp3", "kannst du mit der zunge nach oben zur nase": "121.mp3", "kar": "122.mp3", "kartoffel": "123.mp3", "kartoffel hat 3 silben": "124.mp3", "kat": "125.mp3", "katze": "126.mp3", "katze hat 2 silben": "127.mp3", "ke": "128.mp3", "keks": "129.mp3", "keks hat eine silbe": "130.mp3", "ker": "131.mp3", "kerze": "132.mp3", "kerze hat 2 silben": "133.mp3", "klasse": "134.mp3", "klasse gemacht": "135.mp3", "klick klack": "136.mp3", "ko": "137.mp3", "komm wir spielen zusammen": "138.mp3", "kro": "139.mp3", "krokodil": "140.mp3", "krokodil hat 3 silben": "141.mp3", "krone": "142.mp3", "krone hat 2 silben": "143.mp3", "krö": "144.mp3", "ku": "145.mp3", "kuchen": "146.mp3", "kuchen hat 2 silben": "147.mp3", "kuh": "148.mp3", "kuh hat eine silbe": "149.mp3", "kä": "150.mp3", "käse": "151.mp3", "käse hat 2 silben": "152.mp3", "la": "153.mp3", "lach ganz breit wie ein clown": "154.mp3", "lam": "155.mp3", "lama": "156.mp3", "lama hat 2 silben": "157.mp3", "lampe": "158.mp3", "lampe hat 2 silben": "159.mp3", "lass die lippen flattern wie ein pferd": "160.mp3", "lat": "161.mp3", "lautbuddeln": "162.mp3", "le": "163.mp3", "leck dir rundherum die lippen ab wie nach marmelade": "164.mp3", "lei": "165.mp3", "leiter": "166.mp3", "leiter hat 2 silben": "167.mp3", "ling": "168.mp3", "los": "169.mp3", "lu": "170.mp3", "lupe": "171.mp3", "lupe hat 2 silben": "172.mp3", "lö": "173.mp3", "löf": "174.mp3", "löffel": "175.mp3", "löffel hat 2 silben": "176.mp3", "löwe": "177.mp3", "löwe hat 2 silben": "178.mp3", "ma": "179.mp3", "mach den mund ganz weit auf wie ein löwe": "180.mp3", "mach einen dicken kussmund": "181.mp3", "marienkäfer": "182.mp3", "marienkäfer hat 5 silben": "183.mp3", "maus": "184.mp3", "maus hat eine silbe": "185.mp3", "me": "186.mp3", "mel": "187.mp3", "mila": "188.mp3", "mond": "189.mp3", "mond hat eine silbe": "190.mp3", "mund": "191.mp3", "mund hat eine silbe": "192.mp3", "na": "193.mp3", "nas": "194.mp3", "nase": "195.mp3", "nase hat 2 silben": "196.mp3", "ne": "197.mp3", "nen": "198.mp3", "nuki sitzt oben im baum": "199.mp3", "pe": "200.mp3", "piep piep": "201.mp3", "pin": "202.mp3", "pinguin": "203.mp3", "pinguin hat 3 silben": "204.mp3", "prima": "205.mp3", "probier es nochmal": "206.mp3", "puste deine backen auf wie einen luftballon": "207.mp3", "puste ganz lange als ob du eine kerze auspustest": "208.mp3", "ra": "209.mp3", "rakete": "210.mp3", "rakete hat 3 silben": "211.mp3", "rau": "212.mp3", "raupe": "213.mp3", "raupe hat 2 silben": "214.mp3", "re": "215.mp3", "regen": "216.mp3", "regen hat 2 silben": "217.mp3", "regenbogen": "218.mp3", "regenbogen hat 4 silben": "219.mp3", "reimwippe": "220.mp3", "ri": "221.mp3", "richtig": "222.mp3", "ring": "223.mp3", "ring hat eine silbe": "224.mp3", "ro": "225.mp3", "rose": "226.mp3", "rose hat 2 silben": "227.mp3", "ruck": "228.mp3", "rucksack": "229.mp3", "rucksack hat 2 silben": "230.mp3", "sa": "231.mp3", "sack": "232.mp3", "sag mal": "233.mp3", "salat": "234.mp3", "salat hat 2 silben": "235.mp3", "schaf": "236.mp3", "schaf hat eine silbe": "237.mp3", "schatzkiste": "238.mp3", "sche": "239.mp3", "schenk": "240.mp3", "schere": "241.mp3", "schere hat 2 silben": "242.mp3", "schiff": "243.mp3", "schiff hat eine silbe": "244.mp3", "schild": "245.mp3", "schildkröte": "246.mp3", "schildkröte hat 3 silben": "247.mp3", "schlüs": "248.mp3", "schlüssel": "249.mp3", "schlüssel hat 2 silben": "250.mp3", "schmet": "251.mp3", "schmetterling": "252.mp3", "schmetterling hat 3 silben": "253.mp3", "schnalz mit der zunge": "254.mp3", "schne": "255.mp3", "schnecke": "256.mp3", "schnecke hat 2 silben": "257.mp3", "scho": "258.mp3", "schokolade": "259.mp3", "schokolade hat 4 silben": "260.mp3", "schrau": "261.mp3", "schuh": "262.mp3", "schuh hat eine silbe": "263.mp3", "schön dass du da bist": "264.mp3", "se": "265.mp3", "sei": "266.mp3", "seife": "267.mp3", "seife hat 2 silben": "268.mp3", "sel": "269.mp3", "silbenschaukel": "270.mp3", "so": "271.mp3", "so spricht nuki jetzt": "272.mp3", "socke": "273.mp3", "socke hat 2 silben": "274.mp3", "sofa": "275.mp3", "sofa hat 2 silben": "276.mp3", "son": "277.mp3", "sonne": "278.mp3", "sonne hat 2 silben": "279.mp3", "sonnenblume": "280.mp3", "sonnenblume hat 4 silben": "281.mp3", "spenst": "282.mp3", "spitze": "283.mp3", "sprich mit nuki": "284.mp3", "stern": "285.mp3", "stern hat eine silbe": "286.mp3", "streck die zunge weit heraus": "287.mp3", "super": "288.mp3", "super das klang toll": "289.mp3", "super gemacht": "290.mp3", "super grimasse": "291.mp3", "sä": "292.mp3", "säge": "293.mp3", "säge hat 2 silben": "294.mp3", "ta": "295.mp3", "tan": "296.mp3", "tanne": "297.mp3", "tanne hat 2 silben": "298.mp3", "tar": "299.mp3", "tas": "300.mp3", "tasche": "301.mp3", "tasche hat 2 silben": "302.mp3", "tasse": "303.mp3", "tasse hat 2 silben": "304.mp3", "te": "305.mp3", "ted": "306.mp3", "teddy": "307.mp3", "teddy hat 2 silben": "308.mp3", "ter": "309.mp3", "ti": "310.mp3", "tiger": "311.mp3", "tiger hat 2 silben": "312.mp3", "tipp auf die spielgeräte": "313.mp3", "to": "314.mp3", "tof": "315.mp3", "toll dass du es probiert hast": "316.mp3", "toll gehalten": "317.mp3", "toll gemacht": "318.mp3", "toll gesagt": "319.mp3", "toll probiert": "320.mp3", "tomate": "321.mp3", "tomate hat 3 silben": "322.mp3", "ton ist an": "323.mp3", "trom": "324.mp3", "trommel": "325.mp3", "trommel hat 2 silben": "326.mp3", "tschilp": "327.mp3", "und jetzt die zunge nach unten zum kinn": "328.mp3", "vogel": "329.mp3", "was fängt an wie gabel": "330.mp3", "was fängt an wie katze": "331.mp3", "was fängt an wie löwe": "332.mp3", "was fängt an wie rose": "333.mp3", "was fängt an wie schuh": "334.mp3", "was fängt an wie sonne": "335.mp3", "was fängt an wie tasse": "336.mp3", "was reimt sich auf flasche": "337.mp3", "was reimt sich auf hase": "338.mp3", "was reimt sich auf haus": "339.mp3", "was reimt sich auf hose": "340.mp3", "was reimt sich auf hund": "341.mp3", "was reimt sich auf kanne": "342.mp3", "was reimt sich auf kuh": "343.mp3", "was reimt sich auf maus": "344.mp3", "was reimt sich auf mund": "345.mp3", "was reimt sich auf nase": "346.mp3", "was reimt sich auf rose": "347.mp3", "was reimt sich auf schuh": "348.mp3", "was reimt sich auf tanne": "349.mp3", "was reimt sich auf tasche": "350.mp3", "we": "351.mp3", "willkommen auf dem spielplatz": "352.mp3", "wir üben ananas später nochmal": "353.mp3", "wir üben apfel später nochmal": "354.mp3", "wir üben auto später nochmal": "355.mp3", "wir üben ball später nochmal": "356.mp3", "wir üben banane später nochmal": "357.mp3", "wir üben baum später nochmal": "358.mp3", "wir üben biene später nochmal": "359.mp3", "wir üben eis später nochmal": "360.mp3", "wir üben elefant später nochmal": "361.mp3", "wir üben ente später nochmal": "362.mp3", "wir üben erdbeere später nochmal": "363.mp3", "wir üben fisch später nochmal": "364.mp3", "wir üben flasche später nochmal": "365.mp3", "wir üben gabel später nochmal": "366.mp3", "wir üben geige später nochmal": "367.mp3", "wir üben geschenk später nochmal": "368.mp3", "wir üben gespenst später nochmal": "369.mp3", "wir üben gitarre später nochmal": "370.mp3", "wir üben gurke später nochmal": "371.mp3", "wir üben hase später nochmal": "372.mp3", "wir üben haus später nochmal": "373.mp3", "wir üben hose später nochmal": "374.mp3", "wir üben hubschrauber später nochmal": "375.mp3", "wir üben hund später nochmal": "376.mp3", "wir üben igel später nochmal": "377.mp3", "wir üben kanne später nochmal": "378.mp3", "wir üben kartoffel später nochmal": "379.mp3", "wir üben katze später nochmal": "380.mp3", "wir üben keks später nochmal": "381.mp3", "wir üben kerze später nochmal": "382.mp3", "wir üben krokodil später nochmal": "383.mp3", "wir üben krone später nochmal": "384.mp3", "wir üben kuchen später nochmal": "385.mp3", "wir üben kuh später nochmal": "386.mp3", "wir üben käse später nochmal": "387.mp3", "wir üben lama später nochmal": "388.mp3", "wir üben lampe später nochmal": "389.mp3", "wir üben leiter später nochmal": "390.mp3", "wir üben lupe später nochmal": "391.mp3", "wir üben löffel später nochmal": "392.mp3", "wir üben löwe später nochmal": "393.mp3", "wir üben marienkäfer später nochmal": "394.mp3", "wir üben maus später nochmal": "395.mp3", "wir üben mond später nochmal": "396.mp3", "wir üben mund später nochmal": "397.mp3", "wir üben nase später nochmal": "398.mp3", "wir üben pinguin später nochmal": "399.mp3", "wir üben rakete später nochmal": "400.mp3", "wir üben raupe später nochmal": "401.mp3", "wir üben regen später nochmal": "402.mp3", "wir üben regenbogen später nochmal": "403.mp3", "wir üben ring später nochmal": "404.mp3", "wir üben rose später nochmal": "405.mp3", "wir üben rucksack später nochmal": "406.mp3", "wir üben salat später nochmal": "407.mp3", "wir üben schaf später nochmal": "408.mp3", "wir üben schere später nochmal": "409.mp3", "wir üben schiff später nochmal": "410.mp3", "wir üben schildkröte später nochmal": "411.mp3", "wir üben schlüssel später nochmal": "412.mp3", "wir üben schmetterling später nochmal": "413.mp3", "wir üben schnecke später nochmal": "414.mp3", "wir üben schokolade später nochmal": "415.mp3", "wir üben schuh später nochmal": "416.mp3", "wir üben seife später nochmal": "417.mp3", "wir üben socke später nochmal": "418.mp3", "wir üben sofa später nochmal": "419.mp3", "wir üben sonne später nochmal": "420.mp3", "wir üben sonnenblume später nochmal": "421.mp3", "wir üben stern später nochmal": "422.mp3", "wir üben säge später nochmal": "423.mp3", "wir üben tanne später nochmal": "424.mp3", "wir üben tasche später nochmal": "425.mp3", "wir üben tasse später nochmal": "426.mp3", "wir üben teddy später nochmal": "427.mp3", "wir üben tiger später nochmal": "428.mp3", "wir üben tomate später nochmal": "429.mp3", "wir üben trommel später nochmal": "430.mp3", "wisch zur seite und tipp auf die spielgeräte": "431.mp3", "wortdetektiv": "432.mp3", "wow prima": "433.mp3", "wunderbar gesprochen": "434.mp3", "ze": "435.mp3", "zeig mir": "436.mp3", "zieh die backen nach innen wie ein fisch": "437.mp3", "die schlange zischt": "438.mp3", "mach mit": "439.mp3", "zähne zusammen": "440.mp3", "die zunge bleibt hinter den zähnen": "441.mp3", "dann zischt die schlange": "442.mp3", "su": "443.mp3", "si": "444.mp3", "ich sehe die sonne": "445.mp3", "sonne und käse": "446.mp3", "ich sehe die seife": "447.mp3", "seife und vase": "448.mp3", "ich sehe die socke": "449.mp3", "socke und ameise": "450.mp3", "ich sehe das sofa": "451.mp3", "sofa und maus": "452.mp3", "ich sehe den salat": "453.mp3", "salat und haus": "454.mp3", "ich sehe die säge": "455.mp3", "säge und eis": "456.mp3", "ich sehe die hose": "457.mp3", "hose und bus": "458.mp3", "ich sehe die nase": "459.mp3", "nase und glas": "460.mp3", "ich sehe die rose": "461.mp3", "rose und reis": "462.mp3", "ich sehe den hasen": "463.mp3", "hase und sonne": "464.mp3", "ich sehe den käse": "465.mp3", "käse und seife": "466.mp3", "vase": "467.mp3", "ich sehe die vase": "468.mp3", "vase und socke": "469.mp3", "va": "470.mp3", "ameise": "471.mp3", "ich sehe die ameise": "472.mp3", "ameise und sofa": "473.mp3", "mei": "474.mp3", "ich sehe die maus": "475.mp3", "maus und salat": "476.mp3", "ich sehe das haus": "477.mp3", "haus und säge": "478.mp3", "ich sehe das eis": "479.mp3", "eis und hose": "480.mp3", "bus": "481.mp3", "ich sehe den bus": "482.mp3", "bus und nase": "483.mp3", "glas": "484.mp3", "ich sehe das glas": "485.mp3", "glas und rose": "486.mp3", "reis": "487.mp3", "ich sehe den reis": "488.mp3", "reis und hase": "489.mp3", "sonne und salat": "490.mp3", "seife und säge": "491.mp3", "socke und sonne": "492.mp3", "sofa und seife": "493.mp3", "salat und socke": "494.mp3", "säge und sofa": "495.mp3", "hose und käse": "496.mp3", "nase und vase": "497.mp3", "rose und ameise": "498.mp3", "hase und hose": "499.mp3", "käse und nase": "500.mp3", "vase und rose": "501.mp3", "ameise und hase": "502.mp3", "maus und glas": "503.mp3", "haus und reis": "504.mp3", "eis und maus": "505.mp3", "bus und haus": "506.mp3", "glas und eis": "507.mp3", "reis und bus": "508.mp3", "psst sei ganz leise": "509.mp3", "mach einen kussmund und schieb die lippen nach vorne": "510.mp3", "die zähne bleiben fast zu": "511.mp3", "scha": "512.mp3", "schu": "513.mp3", "schi": "514.mp3", "ich sehe den schuh": "515.mp3", "schuh und dusche": "516.mp3", "ich sehe das schaf": "517.mp3", "schaf und muschel": "518.mp3", "ich sehe das schiff": "519.mp3", "schiff und fisch": "520.mp3", "ich sehe die schere": "521.mp3", "schere und tisch": "522.mp3", "schal": "523.mp3", "ich sehe den schal": "524.mp3", "schal und busch": "525.mp3", "ich sehe den schlüssel": "526.mp3", "schlüssel und frosch": "527.mp3", "ich sehe die tasche": "528.mp3", "tasche und schuh": "529.mp3", "ich sehe die flasche": "530.mp3", "flasche und schaf": "531.mp3", "dusche": "532.mp3", "ich sehe die dusche": "533.mp3", "dusche und schiff": "534.mp3", "du": "535.mp3", "muschel": "536.mp3", "ich sehe die muschel": "537.mp3", "muschel und schere": "538.mp3", "mu": "539.mp3", "schel": "540.mp3", "ich sehe den fisch": "541.mp3", "fisch und schal": "542.mp3", "tisch": "543.mp3", "ich sehe den tisch": "544.mp3", "tisch und schlüssel": "545.mp3", "busch": "546.mp3", "ich sehe den busch": "547.mp3", "busch und tasche": "548.mp3", "frosch": "549.mp3", "ich sehe den frosch": "550.mp3", "frosch und flasche": "551.mp3", "schuh und schal": "552.mp3", "schaf und schlüssel": "553.mp3", "schiff und schuh": "554.mp3", "schere und schaf": "555.mp3", "schal und schiff": "556.mp3", "schlüssel und schere": "557.mp3", "tasche und muschel": "558.mp3", "flasche und tasche": "559.mp3", "dusche und flasche": "560.mp3", "muschel und dusche": "561.mp3", "fisch und frosch": "562.mp3", "tisch und fisch": "563.mp3", "busch und tisch": "564.mp3", "frosch und busch": "565.mp3", "der specht klopft": "566.mp3", "die zungenspitze bleibt unten hinter den zähnen": "567.mp3", "hinten drückt die zunge nach oben wie bei einem kleinen husten": "568.mp3", "ka": "569.mp3", "ki": "570.mp3", "ich sehe die katze": "571.mp3", "katze und schnecke": "572.mp3", "ich sehe die kuh": "573.mp3", "kuh und jacke": "574.mp3", "käse und brücke": "575.mp3", "ich sehe den keks": "576.mp3", "keks und rakete": "577.mp3", "ich sehe den kuchen": "578.mp3", "kuchen und rucksack": "579.mp3", "ich sehe die kerze": "580.mp3", "kerze und berg": "581.mp3", "ich sehe die kanne": "582.mp3", "kanne und zug": "583.mp3", "kopf": "584.mp3", "ich sehe den kopf": "585.mp3", "kopf und katze": "586.mp3", "socke und kuh": "587.mp3", "ich sehe die schnecke": "588.mp3", "schnecke und käse": "589.mp3", "jacke": "590.mp3", "ich sehe die jacke": "591.mp3", "jacke und keks": "592.mp3", "ja": "593.mp3", "brücke": "594.mp3", "ich sehe die brücke": "595.mp3", "brücke und kuchen": "596.mp3", "brü": "597.mp3", "ich sehe die rakete": "598.mp3", "rakete und kerze": "599.mp3", "ich sehe den rucksack": "600.mp3", "rucksack und kanne": "601.mp3", "berg": "602.mp3", "ich sehe den berg": "603.mp3", "berg und kopf": "604.mp3", "zug": "605.mp3", "ich sehe den zug": "606.mp3", "zug und socke": "607.mp3", "katze und kerze": "608.mp3", "kuh und kanne": "609.mp3", "käse und kopf": "610.mp3", "keks und katze": "611.mp3", "kuchen und kuh": "612.mp3", "kerze und käse": "613.mp3", "kanne und keks": "614.mp3", "kopf und kuchen": "615.mp3", "socke und brücke": "616.mp3", "schnecke und rakete": "617.mp3", "jacke und socke": "618.mp3", "brücke und schnecke": "619.mp3", "rakete und jacke": "620.mp3", "rucksack und keks": "621.mp3", "berg und rucksack": "622.mp3", "zug und berg": "623.mp3", "keks und zug": "624.mp3", "das huhn gackert": "625.mp3", "wie beim k": "626.mp3", "zungenspitze unten hinten drückt die zunge nach oben": "627.mp3", "beim g brummt die stimme mit": "628.mp3", "go": "629.mp3", "ich sehe die gabel": "630.mp3", "gabel und igel": "631.mp3", "ich sehe die geige": "632.mp3", "geige und vogel": "633.mp3", "ich sehe die gurke": "634.mp3", "gurke und regen": "635.mp3", "ich sehe das geschenk": "636.mp3", "geschenk und säge": "637.mp3", "ich sehe die gitarre": "638.mp3", "gitarre und tiger": "639.mp3", "ich sehe das gespenst": "640.mp3", "gespenst und auge": "641.mp3", "glas und gabel": "642.mp3", "ich sehe den igel": "643.mp3", "igel und geige": "644.mp3", "ich sehe den vogel": "645.mp3", "vogel und gurke": "646.mp3", "vo": "647.mp3", "ich sehe den regen": "648.mp3", "regen und geschenk": "649.mp3", "säge und gitarre": "650.mp3", "ich sehe den tiger": "651.mp3", "tiger und gespenst": "652.mp3", "auge": "653.mp3", "ich sehe das auge": "654.mp3", "auge und glas": "655.mp3", "gabel und gitarre": "656.mp3", "geige und gespenst": "657.mp3", "gurke und glas": "658.mp3", "geschenk und gabel": "659.mp3", "gitarre und geige": "660.mp3", "gespenst und gurke": "661.mp3", "glas und geschenk": "662.mp3", "igel und tiger": "663.mp3", "vogel und auge": "664.mp3", "regen und igel": "665.mp3", "säge und vogel": "666.mp3", "tiger und regen": "667.mp3", "auge und säge": "668.mp3", "die uhr tickt": "669.mp3", "die zungenspitze tippt oben hinter die zähne": "670.mp3", "ganz vorne im mund": "671.mp3", "tu": "672.mp3", "ich sehe die tasse": "673.mp3", "tasse und ente": "674.mp3", "ich sehe die tomate": "675.mp3", "tomate und butter": "676.mp3", "tiger und auto": "677.mp3", "ich sehe den teddy": "678.mp3", "teddy und hut": "679.mp3", "ich sehe die tanne": "680.mp3", "tanne und boot": "681.mp3", "tisch und brot": "682.mp3", "tonne": "683.mp3", "ich sehe die tonne": "684.mp3", "tonne und bett": "685.mp3", "ton": "686.mp3", "topf": "687.mp3", "ich sehe den topf": "688.mp3", "topf und tasse": "689.mp3", "ich sehe die ente": "690.mp3", "ente und tomate": "691.mp3", "butter": "692.mp3", "ich sehe die butter": "693.mp3", "butter und tiger": "694.mp3", "but": "695.mp3", "ich sehe das auto": "696.mp3", "auto und teddy": "697.mp3", "hut": "698.mp3", "ich sehe den hut": "699.mp3", "hut und tanne": "700.mp3", "boot": "701.mp3", "ich sehe das boot": "702.mp3", "boot und tisch": "703.mp3", "brot": "704.mp3", "ich sehe das brot": "705.mp3", "brot und tonne": "706.mp3", "bett": "707.mp3", "ich sehe das bett": "708.mp3", "bett und topf": "709.mp3", "tasse und tisch": "710.mp3", "tomate und tonne": "711.mp3", "tiger und topf": "712.mp3", "teddy und tasse": "713.mp3", "tanne und tomate": "714.mp3", "tisch und tiger": "715.mp3", "tonne und teddy": "716.mp3", "topf und tanne": "717.mp3", "butter und ente": "718.mp3", "auto und butter": "719.mp3", "tomate und auto": "720.mp3", "hut und bett": "721.mp3", "boot und hut": "722.mp3", "brot und boot": "723.mp3", "bett und brot": "724.mp3", "die katze faucht": "725.mp3", "die oberen zähne beißen ganz leicht auf die unterlippe": "726.mp3", "dann blasen wie ein leiser wind": "727.mp3", "fo": "728.mp3", "fu": "729.mp3", "fi": "730.mp3", "fisch und giraffe": "731.mp3", "fuchs": "732.mp3", "ich sehe den fuchs": "733.mp3", "fuchs und affe": "734.mp3", "feder": "735.mp3", "ich sehe die feder": "736.mp3", "feder und schaf": "737.mp3", "der": "738.mp3", "fahrrad": "739.mp3", "ich sehe das fahrrad": "740.mp3", "fahrrad und schiff": "741.mp3", "fahr": "742.mp3", "rad": "743.mp3", "sofa und brief": "744.mp3", "ich sehe den löffel": "745.mp3", "löffel und fisch": "746.mp3", "giraffe": "747.mp3", "ich sehe die giraffe": "748.mp3", "giraffe und fuchs": "749.mp3", "raf": "750.mp3", "affe": "751.mp3", "ich sehe den affen": "752.mp3", "affe und feder": "753.mp3", "af": "754.mp3", "schaf und fahrrad": "755.mp3", "schiff und sofa": "756.mp3", "brief": "757.mp3", "ich sehe den brief": "758.mp3", "brief und löffel": "759.mp3", "fisch und fahrrad": "760.mp3", "fuchs und fisch": "761.mp3", "feder und fuchs": "762.mp3", "fahrrad und feder": "763.mp3", "sofa und affe": "764.mp3", "löffel und sofa": "765.mp3", "giraffe und löffel": "766.mp3", "affe und giraffe": "767.mp3", "schaf und brief": "768.mp3", "schiff und schaf": "769.mp3", "brief und schiff": "770.mp3", "der löwe brummt": "771.mp3", "das r kommt von ganz hinten im hals wie beim gurgeln mit wasser": "772.mp3", "ru": "773.mp3", "rose und gitarre": "774.mp3", "rakete und schere": "775.mp3", "regen und möhre": "776.mp3", "ich sehe den ring": "777.mp3", "ring und karussell": "778.mp3", "ich sehe die raupe": "779.mp3", "raupe und giraffe": "780.mp3", "reiter": "781.mp3", "ich sehe den reiter": "782.mp3", "reiter und rose": "783.mp3", "rei": "784.mp3", "reis und rakete": "785.mp3", "gitarre und regen": "786.mp3", "schere und ring": "787.mp3", "möhre": "788.mp3", "ich sehe die möhre": "789.mp3", "möhre und raupe": "790.mp3", "möh": "791.mp3", "karussell": "792.mp3", "ich sehe das karussell": "793.mp3", "karussell und reiter": "794.mp3", "rus": "795.mp3", "sell": "796.mp3", "giraffe und reis": "797.mp3", "rose und raupe": "798.mp3", "rakete und reiter": "799.mp3", "regen und reis": "800.mp3", "ring und rose": "801.mp3", "raupe und rakete": "802.mp3", "reiter und regen": "803.mp3", "reis und ring": "804.mp3", "gitarre und karussell": "805.mp3", "schere und giraffe": "806.mp3", "möhre und gitarre": "807.mp3", "karussell und schere": "808.mp3", "giraffe und möhre": "809.mp3", "wir singen": "810.mp3", "die zungenspitze liegt oben hinter den zähnen": "811.mp3", "die luft fließt an den seiten vorbei": "812.mp3", "lo": "813.mp3", "li": "814.mp3", "ich sehe den löwen": "815.mp3", "löwe und eule": "816.mp3", "ich sehe die lampe": "817.mp3", "lampe und ball": "818.mp3", "ich sehe die leiter": "819.mp3", "leiter und igel": "820.mp3", "löffel und schal": "821.mp3", "ich sehe das lama": "822.mp3", "lama und vogel": "823.mp3", "ich sehe die lupe": "824.mp3", "lupe und gabel": "825.mp3", "ballon": "826.mp3", "ich sehe den ballon": "827.mp3", "ballon und löwe": "828.mp3", "bal": "829.mp3", "lon": "830.mp3", "wolke": "831.mp3", "ich sehe die wolke": "832.mp3", "wolke und lampe": "833.mp3", "wol": "834.mp3", "eule": "835.mp3", "ich sehe die eule": "836.mp3", "eule und leiter": "837.mp3", "eu": "838.mp3", "ich sehe den ball": "839.mp3", "ball und löffel": "840.mp3", "igel und lama": "841.mp3", "schal und lupe": "842.mp3", "vogel und ballon": "843.mp3", "gabel und wolke": "844.mp3", "löwe und lama": "845.mp3", "lampe und lupe": "846.mp3", "leiter und löwe": "847.mp3", "löffel und lampe": "848.mp3", "lama und leiter": "849.mp3", "lupe und löffel": "850.mp3", "ballon und eule": "851.mp3", "wolke und ballon": "852.mp3", "eule und wolke": "853.mp3", "ball und vogel": "854.mp3", "igel und gabel": "855.mp3", "schal und ball": "856.mp3", "vogel und igel": "857.mp3", "gabel und schal": "858.mp3", "zwei laute werden freunde": "859.mp3", "sprich beide laute langsam nacheinander": "860.mp3", "b und l wird bl": "861.mp3", "dann immer schneller": "862.mp3", "bla": "863.mp3", "bra": "864.mp3", "kra": "865.mp3", "gla": "866.mp3", "blume": "867.mp3", "ich sehe die blume": "868.mp3", "blume und drache": "869.mp3", "brot und schlange": "870.mp3", "brille": "871.mp3", "ich sehe die brille": "872.mp3", "brille und spinne": "873.mp3", "bril": "874.mp3", "ich sehe die krone": "875.mp3", "krone und stern": "876.mp3", "kreis": "877.mp3", "ich sehe den kreis": "878.mp3", "kreis und flasche": "879.mp3", "frosch und trommel": "880.mp3", "glocke": "881.mp3", "ich sehe die glocke": "882.mp3", "glocke und blume": "883.mp3", "glo": "884.mp3", "kleid": "885.mp3", "ich sehe das kleid": "886.mp3", "kleid und brot": "887.mp3", "drache": "888.mp3", "ich sehe den drachen": "889.mp3", "drache und brille": "890.mp3", "dra": "891.mp3", "che": "892.mp3", "schlange": "893.mp3", "ich sehe die schlange": "894.mp3", "schlange und krone": "895.mp3", "schlan": "896.mp3", "spinne": "897.mp3", "ich sehe die spinne": "898.mp3", "spinne und kreis": "899.mp3", "spin": "900.mp3", "ich sehe den stern": "901.mp3", "stern und frosch": "902.mp3", "flasche und glocke": "903.mp3", "ich sehe die trommel": "904.mp3", "trommel und kleid": "905.mp3", "sag den ganzen satz": "906.mp3", "zwei wörter hintereinander": "907.mp3", "mila will die blumen gießen": "908.mp3", "was braucht sie": "909.mp3", "sag es nuki": "910.mp3", "wo ist die kanne": "911.mp3", "hier ist eine kanne": "912.mp3", "oh ich habe tanne verstanden": "913.mp3", "hier ist eine tanne": "914.mp3", "das passt aber nicht": "915.mp3", "hör mal": "916.mp3", "sag es nochmal": "917.mp3", "ben will den weihnachtsbaum schmücken": "918.mp3", "was braucht er": "919.mp3", "wo ist die tanne": "920.mp3", "oh ich habe kanne verstanden": "921.mp3", "wo setzt ben die mütze auf": "922.mp3", "wo ist der kopf": "923.mp3", "hier ist ein kopf": "924.mp3", "oh ich habe topf verstanden": "925.mp3", "hier ist ein topf": "926.mp3", "nuki will suppe kochen": "927.mp3", "wo ist der topf": "928.mp3", "oh ich habe kopf verstanden": "929.mp3", "mila packt ihre sachen ein": "930.mp3", "wo ist die tasche": "931.mp3", "hier ist eine tasche": "932.mp3", "oh ich habe tasse verstanden": "933.mp3", "hier ist eine tasse": "934.mp3", "ben will kakao trinken": "935.mp3", "wo ist die tasse": "936.mp3", "oh ich habe tasche verstanden": "937.mp3", "wo versteckt sich der hase": "938.mp3", "wo ist der busch": "939.mp3", "hier ist ein busch": "940.mp3", "oh ich habe bus verstanden": "941.mp3", "hier ist ein bus": "942.mp3", "womit fährt ben in die stadt": "943.mp3", "wo ist der bus": "944.mp3", "oh ich habe busch verstanden": "945.mp3", "was zieht mila an den fuß": "946.mp3", "wo ist der schuh": "947.mp3", "hier ist ein schuh": "948.mp3", "oh ich habe kuh verstanden": "949.mp3", "hier ist eine kuh": "950.mp3", "wer macht muh": "951.mp3", "wo ist die kuh": "952.mp3", "oh ich habe schuh verstanden": "953.mp3", "was scheint am himmel": "954.mp3", "wo ist die sonne": "955.mp3", "hier ist eine sonne": "956.mp3", "oh ich habe tonne verstanden": "957.mp3", "hier ist eine tonne": "958.mp3", "wohin kommt der müll": "959.mp3", "wo ist die tonne": "960.mp3", "oh ich habe sonne verstanden": "961.mp3", "was schwimmt im teich": "962.mp3", "wo ist der fisch": "963.mp3", "hier ist ein fisch": "964.mp3", "oh ich habe tisch verstanden": "965.mp3", "hier ist ein tisch": "966.mp3", "wo stellt mila den teller hin": "967.mp3", "wo ist der tisch": "968.mp3", "oh ich habe fisch verstanden": "969.mp3", "nuki hat hunger": "970.mp3", "was möchte er essen": "971.mp3", "wo ist das brot": "972.mp3", "hier ist ein brot": "973.mp3", "oh ich habe boot verstanden": "974.mp3", "hier ist ein boot": "975.mp3", "womit fährt man über den see": "976.mp3", "wo ist das boot": "977.mp3", "oh ich habe brot verstanden": "978.mp3", "welche form ist ganz rund": "979.mp3", "wo ist der kreis": "980.mp3", "hier ist ein kreis": "981.mp3", "oh ich habe reis verstanden": "982.mp3", "hier ist reis": "983.mp3", "was isst ben mit soße": "984.mp3", "wo ist der reis": "985.mp3", "oh ich habe kreis verstanden": "986.mp3", "wer sitzt auf dem pferd": "987.mp3", "wo ist der reiter": "988.mp3", "hier ist ein reiter": "989.mp3", "oh ich habe leiter verstanden": "990.mp3", "hier ist eine leiter": "991.mp3", "womit klettert man auf das dach": "992.mp3", "wo ist die leiter": "993.mp3", "oh ich habe reiter verstanden": "994.mp3", "tagesziel geschafft": "995.mp3", "die sonnenblume blüht": "996.mp3", "nuki versteht dich": "997.mp3", "lautleiter": "998.mp3", "du hast einen stern gesammelt": "999.mp3", "du hast 7 sterne gesammelt": "1000.mp3", "du hast 8 sterne gesammelt": "1001.mp3"};</script>
 <script>
 /* ================= DATA ================= */
 // l = Anlaut-Gruppe (für Laut-Jagd). "X" = nicht für Anlaut-Aufgaben.
@@ -573,6 +638,8 @@ const LAUTE={S:{label:'S',ref:'Sonne'},SCH:{label:'Sch',ref:'Schuh'},K:{label:'K
 const RHYMES=[['Maus','Haus'],['Kuh','Schuh'],['Hase','Nase'],['Rose','Hose'],['Hund','Mund'],['Tanne','Kanne'],['Tasche','Flasche']];
 const MINIMAL=[['Kanne','Tanne'],['Maus','Haus'],['Nase','Hase'],['Rose','Hose'],['Kuh','Schuh'],['Hund','Mund']];
 const GAMES=[
+ {id:'versteht',name:'Nuki versteht dich',desc:'Sag Nuki, was er bringen soll',pic:'🛒',c:'var(--coral)'},
+ {id:'leiter',name:'Laut-Leiter',desc:'Laut für Laut nach oben',pic:'🪜',c:'var(--teal)'},
  {id:'hoeren',name:'Wort-Detektiv',desc:'Hören und zeigen',pic:'🔭',c:'var(--coral)'},
  {id:'anlaut',name:'Laut-Buddeln',desc:'Wie fängt es an?',pic:'🪣',c:'var(--teal)'},
  {id:'silben',name:'Silben-Schaukel',desc:'Silben klatschen',pic:'🥁',c:'var(--sun)'},
@@ -698,7 +765,7 @@ function mascotSVG(mood){
 function setMood(el,mood){el.innerHTML=mascotSVG(mood);if(mood==='happy'){el.classList.remove('jump');void el.offsetWidth;el.classList.add('jump')}}
 
 /* ================= HOME (Szene) ================= */
-const NAMES={nuki:'Nuki',mund:'Grimassen-Spiegel',hoeren:'Wort-Detektiv',anlaut:'Laut-Buddeln',silben:'Silben-Schaukel',reime:'Reim-Wippe',paare:'Hör-Rohre',sprechen:'Sprich mit Nuki',treasure:'Schatzkiste',mila:'Mila',ben:'Ben',bird:'Vogel'};
+const NAMES={versteht:'Nuki versteht dich',leiter:'Laut-Leiter',nuki:'Nuki',mund:'Grimassen-Spiegel',hoeren:'Wort-Detektiv',anlaut:'Laut-Buddeln',silben:'Silben-Schaukel',reime:'Reim-Wippe',paare:'Hör-Rohre',sprechen:'Sprich mit Nuki',treasure:'Schatzkiste',mila:'Mila',ben:'Ben',bird:'Vogel'};
 const scene=$('#scene'),svgEl=$('#sceneSvg');
 function fitScene(){const h=scene.clientHeight;svgEl.style.height=h+'px';svgEl.style.width=Math.max(scene.clientWidth,h*2800/600)+'px';pagers()}
 function pagers(){const m=scene.scrollWidth-scene.clientWidth;$('#pgL').hidden=scene.scrollLeft<20;$('#pgR').hidden=scene.scrollLeft>m-20}
@@ -725,7 +792,7 @@ svgEl.querySelectorAll('.hot').forEach(g=>{
   const act=()=>activate(g.dataset.g,()=>boing(g));
   g.addEventListener('click',act);g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();act()}});
 });
-function renderHome(){$('#starCount').textContent=S.stars;setMood($('#sceneNuki'),'normal');requestAnimationFrame(fitScene)}
+function renderHome(){$('#starCount').textContent=S.stars;paintGoal();setMood($('#sceneNuki'),'normal');requestAnimationFrame(fitScene)}
 $('#btnHelp').onclick=()=>toast('Wisch zur Seite und tipp auf die Spielgeräte. Jedes Spielgerät ist ein Spiel!');
 function paintMute(){$('#muteWaves').style.display=S.mute?'none':'';$('#muteX').style.display=S.mute?'':'none'}
 $('#btnMute').onclick=()=>{S.mute=!S.mute;save();paintMute();if(S.mute)hush();else toast('Ton ist an!')};
@@ -754,6 +821,8 @@ let G=null;
 function anlautPool(){return W.filter(w=>w.l!=='X'&&(S.laut==='ALLE'||w.l===S.laut))}
 function makeTask(id,i){
   const LV=G.L, n=[0,2,3,3,4,4][LV];
+  if(id==='versteht')return nvTask(i);
+  if(id==='leiter')return leiterItem(G.z,G.st,i);
   if(id==='mund'){const ok=MUND.filter(m=>m.lv<=LV);const ex=ok.filter(m=>!G.used.includes(m));const t=rnd(ex.length?ex:ok);G.used.push(t);return {target:t,text:t.say,hold:[0,3,4,5,6,8][LV]}}
   if(id==='hoeren'){
     const pool=anlautPool(); const t=pickN(pool,1,G.used)[0]||rnd(pool); G.used.push(t);
@@ -795,18 +864,23 @@ function makeTask(id,i){
 function startGame(id){
   hush(); const g=GAMES.find(x=>x.id===id);
   G={id,g,L:lvl(id),first:0,i:0,won:0,used:[],rhymes:shuffle(RHYMES),minimal:shuffle(MINIMAL),busy:false};
-  $('#gTitle').innerHTML=`${g.name}<small class="lvl">Stufe ${G.L} von ${AGES[S.age].max}</small>`; $('#gStars').textContent=S.stars;
+  let sub=`Stufe ${G.L} von ${AGES[S.age].max}`;
+  if(id==='versteht'){G.pairs=shuffle(nvPairs())}
+  if(id==='leiter'){G.z=rnd(zielKeys());G.st=S.leiter[G.z]||1;G.R=8;G.good=0;G.off=Math.floor(Math.random()*20);sub=`${ZIEL[G.z].titel} · Sprosse ${G.st}: ${STUFEN[G.st-1]}`}
+  $('#gTitle').innerHTML=`${g.name}<small class="lvl">${sub}</small>`; $('#gStars').textContent=S.stars;
   show('game'); $('#game').scrollTop=0; nextTask();
 }
-function renderDots(){ $('#dots').innerHTML=Array.from({length:ROUND},(_,k)=>`<i class="${k<G.i?'done':k===G.i?'now':''}"></i>`).join('') }
+function renderDots(){ $('#dots').innerHTML=Array.from({length:G.R||ROUND},(_,k)=>`<i class="${k<G.i?'done':k===G.i?'now':''}"></i>`).join('') }
 function bubble(t){$('#gBubble').textContent=t}
 function nextTask(){
-  if(G.i>=ROUND)return finish();
+  if(G.i>=(G.R||ROUND))return finish();
   G.task=makeTask(G.id,G.i); G.tries=0; G.busy=false; renderDots(); setMood($('#gameMascot'),'normal');
   const T=G.task; bubble(T.text);
   if(G.id==='silben')return renderSilben();
   if(G.id==='sprechen')return renderSprechen();
   if(G.id==='mund')return renderMund();
+  if(G.id==='versteht')return renderNV();
+  if(G.id==='leiter')return renderLeiter();
   const cap=S.cap||G.id==='reime'&&false;
   let head='';
   if(T.badge)head=`<div class="speak"><span class="badge">${T.badge}</span><span class="target-mini">${T.ref.e}</span></div>`;
@@ -895,7 +969,7 @@ function renderSprechen(){
   $('#btnSlow').onclick=()=>{hush();saySyllables(T.target)};
   const done=async(good,msg)=>{
     if(G.busy)return;G.busy=true;hush();
-    if(good&&!tries)G.first++;const k=T.target.w;S.practice[k]=Math.max(0,(S.practice[k]||0)+(good?-1:1));if(!S.practice[k])delete S.practice[k];
+    if(good&&!tries)G.first++;logTrial(S.ziel,good);const k=T.target.w;S.practice[k]=Math.max(0,(S.practice[k]||0)+(good?-1:1));if(!S.practice[k])delete S.practice[k];
     addStar();fxRight();setMood($('#gameMascot'),'happy');
     const t=msg||(good?rnd(['Wunderbar gesprochen!','Super, das klang toll!','Klasse!']):'Toll, dass du es probiert hast!');
     bubble(t);if(good)confetti(18);await say(t);await wait(250);G.i++;nextTask();
@@ -990,28 +1064,291 @@ function renderMund(){
   wait(250).then(()=>say(T.text));
 }
 
+/* ================= NEU: LAUT-PLAN, NUKI VERSTEHT DICH, LAUT-LEITER =================
+   Fachlicher Hintergrund (Logopädie):
+   - Minimalpaar-Ansatz: erst Hören (Bild zeigen), dann Sprechen, dann Sprechen mit echter Folge
+     (der Zuhörer bringt, was er GEHÖRT hat). So merkt das Kind selbst, dass der Laut die Bedeutung ändert.
+   - Lautanbahnung in Stufen: Laut -> Silbe -> Wort -> Satz -> zwei Wörter, mit Laut-Bild und Mund-Bild.
+   - Viele kurze Wiederholungen (Dosis) sind entscheidend, daher Tagesziel und Zähler.
+   - Spracherkennung irrt bei Kinderstimmen oft: Erwachsene entscheiden mit („Was hast du gehört?“).
+   - Eigene Stimme hören (Aufnahme) stärkt die Selbstwahrnehmung. */
+const W2=[
+ ['Vase','🏺','Va-se'],['Ameise','🐜','A-mei-se'],['Bus','🚌','Bus'],['Glas','🥛','Glas'],['Dusche','🚿','Du-sche'],['Muschel','🐚','Mu-schel'],
+ ['Tisch','🪑','Tisch'],['Busch','🌳','Busch'],['Frosch','🐸','Frosch'],['Jacke','🧥','Ja-cke'],['Brücke','🌉','Brü-cke'],['Berg','⛰️','Berg'],['Zug','🚂','Zug'],
+ ['Auge','👁️','Au-ge'],['Butter','🧈','But-ter'],['Hut','🎩','Hut'],['Boot','⛵','Boot'],['Brot','🍞','Brot'],['Bett','🛏️','Bett'],['Fuchs','🦊','Fuchs'],
+ ['Feder','🪶','Fe-der'],['Fahrrad','🚲','Fahr-rad'],['Giraffe','🦒','Gi-raf-fe'],['Affe','🐒','Af-fe'],['Brief','✉️','Brief'],['Reiter','🏇','Rei-ter'],
+ ['Möhre','🥕','Möh-re'],['Karussell','🎠','Ka-rus-sell'],['Ballon','🎈','Bal-lon'],['Wolke','☁️','Wol-ke'],['Eule','🦉','Eu-le'],['Schal','🧣','Schal'],
+ ['Blume','🌸','Blu-me'],['Brille','👓','Bril-le'],['Kreis','⭕','Kreis'],['Glocke','🔔','Glo-cke'],['Schlange','🐍','Schlan-ge'],['Spinne','🕷️','Spin-ne'],
+ ['Kleid','👗','Kleid'],['Drache','🐉','Dra-che'],['Reis','🍚','Reis'],['Tonne','🗑️','Ton-ne'],['Topf','🍲','Topf'],['Kopf','👦','Kopf'],['Vogel','🐦','Vo-gel']
+].map(([w,e,s])=>({w,e,s,l:'N'}));
+const WX=Object.fromEntries([...W,...W2].map(x=>[x.w,x]));
+const ART={Sonne:'die',Seife:'die',Socke:'die',Sofa:'das',Salat:'der',Säge:'die',Hose:'die',Nase:'die',Rose:'die',Hase:'der',Käse:'der',Vase:'die',Ameise:'die',Maus:'die',Haus:'das',Eis:'das',Bus:'der',Glas:'das',Reis:'der',
+ Schuh:'der',Schaf:'das',Schiff:'das',Schere:'die',Schal:'der',Schlüssel:'der',Tasche:'die',Flasche:'die',Dusche:'die',Muschel:'die',Fisch:'der',Tisch:'der',Busch:'der',Frosch:'der',
+ Katze:'die',Kuh:'die',Keks:'der',Kuchen:'der',Kerze:'die',Kanne:'die',Kopf:'der',Schnecke:'die',Jacke:'die',Brücke:'die',Rakete:'die',Rucksack:'der',Berg:'der',Zug:'der',
+ Gabel:'die',Geige:'die',Gurke:'die',Geschenk:'das',Gitarre:'die',Gespenst:'das',Igel:'der',Vogel:'der',Regen:'der',Tiger:'der',Auge:'das',
+ Tasse:'die',Tomate:'die',Teddy:'der',Tanne:'die',Tonne:'die',Topf:'der',Ente:'die',Butter:'die',Auto:'das',Hut:'der',Boot:'das',Brot:'das',Bett:'das',
+ Fuchs:'der',Feder:'die',Fahrrad:'das',Löffel:'der',Giraffe:'die',Affe:'der',Brief:'der',Ring:'der',Raupe:'die',Reiter:'der',Möhre:'die',Karussell:'das',
+ Löwe:'der',Lampe:'die',Leiter:'die',Lama:'das',Lupe:'die',Ballon:'der',Wolke:'die',Eule:'die',Ball:'der',Blume:'die',Brille:'die',Krone:'die',Kreis:'der',
+ Glocke:'die',Kleid:'das',Drache:'der',Schlange:'die',Spinne:'die',Stern:'der',Trommel:'die'};
+const MASSE={Reis:1,Butter:1,Regen:1,Käse:1,Salat:1};
+const akk=w=>({der:'den',die:'die',das:'das'})[ART[w]||'das'];
+const AKKW={Hase:'Hasen',Löwe:'Löwen',Affe:'Affen',Drache:'Drachen'};const akkW=w=>AKKW[w]||w;
+const ein=w=>MASSE[w]?'':(ART[w]==='die'?'eine':'ein');
+const ZIEL={
+ S:{name:'S',titel:'S wie Sonne',bild:'🐍',bildText:'Die Schlange zischt.',noise:'s',mund:'s',tipp:'Zähne zusammen. Die Zunge bleibt hinter den Zähnen. Dann zischt die Schlange.',
+   silben:['sa','so','su','si','se'],pos:{an:['Sonne','Seife','Socke','Sofa','Salat','Säge'],mitte:['Hose','Nase','Rose','Hase','Käse','Vase','Ameise'],ende:['Maus','Haus','Eis','Bus','Glas','Reis']}},
+ SCH:{name:'Sch',titel:'Sch wie Schuh',bild:'🤫',bildText:'Psst, sei ganz leise.',noise:'sch',mund:'sch',tipp:'Mach einen Kussmund und schieb die Lippen nach vorne. Die Zähne bleiben fast zu.',
+   silben:['scha','scho','schu','schi','sche'],pos:{an:['Schuh','Schaf','Schiff','Schere','Schal','Schlüssel'],mitte:['Tasche','Flasche','Dusche','Muschel'],ende:['Fisch','Tisch','Busch','Frosch']}},
+ K:{name:'K',titel:'K wie Katze',bild:'🐦',bildText:'Der Specht klopft.',mund:'k',tipp:'Die Zungenspitze bleibt unten hinter den Zähnen. Hinten drückt die Zunge nach oben, wie bei einem kleinen Husten.',
+   silben:['ka','ko','ku','ki','ke'],pos:{an:['Katze','Kuh','Käse','Keks','Kuchen','Kerze','Kanne','Kopf'],mitte:['Socke','Schnecke','Jacke','Brücke','Rakete'],ende:['Rucksack','Berg','Zug','Keks']}},
+ G:{name:'G',titel:'G wie Gabel',bild:'🐔',bildText:'Das Huhn gackert.',mund:'g',tipp:'Wie beim K: Zungenspitze unten, hinten drückt die Zunge nach oben. Beim G brummt die Stimme mit.',
+   silben:['ga','go','gu','gi','ge'],pos:{an:['Gabel','Geige','Gurke','Geschenk','Gitarre','Gespenst','Glas'],mitte:['Igel','Vogel','Regen','Säge','Tiger','Auge'],ende:[]}},
+ T:{name:'T',titel:'T wie Tasse',bild:'⏰',bildText:'Die Uhr tickt.',mund:'t',tipp:'Die Zungenspitze tippt oben hinter die Zähne. Ganz vorne im Mund.',
+   silben:['ta','to','tu','ti','te'],pos:{an:['Tasse','Tomate','Tiger','Teddy','Tanne','Tisch','Tonne','Topf'],mitte:['Ente','Butter','Auto','Tomate'],ende:['Hut','Boot','Brot','Bett']}},
+ F:{name:'F',titel:'F wie Fisch',bild:'🐱',bildText:'Die Katze faucht.',noise:'f',mund:'f',tipp:'Die oberen Zähne beißen ganz leicht auf die Unterlippe. Dann blasen wie ein leiser Wind.',
+   silben:['fa','fo','fu','fi','fe'],pos:{an:['Fisch','Fuchs','Feder','Fahrrad'],mitte:['Sofa','Löffel','Giraffe','Affe'],ende:['Schaf','Schiff','Brief']}},
+ R:{name:'R',titel:'R wie Rose',bild:'🦁',bildText:'Der Löwe brummt.',mund:'r',tipp:'Das R kommt von ganz hinten im Hals, wie beim Gurgeln mit Wasser.',
+   silben:['ra','ro','ru','ri','re'],pos:{an:['Rose','Rakete','Regen','Ring','Raupe','Reiter','Reis'],mitte:['Gitarre','Schere','Möhre','Karussell','Giraffe'],ende:[]}},
+ L:{name:'L',titel:'L wie Löwe',bild:'🎵',bildText:'Wir singen.',mund:'l',tipp:'Die Zungenspitze liegt oben hinter den Zähnen. Die Luft fließt an den Seiten vorbei.',
+   silben:['la','lo','lu','li','le'],pos:{an:['Löwe','Lampe','Leiter','Löffel','Lama','Lupe'],mitte:['Ballon','Wolke','Eule'],ende:['Ball','Igel','Schal','Vogel','Gabel']}},
+ CL:{name:'Bl, Kr …',titel:'Zwei Laute zusammen',bild:'🧩',bildText:'Zwei Laute werden Freunde.',mund:'cl',tipp:'Sprich beide Laute langsam nacheinander: B und L wird Bl. Dann immer schneller.',
+   silben:['bla','bra','kra','gla','fla'],pos:{an:['Blume','Brot','Brille','Krone','Kreis','Frosch','Glocke','Kleid','Drache','Schlange','Spinne','Stern','Flasche','Trommel'],mitte:[],ende:[]}}
+};
+const STUFEN=['Laut','Silbe','Wort','Satz','Zwei Wörter'];
+const NV=[ // Nuki versteht dich: Minimalpaare mit Alltags-Situation für jedes Wort
+ {k:['K','T'],a:'Kanne',b:'Tanne',ca:'Mila will die Blumen gießen. Was braucht sie?',cb:'Ben will den Weihnachtsbaum schmücken. Was braucht er?'},
+ {k:['K','T'],a:'Kopf',b:'Topf',ca:'Wo setzt Ben die Mütze auf?',cb:'Nuki will Suppe kochen. Was braucht er?'},
+ {k:['SCH','S'],a:'Tasche',b:'Tasse',ca:'Mila packt ihre Sachen ein. Was braucht sie?',cb:'Ben will Kakao trinken. Was braucht er?'},
+ {k:['SCH','S'],a:'Busch',b:'Bus',ca:'Wo versteckt sich der Hase?',cb:'Womit fährt Ben in die Stadt?'},
+ {k:['SCH','K'],a:'Schuh',b:'Kuh',ca:'Was zieht Mila an den Fuß?',cb:'Wer macht Muh?'},
+ {k:['S','T'],a:'Sonne',b:'Tonne',ca:'Was scheint am Himmel?',cb:'Wohin kommt der Müll?'},
+ {k:['F','T'],a:'Fisch',b:'Tisch',ca:'Was schwimmt im Teich?',cb:'Wo stellt Mila den Teller hin?'},
+ {k:['CL'],a:'Brot',b:'Boot',ca:'Nuki hat Hunger. Was möchte er essen?',cb:'Womit fährt man über den See?'},
+ {k:['CL','R','K'],a:'Kreis',b:'Reis',ca:'Welche Form ist ganz rund?',cb:'Was isst Ben mit Soße?'},
+ {k:['R','L'],a:'Reiter',b:'Leiter',ca:'Wer sitzt auf dem Pferd?',cb:'Womit klettert man auf das Dach?'}
+];
+S.ziel=S.ziel||'ALLE';S.pos=S.pos||'alle';S.goal=S.goal||30;S.leiter=S.leiter||{};S.log=S.log||{};S.ear=S.ear||'erwachsen';
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+function todayN(){return (S.log[today()]||{n:0}).n}
+function logTrial(z,good){
+  const d=today();const L=S.log[d]=S.log[d]||{n:0,g:0,by:{}};L.n++;if(good)L.g++;const b=L.by[z]=L.by[z]||[0,0];b[0]++;if(good)b[1]++;
+  const keys=Object.keys(S.log).sort();while(keys.length>90)delete S.log[keys.shift()];save();paintGoal();
+  if(L.n===S.goal){setTimeout(()=>{confetti(60);tone([523,659,784,1047],.12,'triangle');toast('Tagesziel geschafft! Die Sonnenblume blüht.')},600)}
+}
+function paintGoal(){const el=$('#goalCount');if(el){const n=todayN();el.textContent=Math.min(n,S.goal)+'/'+S.goal;$('#goalChip').classList.toggle('full',n>=S.goal)}}
+function zielKeys(){return S.ziel==='ALLE'?Object.keys(ZIEL):[S.ziel]}
+function zielWords(z){const P=ZIEL[z].pos;const ks=S.pos==='alle'?['an','mitte','ende']:[S.pos];let ws=ks.flatMap(k=>P[k]||[]);if(!ws.length)ws=P.an;return [...new Set(ws)].map(w=>WX[w]).filter(Boolean)}
+
+/* --- Geräusch-Laute (S, Sch, F) künstlich erzeugt: klingt wie echtes Zischen --- */
+function lautNoise(type){return new Promise(res=>{
+  if(!S.sound||S.mute)return res();try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();
+   const dur=1.3,buf=ac.createBuffer(1,ac.sampleRate*dur,ac.sampleRate),d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+   const src=ac.createBufferSource();src.buffer=buf;const f=ac.createBiquadFilter(),g=ac.createGain(),t=ac.currentTime;
+   if(type==='s'){f.type='bandpass';f.frequency.value=6800;f.Q.value=1.4}else if(type==='sch'){f.type='bandpass';f.frequency.value=2700;f.Q.value=1.1}else{f.type='highpass';f.frequency.value=1400}
+   const v=type==='f'?.16:.32;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.12);g.gain.setValueAtTime(v,t+dur-.25);g.gain.linearRampToValueAtTime(0,t+dur);
+   src.connect(f).connect(g).connect(ac.destination);src.start(t);src.stop(t+dur);setTimeout(res,dur*1000+80)}catch(e){res()}})}
+
+/* --- Mund-Bild: Seitenansicht, wo Zunge, Zähne und Lippen sind --- */
+function mundSVG(t){
+  const K='stroke="#26303a" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"';
+  const TON={
+    s:'M40 170 Q46 122 78 112 Q112 104 140 102 Q148 103 147 109 Q124 118 94 128 Q64 142 62 170Z',
+    sch:'M40 170 Q46 120 78 110 Q108 100 134 96 Q142 95 142 101 Q122 114 94 126 Q64 142 62 170Z',
+    t:'M40 170 Q46 124 78 114 Q108 106 130 96 Q142 87 148 90 Q147 99 128 112 Q96 132 64 170Z',
+    l:'M40 170 Q46 124 78 114 Q108 106 130 96 Q142 87 148 90 Q147 99 128 112 Q96 132 64 170Z',
+    k:'M40 170 Q42 104 60 88 Q78 80 98 96 Q122 112 144 113 Q147 119 140 121 Q100 128 70 152 Q58 162 56 170Z',
+    g:'M40 170 Q42 104 60 88 Q78 80 98 96 Q122 112 144 113 Q147 119 140 121 Q100 128 70 152 Q58 162 56 170Z',
+    r:'M40 170 Q40 112 52 98 Q68 92 96 104 Q124 112 144 112 Q147 118 140 120 Q100 128 70 152 Q58 162 56 170Z',
+    f:'M40 170 Q46 128 80 118 Q112 112 138 112 Q146 113 144 119 Q120 124 94 132 Q64 146 62 170Z',
+    cl:'M40 170 Q46 122 78 112 Q112 104 140 102 Q148 103 147 109 Q124 118 94 128 Q64 142 62 170Z'};
+  const round=t==='sch',fl=t==='f';
+  const lipU=round?`<ellipse cx="172" cy="90" rx="11" ry="8" fill="#e8558a" ${K}/>`:`<ellipse cx="164" cy="${fl?88:90}" rx="9" ry="6.5" fill="#e8558a" ${K}/>`;
+  const lipL=round?`<ellipse cx="172" cy="112" rx="11" ry="8" fill="#e8558a" ${K}/>`:fl?`<ellipse cx="153" cy="103" rx="9" ry="6.5" fill="#e8558a" ${K}/>`:`<ellipse cx="164" cy="111" rx="9" ry="6.5" fill="#e8558a" ${K}/>`;
+  const air={s:'<path d="M150 101 H205" stroke="#1fb3a8" stroke-width="4" stroke-dasharray="6 5" marker-end="url(#ar)"/>',
+    sch:'<path d="M182 96 Q196 92 208 88 M182 101 H210 M182 106 Q196 110 208 114" stroke="#1fb3a8" stroke-width="4" stroke-dasharray="6 5" fill="none"/>',
+    f:'<path d="M164 96 Q186 92 208 90" stroke="#1fb3a8" stroke-width="4" stroke-dasharray="6 5" fill="none" marker-end="url(#ar)"/>',
+    k:'<text x="182" y="106" font-size="22" font-weight="900" fill="#ff7559" font-family="sans-serif">k!</text>',
+    g:'<text x="182" y="106" font-size="22" font-weight="900" fill="#ff7559" font-family="sans-serif">g!</text><path d="M24 120 q6 -6 0 -12 q-6 -6 0 -12 M14 120 q6 -6 0 -12 q-6 -6 0 -12" stroke="#8566db" stroke-width="3" fill="none"/>',
+    t:'<text x="182" y="106" font-size="22" font-weight="900" fill="#ff7559" font-family="sans-serif">t!</text>',
+    l:'<path d="M120 122 Q150 134 176 124 M120 80 Q150 70 176 78" stroke="#1fb3a8" stroke-width="3.5" stroke-dasharray="5 5" fill="none"/>',
+    r:'<path d="M52 96 q-6 5 0 10 q6 5 0 10 q-6 5 0 10" stroke="#8566db" stroke-width="3.5" fill="none"/>',cl:''}[t]||'';
+  const spot={s:[143,104],sch:[138,98],t:[146,90],l:[146,90],k:[66,86],g:[66,86],r:[52,100],f:[152,98],cl:[143,104]}[t]||[140,100];
+  return `<svg viewBox="0 0 220 180" aria-hidden="true"><defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#1fb3a8"/></marker></defs>
+   <path d="M20 4 Q150 0 178 52 L192 70 Q196 76 184 80 L184 122 Q182 150 150 160 L120 176 H20Z" fill="#f6cfae" ${K}/>
+   <path d="M150 84 Q122 70 92 72 Q64 74 46 92 L40 176 H62 Q70 140 140 120 L150 118Z" fill="#7a2338" opacity=".88"/>
+   <path d="M152 84 Q122 70 92 72 Q62 74 46 92" fill="none" stroke="#c96b7a" stroke-width="7" stroke-linecap="round"/>
+   <path d="M46 92 q-3 6 -1 10" stroke="#c96b7a" stroke-width="5" fill="none" stroke-linecap="round"/>
+   <path d="${TON[t]||TON.s}" fill="#ff7f8a" ${K}/>
+   <path d="M146 84 H156 L155 97 H148Z" fill="#fff" ${K}/><path d="M147 105 H155 L156 117 H148Z" fill="#fff" ${K}/>
+   ${lipU}${lipL}${air}
+   <circle cx="${spot[0]}" cy="${spot[1]}" r="9" fill="none" stroke="#ffc63a" stroke-width="4" class="mspot"/>
+  </svg>`;
+}
+
+/* --- Mikrofon-Aufnahme „Hör dich selbst“ und Kamera-Spiegel (nur auf diesem Gerät, nichts wird gesendet) --- */
+let MED={a:null,v:null};
+async function micStream(){if(MED.a&&MED.a.active)return MED.a;MED.a=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});return MED.a}
+function stopMedia(){['a','v'].forEach(k=>{if(MED[k]){MED[k].getTracks().forEach(t=>t.stop());MED[k]=null}})}
+function canRecord(){return !!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder)}
+async function recordClip(ms,onLevel){
+  const st=await micStream();let mime='';['audio/webm','audio/mp4','audio/ogg'].some(m=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(m)&&(mime=m));
+  const mr=new MediaRecorder(st,mime?{mimeType:mime}:undefined),ch=[];let an=null,raf=0;
+  try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')await ac.resume();const src=ac.createMediaStreamSource(st);an=ac.createAnalyser();an.fftSize=512;src.connect(an)}catch(e){}
+  const buf=an?new Uint8Array(an.fftSize):null;
+  const meter=()=>{if(an&&onLevel){an.getByteTimeDomainData(buf);let m=0;for(const v of buf)m=Math.max(m,Math.abs(v-128));onLevel(Math.min(1,m/70))}raf=requestAnimationFrame(meter)};
+  return new Promise(res=>{mr.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};mr.onstop=()=>{cancelAnimationFrame(raf);onLevel&&onLevel(0);res(ch.length?URL.createObjectURL(new Blob(ch,{type:mr.mimeType||mime||'audio/webm'})):null)};
+    mr.start();meter();setTimeout(()=>{try{mr.stop()}catch(e){res(null)}},ms)})}
+function playUrl(u){return new Promise(r=>{const a=new Audio(u);a.onended=a.onerror=()=>r();a.play().catch(()=>r())})}
+async function mirrorOn(video){MED.v=MED.v||await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:480},height:{ideal:480}},audio:false});video.srcObject=MED.v;try{await video.play()}catch(e){}}
+
+/* --- Gemeinsames Bedien-Element: Aufnehmen, Spiegel, Bewerten --- */
+function practiceBox(id){
+  return `<div class="pbox">
+   ${canRecord()?`<button class="micbtn rec" id="${id}Rec" aria-label="Aufnehmen"><span class="lvlring" id="${id}Lvl"></span><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/></svg></button>
+   <p class="stage-note" id="${id}Note">Tipp aufs Mikrofon, sprich nach – dann hörst du dich selbst!</p>
+   <div class="row small"><button class="bigbtn light" id="${id}Me" disabled>👂 Mich hören</button></div>`:'<p class="stage-note">Sprich es Nuki nach!</p>'}
+  </div>`}
+function wireRecord(id,after){
+  if(!canRecord())return;const btn=$('#'+id+'Rec'),note=$('#'+id+'Note'),me=$('#'+id+'Me'),lv=$('#'+id+'Lvl');let url=null,busy=false;
+  btn.onclick=async()=>{if(busy)return;busy=true;hush();btn.classList.add('on');note.textContent='Ich höre zu … sprich jetzt!';
+    try{url=await recordClip(2600,v=>{lv.style.transform=`scale(${1+v*.9})`;lv.style.opacity=.25+v*.75});}catch(e){note.textContent='Das Mikrofon ist nicht erlaubt. Kein Problem – einfach laut nachsprechen!';btn.disabled=true;btn.style.opacity=.4;busy=false;btn.classList.remove('on');return}
+    btn.classList.remove('on');busy=false;if(!url){note.textContent='Ich habe nichts gehört. Nochmal!';return}
+    me.disabled=false;note.textContent='So klingst du:';await wait(150);await playUrl(url);note.textContent='Klang es wie bei Nuki? Hör nochmal oder bewerte unten.';after&&after()};
+  me.onclick=()=>{if(url){hush();playUrl(url)}}}
+function rateRow(id){return `<p class="stage-note" style="margin:6px 0 0">Wie hat es geklappt?</p><div class="row" style="padding-bottom:18px"><button class="bigbtn green" id="${id}Good">😊 Gut gesagt</button><button class="bigbtn orange" id="${id}Again">💪 Üben wir noch</button></div>`}
+
+/* --- Spiel: Laut-Leiter --- */
+function leiterItem(z,st,i){
+  const Z=ZIEL[z];
+  if(st===1)return {kind:'laut',show:Z.bild,label:Z.name,say:Z.bildText,text:Z.bildText+' Mach mit!',model:async()=>{await say(Z.bildText);if(Z.noise)await lautNoise(Z.noise);else{for(let k=0;k<3;k++){await say(Z.silben[0]);await wait(120)}}}};
+  if(st===2){const s=Z.silben[i%Z.silben.length];return {kind:'silbe',show:s.charAt(0).toUpperCase()+s.slice(1),label:'Silbe',say:s,text:'Sag mal: '+s+'!',model:()=>say(s)}}
+  const ws=zielWords(z);const w=ws[(i+G.off)%ws.length];
+  if(st===3)return {kind:'wort',word:w,show:w.e,label:w.w,say:w.w,text:'Sag mal: '+w.w+'!',model:()=>say(w.w)};
+  if(st===4){const t=`Ich sehe ${akk(w.w)} ${akkW(w.w)}.`;return {kind:'satz',word:w,show:w.e,label:t,say:t,text:'Sag den ganzen Satz!',model:()=>say(t)}}
+  const w2=ws[(i+G.off+1+Math.floor(ws.length/2))%ws.length]||w;const t=`${w.w} und ${w2.w}.`;return {kind:'zwei',word:w,show:w.e+' '+w2.e,label:t,say:t,text:'Zwei Wörter hintereinander!',model:()=>say(t)};
+}
+function renderLeiter(){
+  const T=G.task,z=G.z,Z=ZIEL[z],st=G.st;
+  const rungs=STUFEN.map((n,k)=>`<li class="${k+1===st?'now':k+1<st?'done':''}"><b>${k+1}</b><span>${n}</span></li>`).reverse().join('');
+  $('#stage').innerHTML=`<div class="split leiter">
+   <div class="lcol">
+     <ol class="ladder" aria-label="Stufen">${rungs}</ol>
+     <div class="mundbox"><div class="mundpic">${mundSVG(Z.mund)}</div><button class="bigbtn light small" id="lTipp">👄 So geht's</button>
+       <button class="bigbtn light small" id="lMirror">🪞 Spiegel</button><video id="lVideo" class="mirrorcam" playsinline muted hidden></video></div>
+   </div>
+   <div class="mctl">
+     <div class="hero"><div class="frame ${T.kind==='silbe'?'syl-frame':''}"><span class="em ${T.kind==='silbe'||T.kind==='laut'&&false?'txt':''}">${T.show}</span></div><div class="word">${T.kind==='laut'?Z.bildText:T.label}</div>
+       ${T.word&&T.kind==='wort'&&G.L<5?`<div class="syl">${T.word.s.split('-').join(' · ')}</div>`:''}</div>
+     <div class="speak"><button class="bigbtn" id="lModel">🔊 Nuki zeigt es</button>${T.word?'<button class="bigbtn light" id="lSlow">🐢 Langsam</button>':''}</div>
+     ${practiceBox('l')}${rateRow('l')}
+   </div></div>`;
+  $('#lModel').onclick=()=>{hush();T.model()};
+  if(T.word)$('#lSlow').onclick=()=>{hush();saySyllables(T.word)};
+  $('#lTipp').onclick=()=>{hush();bubble(Z.tipp);say(Z.tipp)};
+  $('#lMirror').onclick=async()=>{const v=$('#lVideo');if(!v.hidden){v.hidden=true;if(MED.v){MED.v.getTracks().forEach(t=>t.stop());MED.v=null}return}
+    try{v.hidden=false;await mirrorOn(v)}catch(e){v.hidden=true;toast('Die Kamera ist nicht erlaubt. Nimm einfach einen Spiegel!',false)}};
+  wireRecord('l');
+  const done=async good=>{if(G.busy)return;G.busy=true;hush();logTrial(z,good);if(good){G.first++;G.good++}
+    addStar();fxRight();setMood($('#gameMascot'),'happy');
+    const t=good?rnd(['Wunderbar gesprochen!','Super, das klang toll!','Klasse!']):'Toll, dass du es probiert hast!';
+    bubble(t);if(good)confetti(14);await say(t);await wait(200);G.i++;nextTask()};
+  $('#lGood').onclick=()=>done(true);$('#lAgain').onclick=()=>done(false);
+  wait(250).then(()=>T.model());
+}
+
+/* --- Spiel: Nuki versteht dich (Minimalpaare mit echter Folge) --- */
+function nvPairs(){const ks=zielKeys();let p=NV.filter(x=>S.ziel==='ALLE'||x.k.some(k=>ks.includes(k)));return p.length?p:NV}
+function nvTask(i){
+  const pr=G.pairs[i%G.pairs.length],aim=Math.random()<.5?'a':'b',t=pr[aim],o=pr[aim==='a'?'b':'a'];
+  const perceive=G.L<=2?i%3!==2:(G.L<=3?i%2===0:i===0);
+  return {pr,target:WX[t],other:WX[o],ctx:pr['c'+aim],perceive};
+}
+function renderNV(){
+  const T=G.task,a=T.target,b=T.other,cards=shuffle([a,b]);
+  if(T.perceive){
+    bubble(`Hör genau! Wo ist ${ART[a.w]||'das'} ${a.w}?`);
+    $('#stage').innerHTML=`<div class="speak"><button class="bigbtn" id="btnListen">🔊 Nochmal hören</button></div>
+     <div class="cards n2" style="--n:2">${cards.map(o=>`<button class="card" data-w="${o.w}" aria-label="${o.w}"><span class="em">${o.e}</span>${S.cap?`<span class="cap">${o.w}</span>`:''}</button>`).join('')}</div>
+     <p class="stage-note">Erst hören, dann selbst sagen: so lernt das Ohr den Unterschied.</p>`;
+    const sp=`Wo ist ${ART[a.w]||'das'} ${a.w}?`;$('#btnListen').onclick=()=>{hush();say(sp)};
+    $('#stage').querySelectorAll('.card').forEach(c=>c.onclick=async()=>{if(G.busy||c.classList.contains('wrong'))return;
+      if(c.dataset.w===a.w){G.busy=true;if(!G.tries)G.first++;c.classList.add('right');fxRight();setMood($('#gameMascot'),'happy');addStar();confetti(10);const p=rnd(PRAISE);bubble(`${p} ${a.w}!`);await say(`${p} ${a.w}!`);await wait(250);G.i++;nextTask()}
+      else{G.tries++;c.classList.add('wrong');fxSoft();setMood($('#gameMascot'),'think');hush();await say('Hör nochmal genau.');say(a.w)}});
+    wait(250).then(()=>say(sp));return;
+  }
+  bubble(T.ctx+' Sag es Nuki!');
+  const mic=micUsable(),adult=S.ear!=='kind';
+  $('#stage').innerHTML=`<div class="nvshop"><div class="shelf">${cards.map(o=>`<div class="goods" data-w="${o.w}"><span class="em">${o.e}</span>${S.cap?`<span class="cap">${o.w}</span>`:''}</div>`).join('')}</div>
+    <div class="tray" id="tray"><span class="trayhint">Nuki bringt, was er hört …</span></div></div>
+   <div class="speak"><button class="bigbtn" id="btnCtx">🔊 Nochmal hören</button></div>
+   ${mic?`<button class="micbtn" id="btnMic" aria-label="Jetzt sprechen"><span class="micrings"></span><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/></svg></button><p class="stage-note" id="micNote">Tipp aufs Mikrofon und sag Nuki, was er bringen soll!</p><p class="heard" id="heard"></p>`:''}
+   <p class="stage-note" style="margin:4px 0 0">${adult?'Für Erwachsene: Welches Wort haben Sie gehört?':'Was hast du gesagt?'}</p>
+   <div class="row heardrow">${[a,b].map(o=>`<button class="bigbtn light" data-h="${o.w}">${o.e} ${o.w}</button>`).join('')}</div>`;
+  const ctxSay=()=>say(T.ctx+' Sag es Nuki!');$('#btnCtx').onclick=()=>{hush();ctxSay()};
+  const deliver=async h=>{
+    if(G.busy)return;G.busy=true;hush();const tray=$('#tray');const got=WX[h];
+    tray.innerHTML=`<span class="em pop">${got.e}</span>`;
+    if(h===a.w){logTrial(S.ziel,true);if(!G.tries)G.first++;fxRight();setMood($('#gameMascot'),'happy');addStar();confetti(16);
+      const t=`Genau! Hier ist ${ein(a.w)} ${a.w}.`.replace('  ',' ');bubble(t);await say(t);await wait(300);G.i++;nextTask();return}
+    logTrial(S.ziel,false);G.tries++;setMood($('#gameMascot'),'think');tone([392,330],.13,'triangle',.1);
+    const t1=`Oh, ich habe ${h} verstanden.`,t2=`Hier ist ${ein(h)} ${h}!`.replace('  ',' ');bubble(t1+' '+t2);await say(t1);await say(t2);await wait(200);
+    if(G.tries>=2){const t3=`Das passt aber nicht. Hör mal: ${a.w}.`;bubble(t3+' Toll probiert!');await say(t3);await say('Toll probiert!');tray.innerHTML=`<span class="em pop">${a.e}</span>`;addStar();await wait(500);G.i++;nextTask();return}
+    const t3=`Das passt aber nicht. Hör mal: ${a.w}.`;bubble(t3+' Sag es nochmal!');await say(t3);await say('Sag es nochmal!');tray.innerHTML='<span class="trayhint">Nuki bringt, was er hört …</span>';G.busy=false};
+  $('#stage').querySelectorAll('[data-h]').forEach(b=>b.onclick=()=>deliver(b.dataset.h));
+  if(mic){const btn=$('#btnMic'),note=$('#micNote'),heard=$('#heard');let bm=false;
+    btn.onclick=async()=>{if(bm||G.busy)return;bm=true;hush();await wait(150);btn.classList.add('wait');note.textContent='Einen Moment …';
+      const r=await listenOnce(()=>{btn.classList.remove('wait');btn.classList.add('on');note.textContent='Ich höre zu …'});btn.classList.remove('on','wait');bm=false;
+      if(r.error&&['not-allowed','service-not-allowed','audio-capture','unsupported','start'].includes(r.error)){micBroken=true;note.textContent='Das Mikrofon ist hier nicht erlaubt. Bitte die Knöpfe unten nutzen.';btn.disabled=true;btn.style.opacity=.4;return}
+      if(!r.alts.length){note.textContent='Ich habe nichts gehört. Tipp nochmal!';say('Ich habe dich nicht gehört.');return}
+      const sa=similarity(r.alts,a.w),sb=similarity(r.alts,b.w);heard.textContent='Gehört: „'+r.alts[0]+'“';
+      if(Math.max(sa,sb)<.5||Math.abs(sa-sb)<.08){note.textContent='Nicht ganz sicher – Erwachsene, bitte unten tippen, was Sie gehört haben.';return}
+      deliver(sa>sb?a.w:b.w)}}
+  wait(250).then(ctxSay);
+}
+
+/* --- Bericht und Elternbereich-Ergänzungen --- */
+function berichtHTML(){
+  const days=[];for(let k=13;k>=0;k--){const d=new Date();d.setDate(d.getDate()-k);const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');days.push([key,S.log[key]||{n:0,g:0,by:{}}])}
+  const max=Math.max(S.goal,...days.map(d=>d[1].n));const tot={};Object.values(S.log).forEach(L=>Object.entries(L.by||{}).forEach(([z,[n,g]])=>{tot[z]=tot[z]||[0,0];tot[z][0]+=n;tot[z][1]+=g}));
+  const sumN=days.reduce((a,d)=>a+d[1].n,0),act=days.filter(d=>d[1].n>0).length;
+  return `<div class="rchart">${days.map(([k,L])=>`<div class="rcol" title="${k}: ${L.n} Übungen"><i style="height:${L.n/max*100}%" class="${L.n>=S.goal?'ok':''}"></i><span>${+k.slice(8)}.</span></div>`).join('')}</div>
+   <p>Letzte 14 Tage: <b>${sumN}</b> Übungen an <b>${act}</b> Tagen · Tagesziel ${S.goal}.</p>
+   <table class="rtab"><tr><th>Laut</th><th>Übungen gesamt</th><th>davon „gut“</th><th>Laut-Leiter-Stufe</th></tr>
+   ${Object.keys(ZIEL).filter(z=>tot[z]||S.leiter[z]).map(z=>`<tr><td>${ZIEL[z].name}</td><td>${tot[z]?tot[z][0]:0}</td><td>${tot[z]?Math.round(tot[z][1]/tot[z][0]*100)+' %':'–'}</td><td>${S.leiter[z]?S.leiter[z]+' · '+STUFEN[S.leiter[z]-1]:'–'}</td></tr>`).join('')||'<tr><td colspan="4">Noch keine Übungen mit Ziel-Laut.</td></tr>'}</table>`}
+function renderParents2(){
+  seg($('#segZiel'),[['ALLE','Alle'],...Object.entries(ZIEL).map(([k,v])=>[k,v.name])],S.ziel,v=>{S.ziel=v;S.laut=LAUTE[v]?v:'ALLE'});
+  seg($('#segPos'),[['alle','Überall'],['an','Am Anfang'],['mitte','In der Mitte'],['ende','Am Ende']],S.pos,v=>S.pos=v);
+  seg($('#segGoal'),[[20,'20'],[30,'30'],[50,'50'],[80,'80']],S.goal,v=>{S.goal=+v;paintGoal()});
+  seg($('#segEar'),[['erwachsen','Erwachsene hören mit'],['kind','Kind wählt selbst']],S.ear,v=>S.ear=v);
+  $('#bericht').innerHTML=berichtHTML();
+  const z=S.ziel!=='ALLE'?ZIEL[S.ziel]:null;
+  $('#zielInfo').innerHTML=z?`<b>${z.titel}</b> · Mund-Tipp: ${z.tipp} ${z.pos[S.pos]&&!z.pos[S.pos].length?'<br><i>Für diesen Laut gibt es an dieser Stelle im Wort keine Übungswörter, die App nimmt dann Wörter mit dem Laut am Anfang.</i>':''}`:'Alle Laute gemischt. Tipp: Stellen Sie den Laut ein, an dem Ihr Kind gerade in der Logopädie arbeitet.';
+}
+function printBericht(){const r=$('#reportPrint');r.innerHTML=`<h1>Wort-Spielplatz · Übungsbericht</h1><p>Erstellt am ${new Date().toLocaleDateString('de-DE')} · Übe-Laut: ${S.ziel==='ALLE'?'alle':ZIEL[S.ziel].name} · Stelle im Wort: ${{alle:'überall',an:'Anfang',mitte:'Mitte',ende:'Ende'}[S.pos]}</p>${berichtHTML()}<p style="margin-top:18px;font-size:12px">„gut“ = von Erwachsenen oder dem Kind als gut gesprochen bewertet. Die App ersetzt keine logopädische Diagnostik oder Therapie.</p>`;window.print()}
+
 /* --- Rundenende --- */
 function finish(){
-  renderDots();hush();
+  renderDots();hush();stopMedia();
   const A=AGES[S.age];let up=false;
-  if(G.first>=5&&G.L<A.max){S.lvl[G.id]=G.L+1;up=true}
+  if(G.id==='leiter'){if(G.good>=6&&G.st<5){S.leiter[G.z]=G.st+1;up=true}else if(G.good<=2&&G.st>1){S.leiter[G.z]=G.st-1}else S.leiter[G.z]=G.st}
+  else if(G.first>=5&&G.L<A.max){S.lvl[G.id]=G.L+1;up=true}
   else if(G.first<=2&&G.L>A.min){S.lvl[G.id]=G.L-1}
   save();
   const before=Math.floor((S.stars-G.won)/PER_STICKER),after=Math.floor(S.stars/PER_STICKER);
   const newSticker=after>before&&after<=STICKERS.length?STICKERS[after-1]:null;
   $('#doneStars').textContent='⭐'.repeat(G.won);
-  $('#doneTitle').textContent=up?`Neue Stufe: ${G.L+1}!`:rnd(['Super gemacht!','Du bist ein Profi!','Was für eine Runde!']);
+  $('#doneTitle').textContent=up?(G.id==='leiter'?`Eine Sprosse höher: ${STUFEN[G.st]}!`:`Neue Stufe: ${G.L+1}!`):rnd(['Super gemacht!','Du bist ein Profi!','Was für eine Runde!']);
   const parts=[];
   if(up)parts.push('Ab jetzt wird es ein bisschen schwerer. Du schaffst das!');
-  parts.push(newSticker?`Neuer Sticker für deine Schatzkiste: ${newSticker}`:`Noch ${PER_STICKER-(S.stars%PER_STICKER)} Sterne bis zum nächsten Sticker.`);
+  parts.push(newSticker?`Neuer Sticker für deine Schatzkiste: ${newSticker}`:`Noch ${PER_STICKER-(S.stars%PER_STICKER)===1?'ein Stern':(PER_STICKER-(S.stars%PER_STICKER))+' Sterne'} bis zum nächsten Sticker.`);
   $('#doneText').textContent=parts.join(' ');
   setMood($('#doneMascot'),'happy');$('#doneOv').hidden=false;confetti(up?70:40);fxRight();if(up)setTimeout(()=>tone([523,659,784,1047],.12,'triangle'),400);
-  say(up?'Juhu! Du hast eine neue Stufe geschafft!':(newSticker?'Super gemacht! Du hast einen neuen Sticker!':'Super gemacht! Du hast '+G.won+' Sterne gesammelt.'));
+  say(up?'Juhu! Du hast eine neue Stufe geschafft!':(newSticker?'Super gemacht! Du hast einen neuen Sticker!':'Super gemacht! Du hast '+(G.won===1?'einen Stern':G.won+' Sterne')+' gesammelt.'));
 }
 $('#btnAgain').onclick=()=>{$('#doneOv').hidden=true;startGame(G.id)};
 $('#btnIsland').onclick=()=>{$('#doneOv').hidden=true;goHome()};
 $('#btnHome').onclick=goHome;
-function goHome(){hush();renderHome();show('home')}
+function goHome(){hush();stopMedia();renderHome();show('home')}
 
 function confetti(n){
   if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
@@ -1023,7 +1360,7 @@ function confetti(n){
 function openTreasure(){
   const got=Math.min(STICKERS.length,Math.floor(S.stars/PER_STICKER));
   $('#stickers').innerHTML=STICKERS.map((s,k)=>k<got?`<div class="got">${s}</div>`:`<div class="lock">?</div>`).join('');
-  $('#treasureText').textContent=got>=STICKERS.length?'Du hast alle Sticker gefunden!':`Alle ${PER_STICKER} Sterne gibt es einen neuen Sticker. Noch ${PER_STICKER-(S.stars%PER_STICKER)} Sterne!`;
+  $('#treasureText').textContent=got>=STICKERS.length?'Du hast alle Sticker gefunden!':`Alle ${PER_STICKER} Sterne gibt es einen neuen Sticker. Noch ${PER_STICKER-(S.stars%PER_STICKER)===1?'ein Stern':(PER_STICKER-(S.stars%PER_STICKER))+' Sterne'}!`;
   $('#treasureOv').hidden=false;
 }
 $('#btnCloseTreasure').onclick=()=>$('#treasureOv').hidden=true;
@@ -1031,7 +1368,7 @@ $('#btnCloseTreasure').onclick=()=>$('#treasureOv').hidden=true;
 /* ================= PARENTS ================= */
 function seg(el,items,cur,onPick){
   el.innerHTML=items.map(([v,l])=>`<button aria-pressed="${String(v)===String(cur)}" data-v="${v}">${l}</button>`).join('');
-  el.querySelectorAll('button').forEach(b=>b.onclick=()=>{onPick(b.dataset.v);save();renderParents()});
+  el.querySelectorAll('button').forEach(b=>b.onclick=()=>{onPick(b.dataset.v);save();renderParents();if(typeof renderParents2==='function')renderParents2()});
 }
 function renderParents(){
   seg($('#segLaut'),[['ALLE','Alle'],...Object.entries(LAUTE).map(([k,v])=>[k,v.label])],S.laut,v=>S.laut=v);
@@ -1041,7 +1378,7 @@ function renderParents(){
   seg($('#segMic'),[[false,'Aus'],[true,'An']],S.mic,v=>{S.mic=v==='true';micBroken=false});
   seg($('#segSound'),[[true,'An'],[false,'Aus']],S.sound,v=>S.sound=v==='true');
   const max=Math.max(6,...GAMES.map(g=>S.perGame[g.id]||0));
-  $('#progress').innerHTML=GAMES.map(g=>{const v=S.perGame[g.id]||0;return `<div class="bar"><span>${g.pic} ${g.name} · Stufe ${lvl(g.id)}</span><div class="t"><i style="width:${v/max*100}%"></i></div><b>${v}</b></div>`}).join('')+
+  $('#progress').innerHTML=GAMES.map(g=>{const v=S.perGame[g.id]||0;const lv=g.id==='leiter'?(Object.keys(S.leiter).length?Object.entries(S.leiter).map(([z,n])=>ZIEL[z].name+' '+n).join(', '):'Sprosse 1'):'Stufe '+lvl(g.id);return `<div class="bar"><span>${g.pic} ${g.name} · ${lv}</span><div class="t"><i style="width:${v/max*100}%"></i></div><b>${v}</b></div>`}).join('')+
     `<div class="bar"><span><b style="text-align:left">Gesamt</b></span><span></span><b>${S.stars}</b></div>`;
   const pr=Object.entries(S.practice).sort((a,b)=>b[1]-a[1]);
   $('#practiceList').innerHTML=pr.length?pr.map(([w,c])=>`<span>${byName[w]?.e||''} ${w} · ${c}×</span>`).join(''):'<p>Noch nichts. Markierungen aus „Sprich mit Nuki“ erscheinen hier.</p>';
@@ -1049,12 +1386,13 @@ function renderParents(){
   $('#voiceWarn').innerHTML=micWarn+(CLIPS?'':(!hasTTS?'<div class="warn" style="margin-bottom:14px">Dieser Browser kann keine Sprache ausgeben. Öffnen Sie die App über canzo-kinder.github.io/wort-spielplatz, dort spricht Nuki in jedem Browser.</div>':
     (!deVoice?'<div class="warn" style="margin-bottom:14px">Keine deutsche Stimme gefunden. Auf dem iPhone: Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen → Deutsch laden.</div>':'')));
 }
-function openParents(){hush();renderParents();show('parents');$('#parents').scrollTop=0}
+function openParents(){hush();renderParents();renderParents2();show('parents');$('#parents').scrollTop=0}
+$('#btnPrint').onclick=printBericht;
 $('#btnBack').onclick=goHome;
 let resetArmed=false;
 $('#btnReset').onclick=()=>{
   if(!resetArmed){resetArmed=true;$('#btnReset').textContent='Wirklich löschen? Nochmal tippen';setTimeout(()=>{resetArmed=false;$('#btnReset').textContent='Sterne & Fortschritt löschen'},4000);return}
-  S.stars=0;S.perGame={};S.practice={};S.lvl={};save();resetArmed=false;$('#btnReset').textContent='Gelöscht ✓';renderParents();
+  S.stars=0;S.perGame={};S.practice={};S.lvl={};S.leiter={};S.log={};save();paintGoal();resetArmed=false;$('#btnReset').textContent='Gelöscht ✓';renderParents();
 };
 
 /* ================= 3D-SPIELPLATZ (realistisch) ================= */
@@ -1265,6 +1603,22 @@ let USE3D=false;
     const mr=mesh(new THREE.CircleGeometry(.62,64),new THREE.MeshStandardMaterial({color:lin('#f4f8fb'),roughness:.01,metalness:1,envMapIntensity:1.5}),0,1.95,.005,g);mr.scale.set(1,1.35,1);
     marker(g,0,3.0,0)})();
 
+  /* --- Station: Kaufmannsladen (Nuki versteht dich) --- */
+  ;(()=>{const g=station('versteht',61,.3);mat3(61,1.6,2.6);
+    mesh(new THREE.BoxGeometry(2.3,.95,.8),MAT.wood,0,.48,0,g);mesh(new THREE.BoxGeometry(2.45,.06,.95),MAT.darkwood,0,.98,.02,g);
+    [-1.12,1.12].forEach(x=>rod([x,.95,-.32],[x,2.35,-.32],.055,MAT.darkwood,g));
+    const aw=canvasTex(256,64,(x,w,h)=>{for(let i=0;i<8;i++){x.fillStyle=i%2?'#f4f1ea':'#d8432f';x.fillRect(i*w/8,0,w/8,h)}});
+    const awn=mesh(new THREE.BoxGeometry(2.6,.06,1.05),new THREE.MeshStandardMaterial({map:aw,roughness:.8}),0,2.42,.1,g);awn.rotation.x=.22;
+    mesh(new THREE.SphereGeometry(.15,20,14),MAT.red,-.7,1.15,.1,g);mesh(new THREE.SphereGeometry(.14,20,14),MAT.yellow,-.36,1.14,.16,g);
+    mesh(new THREE.CylinderGeometry(.14,.12,.3,18),MAT.blue,.25,1.16,.05,g);mesh(new THREE.BoxGeometry(.32,.22,.22),MAT.green,.72,1.12,.08,g);
+    marker(g,0,3.1,0)})();
+  /* --- Station: Kletter-Leiter (Laut-Leiter) --- */
+  ;(()=>{const g=station('leiter',66.2,0);mat3(66.2,.9,2.4);
+    [-.5,.5].forEach(x=>rod([x,0,0],[x,3.2,0],.06,MAT.brushed,g));
+    const cols=[MAT.red,MAT.yellow,MAT.green,MAT.blue,MAT.red];
+    for(let k=0;k<5;k++)rod([-.5,.45+k*.6,0],[.5,.45+k*.6,0],.05,cols[k],g);
+    mesh(new THREE.BoxGeometry(1.4,.08,1),MAT.wood,0,3.2,-.4,g);[-.65,.65].forEach(x=>rod([x,0,-.85],[x,3.2,-.85],.06,MAT.brushed,g));
+    marker(g,0,3.9,-.2)})();
   plantGrass();
   /* --- Umgebung: Bänke, Laterne, Mülleimer, Hecke, Baumreihe --- */
   function bench(x,z,ry){const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=ry||0;scene.add(g);
@@ -1288,7 +1642,7 @@ let USE3D=false;
       const mx=new THREE.AnimationMixer(b);mx.clipAction(gt.animations[0]).setDuration(1.2).play();mixers.push(mx);birds.push(b)},undefined,()=>{}))}
 
   /* --- Kamera-Steuerung (wischen) --- */
-  const X0=4,X1=55.5;let camX=9.2,velX=0,targetX=null;let W=1,H=1;
+  const X0=4,X1=65;let camX=9.2,velX=0,targetX=null;let W=1,H=1;
   function resize(){W=host.clientWidth||innerWidth;H=host.clientHeight||innerHeight;renderer.setSize(W,H,false);camera.aspect=W/H;camera.fov=camera.aspect<1?60:46;camera.updateProjectionMatrix()}
   function camDist(){return camera.aspect<1?Math.min(20,8.5/camera.aspect*.62):9.4}
   function visW(){return 2*camDist()*Math.tan(camera.fov*Math.PI/360)*camera.aspect}
