@@ -195,6 +195,7 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
 .mname{background:var(--paper);color:var(--ink);border-radius:999px;padding:6px 16px;font-family:var(--f-display);font-weight:800;font-size:20px;box-shadow:var(--shadow)}
 .mctl{display:flex;flex-direction:column;align-items:center;gap:12px;max-width:300px}
 .mctl .stage-note{text-align:center;margin:0;font-weight:700;font-size:14px}
+.mctl{margin-inline:auto}.raterow .stage-note{text-align:center}
 .ringwrap{position:relative;width:120px;height:120px}
 .ringwrap svg{width:100%;height:100%}
 .ringwrap b{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--f-display);font-size:44px;color:var(--ink);font-variant-numeric:tabular-nums}
@@ -300,7 +301,7 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
 .ladder li.done{background:#d9f2e3;color:#2a7f50;box-shadow:0 3px 0 #9fd3b4}.ladder li.done b{background:var(--leaf);color:#fff}
 .ladder li.now{background:var(--sun);color:var(--ink);transform:scale(1.06)}.ladder li.now b{background:var(--ink);color:#fff}
 .mundbox{display:flex;flex-direction:column;align-items:center;gap:8px;width:min(230px,52vw)}
-.mundpic{width:100%;aspect-ratio:220/180;background:#fff;border-radius:20px;box-shadow:var(--shadow);overflow:hidden}.mundpic svg{width:100%;height:100%;display:block}
+.mundpic{width:100%;aspect-ratio:186/152;background:#fff;border-radius:20px;box-shadow:var(--shadow);overflow:hidden}.mundpic svg{width:100%;height:100%;display:block}
 .mspot{animation:mspot 1.3s ease-in-out infinite;transform-box:fill-box;transform-origin:center}@keyframes mspot{50%{transform:scale(1.35);opacity:.55}}
 .bigbtn.small{min-height:44px;font-size:15px;padding:6px 14px;width:100%}
 .mirrorcam{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:50%;border:8px solid var(--grape);transform:scaleX(-1);background:#cdeefb}
@@ -633,7 +634,7 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
 <div class="overlay" id="vidOv" hidden>
   <div class="panel vidpanel">
     <h2>So geht der Spielplatz</h2>
-    <video id="vidEl" playsinline controls preload="none" poster="v/erklaervideo.jpg"><source src="v/erklaervideo.mp4?v=3" type="video/mp4"></video>
+    <video id="vidEl" playsinline controls preload="none" poster="v/erklaervideo.jpg"><source src="v/erklaervideo.mp4?v=4" type="video/mp4"></video>
     <div class="row"><button class="bigbtn" id="btnCloseVid">Los geht's!</button></div>
   </div>
 </div>
@@ -1216,40 +1217,45 @@ function lautNoise(type){return new Promise(res=>{
    const v=type==='f'?.16:.32;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.12);g.gain.setValueAtTime(v,t+dur-.25);g.gain.linearRampToValueAtTime(0,t+dur);
    src.connect(f).connect(g).connect(ac.destination);src.start(t);src.stop(t+dur);setTimeout(res,dur*1000+80)}catch(e){res()}})}
 
-/* --- Mund-Bild: Seitenansicht, wo Zunge, Zähne und Lippen sind --- */
+/* --- Mund-Bild: Seitenansicht (Schnitt durch die Mitte des Kopfes, Blick von links) – wo Zunge, Zähne und Lippen sind --- */
 function mundSVG(t){
-  const K='stroke="#26303a" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"';
+  const K='stroke="#26303a" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"',k2='stroke="#26303a" stroke-width="2.4" stroke-linejoin="round"';
+  /* Zunge: hinten im Rachen verankert, Spitze vorne; je Laut andere Form */
   const TON={
-    s:'M40 170 Q46 122 78 112 Q112 104 140 102 Q148 103 147 109 Q124 118 94 128 Q64 142 62 170Z',
-    sch:'M40 170 Q46 120 78 110 Q108 100 134 96 Q142 95 142 101 Q122 114 94 126 Q64 142 62 170Z',
-    t:'M40 170 Q46 124 78 114 Q108 106 130 96 Q142 87 148 90 Q147 99 128 112 Q96 132 64 170Z',
-    l:'M40 170 Q46 124 78 114 Q108 106 130 96 Q142 87 148 90 Q147 99 128 112 Q96 132 64 170Z',
-    k:'M40 170 Q42 104 60 88 Q78 80 98 96 Q122 112 144 113 Q147 119 140 121 Q100 128 70 152 Q58 162 56 170Z',
-    g:'M40 170 Q42 104 60 88 Q78 80 98 96 Q122 112 144 113 Q147 119 140 121 Q100 128 70 152 Q58 162 56 170Z',
-    r:'M40 170 Q40 112 52 98 Q68 92 96 104 Q124 112 144 112 Q147 118 140 120 Q100 128 70 152 Q58 162 56 170Z',
-    f:'M40 170 Q46 128 80 118 Q112 112 138 112 Q146 113 144 119 Q120 124 94 132 Q64 146 62 170Z',
-    cl:'M40 170 Q46 122 78 112 Q112 104 140 102 Q148 103 147 109 Q124 118 94 128 Q64 142 62 170Z'};
+    s:'M58 180 Q54 122 78 108 Q108 96 140 93 Q155 92 161 95 Q160 101 150 104 Q128 110 112 124 Q102 142 100 180Z',
+    sch:'M58 180 Q54 120 80 104 Q108 91 138 91 Q151 92 156 97 Q151 103 138 107 Q118 114 106 128 Q98 146 98 180Z',
+    t:'M58 180 Q54 122 80 110 Q110 100 140 92 Q156 86 165 88 Q164 95 152 99 Q128 108 110 124 Q100 142 100 180Z',
+    l:'M58 180 Q54 122 80 110 Q110 100 140 92 Q156 86 165 88 Q164 95 152 99 Q128 108 110 124 Q100 142 100 180Z',
+    k:'M58 180 Q52 112 66 96 Q78 84 94 90 Q114 100 140 104 Q156 106 161 109 Q158 115 146 115 Q122 118 106 130 Q98 150 98 180Z',
+    g:'M58 180 Q52 112 66 96 Q78 84 94 90 Q114 100 140 104 Q156 106 161 109 Q158 115 146 115 Q122 118 106 130 Q98 150 98 180Z',
+    r:'M58 180 Q52 122 60 110 Q70 100 88 104 Q116 108 144 108 Q157 108 161 111 Q157 116 145 116 Q120 120 106 132 Q98 150 98 180Z',
+    f:'M58 180 Q54 126 82 116 Q112 108 144 108 Q157 108 161 111 Q157 116 145 116 Q120 120 106 132 Q98 150 98 180Z',
+    cl:'M58 180 Q52 122 72 106 Q94 88 120 85 Q144 86 156 104 Q161 110 156 114 Q140 116 122 122 Q104 134 100 180Z'};
   const round=t==='sch',fl=t==='f';
-  const lipU=round?`<ellipse cx="172" cy="90" rx="11" ry="8" fill="#e8558a" ${K}/>`:`<ellipse cx="164" cy="${fl?88:90}" rx="9" ry="6.5" fill="#e8558a" ${K}/>`;
-  const lipL=round?`<ellipse cx="172" cy="112" rx="11" ry="8" fill="#e8558a" ${K}/>`:fl?`<ellipse cx="153" cy="103" rx="9" ry="6.5" fill="#e8558a" ${K}/>`:`<ellipse cx="164" cy="111" rx="9" ry="6.5" fill="#e8558a" ${K}/>`;
-  const air={s:'<path d="M150 101 H205" stroke="#1fb3a8" stroke-width="4" stroke-dasharray="6 5" marker-end="url(#ar)"/>',
-    sch:'<path d="M182 96 Q196 92 208 88 M182 101 H210 M182 106 Q196 110 208 114" stroke="#1fb3a8" stroke-width="4" stroke-dasharray="6 5" fill="none"/>',
-    f:'<path d="M164 96 Q186 92 208 90" stroke="#1fb3a8" stroke-width="4" stroke-dasharray="6 5" fill="none" marker-end="url(#ar)"/>',
-    k:'<text x="182" y="106" font-size="22" font-weight="900" fill="#ff7559" font-family="sans-serif">k!</text>',
-    g:'<text x="182" y="106" font-size="22" font-weight="900" fill="#ff7559" font-family="sans-serif">g!</text><path d="M24 120 q6 -6 0 -12 q-6 -6 0 -12 M14 120 q6 -6 0 -12 q-6 -6 0 -12" stroke="#8566db" stroke-width="3" fill="none"/>',
-    t:'<text x="182" y="106" font-size="22" font-weight="900" fill="#ff7559" font-family="sans-serif">t!</text>',
-    l:'<path d="M120 122 Q150 134 176 124 M120 80 Q150 70 176 78" stroke="#1fb3a8" stroke-width="3.5" stroke-dasharray="5 5" fill="none"/>',
-    r:'<path d="M52 96 q-6 5 0 10 q6 5 0 10 q-6 5 0 10" stroke="#8566db" stroke-width="3.5" fill="none"/>',cl:''}[t]||'';
-  const spot={s:[143,104],sch:[138,98],t:[146,90],l:[146,90],k:[66,86],g:[66,86],r:[52,100],f:[152,98],cl:[143,104]}[t]||[140,100];
-  return `<svg viewBox="0 0 220 180" aria-hidden="true"><defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#1fb3a8"/></marker></defs>
-   <path d="M20 4 Q150 0 178 52 L192 70 Q196 76 184 80 L184 122 Q182 150 150 160 L120 176 H20Z" fill="#f6cfae" ${K}/>
-   <path d="M150 84 Q122 70 92 72 Q64 74 46 92 L40 176 H62 Q70 140 140 120 L150 118Z" fill="#7a2338" opacity=".88"/>
-   <path d="M152 84 Q122 70 92 72 Q62 74 46 92" fill="none" stroke="#c96b7a" stroke-width="7" stroke-linecap="round"/>
-   <path d="M46 92 q-3 6 -1 10" stroke="#c96b7a" stroke-width="5" fill="none" stroke-linecap="round"/>
+  /* Lippen: normal, gerundet nach vorne (Sch), oder Unterlippe an den oberen Zähnen (F) */
+  const lipU=round?`<path d="M174 82 Q200 82 202 91 Q202 97 190 98 L174 98Z" fill="#e8708a" ${k2}/>`:`<path d="M174 83 Q191 85 191 92 Q190 98 176 98Z" fill="#e8708a" ${k2}/>`;
+  const lipL=round?`<path d="M174 103 L190 103 Q202 104 202 110 Q200 119 174 120Z" fill="#e8708a" ${k2}/>`:fl?`<path d="M166 100 Q178 97 184 104 Q185 114 172 118 L170 118Z" fill="#e8708a" ${k2}/>`:`<path d="M175 102 Q190 103 189 110 Q187 118 173 118Z" fill="#e8708a" ${k2}/>`;
+  const air={s:'<path d="M164 100 H206" stroke="#1fb3a8" stroke-width="4" stroke-dasharray="6 5" marker-end="url(#ar)"/>',
+    sch:'<path d="M200 96 Q208 92 216 88 M202 101 H216 M200 106 Q208 110 216 114" stroke="#1fb3a8" stroke-width="3.5" stroke-dasharray="5 4" fill="none"/>',
+    f:'<path d="M176 95 Q192 92 210 92" stroke="#1fb3a8" stroke-width="4" stroke-dasharray="6 5" fill="none" marker-end="url(#ar)"/>',
+    cl:'<path d="M118 92 Q150 96 168 100 L206 100" stroke="#1fb3a8" stroke-width="3.5" stroke-dasharray="6 5" fill="none" marker-end="url(#ar)"/>',
+    k:'<text x="195" y="107" font-size="21" font-weight="900" fill="#ff7559" font-family="sans-serif">k!</text>',
+    g:'<text x="195" y="107" font-size="21" font-weight="900" fill="#ff7559" font-family="sans-serif">g!</text><path d="M50 170 q5 -5 0 -10 q-5 -5 0 -10 M42 170 q5 -5 0 -10 q-5 -5 0 -10" stroke="#8566db" stroke-width="3" fill="none"/>',
+    t:'<text x="195" y="107" font-size="21" font-weight="900" fill="#ff7559" font-family="sans-serif">t!</text>',
+    l:'<path d="M118 120 Q148 128 168 112 M118 86 Q146 76 166 86" stroke="#1fb3a8" stroke-width="3.2" stroke-dasharray="5 5" fill="none"/>',
+    r:'<path d="M60 104 q-5 4 0 8 q5 4 0 8" stroke="#8566db" stroke-width="3" fill="none"/>'}[t]||'';
+  const spot={s:[160,90],sch:[152,92],t:[164,88],l:[164,88],k:[82,86],g:[82,86],r:[70,104],f:[169,100],cl:[120,82]}[t]||[160,90];
+  const uv=t==='r'?'M72 92 Q66 100 68 110 Q74 112 76 104':'M72 92 Q70 100 72 108 Q77 109 77 101';
+  return `<svg viewBox="34 28 186 152" aria-hidden="true"><defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#1fb3a8"/></marker></defs>
+   <path d="M14 0 H118 Q158 4 166 30 L170 42 Q186 56 194 66 Q194 73 182 74 L176 76 L176 120 Q172 126 174 132 Q182 144 170 154 Q148 162 122 164 L112 180 H14Z" fill="#f6cfae" ${K}/>
+   <path d="M168 78 Q150 64 120 63 Q92 63 76 76 L72 92 Q92 76 120 74 Q148 74 166 86Z" fill="#fde7d6" opacity=".9"/>
+   <path d="M168 88 Q150 78 120 77 Q94 77 78 86 L72 92 L48 104 L46 180 H100 Q102 140 124 128 Q152 116 170 112 L176 100Z" fill="#7a2338" opacity=".9"/>
+   <path d="M168 88 Q150 76 120 75 Q94 75 76 88" fill="none" stroke="#c96b7a" stroke-width="6" stroke-linecap="round"/>
+   <path d="${uv}" fill="#c96b7a" stroke="#c96b7a" stroke-width="2"/>
    <path d="${TON[t]||TON.s}" fill="#ff7f8a" ${K}/>
-   <path d="M146 84 H156 L155 97 H148Z" fill="#fff" ${K}/><path d="M147 105 H155 L156 117 H148Z" fill="#fff" ${K}/>
+   <path d="M161 85 H170 L169 99 H164Z" fill="#fff" ${k2}/><path d="M161 101 H168 L168 114 H162Z" fill="#fff" ${k2}/>
    ${lipU}${lipL}${air}
-   <circle cx="${spot[0]}" cy="${spot[1]}" r="9" fill="none" stroke="#ffc63a" stroke-width="4" class="mspot"/>
+   <circle cx="${spot[0]}" cy="${spot[1]}" r="8" fill="none" stroke="#ffc63a" stroke-width="4" class="mspot"/>
   </svg>`;
 }
 
