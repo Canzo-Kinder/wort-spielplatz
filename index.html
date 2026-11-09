@@ -407,6 +407,23 @@ body{background:#e8f7ff}
 /* Bilder: weiche statt schwarzer Umrisse */
 .emsvg [stroke="#26303a"]{stroke:rgba(43,47,74,.28)}
 .emsvg [fill="#26303a"]{fill:#2b2f4a}
+/* Eltern-Bereich im neuen Look */
+#parents{background:#f4f7fb}
+.phead{display:flex;align-items:center;gap:12px;padding:calc(14px + env(safe-area-inset-top,0px)) 0 10px}
+.phead b{display:block;font-family:var(--f-display);font-size:24px;font-weight:800;line-height:1.1}
+.phead small{display:block;font-size:13px;font-weight:700;color:var(--ink-soft)}
+.ptabs{display:flex;gap:4px;padding:4px;border-radius:16px;background:#e6ebf3;margin-bottom:14px;position:sticky;top:0;z-index:3}
+.ptabs button{flex:1;min-height:44px;border-radius:12px;font-weight:800;font-size:15px;color:var(--ink-soft)}
+.ptabs button[aria-selected="true"]{background:#fff;color:var(--ink);box-shadow:0 2px 0 rgba(43,47,74,.08)}
+.pstats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:14px}
+@media (min-width:640px){.pstats{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.pst2{background:#fff;border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:2px;box-shadow:0 3px 0 rgba(43,47,74,.06);border-top:5px solid var(--c)}
+.pst2 b{font-family:var(--f-display);font-size:26px;font-weight:800;line-height:1.1}
+.pst2 span{font-size:13px;font-weight:700;color:var(--ink-soft)}
+.sec{border:0;border-radius:22px;box-shadow:0 3px 0 rgba(43,47,74,.06);padding:18px}
+.seg button{background:#f4f7fb;border:2px solid #e3e9f2;border-radius:14px}
+.seg button[aria-pressed="true"]{background:var(--grape);border-color:var(--grape)}
+.danger{border-radius:14px}
 /* Belohnung */
 #doneOv{background:radial-gradient(circle at 50% 34%,#a99dff 0%,#7c6cf2 55%,#6655e0 100%);padding:0}
 #doneOv::before{content:"";position:absolute;inset:0;background:repeating-conic-gradient(from 0deg at 50% 34%,rgba(255,255,255,.12) 0 10deg,transparent 10deg 30deg);pointer-events:none}
@@ -670,10 +687,30 @@ body{background:#e8f7ff}
 <!-- ================= PARENTS ================= -->
 <section class="screen" id="parents" hidden>
   <div class="wrap">
-    <div class="gbar">
-      <button class="round" id="btnBack" aria-label="Zurück">←</button>
-      <div class="gtitle">Eltern-Bereich</div>
+    <div class="phead">
+      <button class="round" id="btnBack" aria-label="Zurück zum Spielpfad"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <div><b>Eltern-Bereich</b><small>Fortschritt, Einstellungen und Tipps</small></div>
     </div>
+    <div class="ptabs" role="tablist" aria-label="Bereiche">
+      <button role="tab" data-t="ov" aria-selected="true">Übersicht</button>
+      <button role="tab" data-t="set" aria-selected="false">Einstellungen</button>
+      <button role="tab" data-t="info" aria-selected="false">Wissen</button>
+    </div>
+    <div class="ptab" id="pt-ov" role="tabpanel">
+      <div class="pstats" id="pStatsP"></div>
+      <div class="sec">
+        <h3>Übungsbericht</h3>
+        <div id="bericht"></div>
+        <button class="bigbtn light" id="btnPrint"><svg class="bi" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 9V3h10v6M7 17H4v-7a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v7h-3M7 14h10v7H7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Bericht für die Logopädin drucken</button>
+      </div>
+      <div class="sec">
+        <h3>Fortschritt</h3>
+        <div id="progress"></div>
+        <div class="lbl">Diese Wörter noch üben</div>
+        <div class="wchips" id="practiceList"></div>
+      </div>
+    </div>
+    <div class="ptab" id="pt-set" role="tabpanel" hidden>
     <div id="voiceWarn"></div>
     <div class="sec">
       <h3>Mein Übe-Laut</h3>
@@ -686,6 +723,9 @@ body{background:#e8f7ff}
       <div class="lbl">Tagesziel (Übungen pro Tag)</div>
       <div class="seg" id="segGoal"></div>
       <p>Viele kurze Wiederholungen helfen am meisten. 20 bis 50 Übungen am Tag schaffen Kinder meist in 5 bis 10 Minuten. Die Sonnenblume auf dem Spielplatz zeigt den Stand.</p>
+    </div>
+    <div class="sec">
+      <h3>Spiele</h3>
       <div class="lbl">Bei „Nuki versteht dich“ entscheidet</div>
       <div class="seg" id="segEar"></div>
       <p>Spracherkennung irrt bei Kinderstimmen oft. Deshalb hören Erwachsene mit und tippen, welches Wort sie wirklich gehört haben. Nuki bringt genau das – auch wenn es das falsche ist. Genau daran merkt Ihr Kind, dass der Laut den Unterschied macht.</p>
@@ -693,6 +733,9 @@ body{background:#e8f7ff}
       <div class="seg" id="segAge"></div>
       <p>Jedes Spiel hat 5 Stufen. Die Altersgruppe legt fest, bei welcher Stufe es losgeht und wie weit es steigen kann (3–4 J.: Stufe 1–3, 5–6 J.: 2–4, 7–8 J.: 3–5). Schafft Ihr Kind 5 von 6 Aufgaben im ersten Versuch, steigt die Stufe. Bei 2 oder weniger geht sie eine Stufe zurück, ohne dass das Kind davon etwas merkt.</p>
       <p><b>Was schwerer wird:</b> mehr Bilder zur Auswahl, ähnlich klingende Laute (S/Sch, K/T), längere Wörter, weniger Hilfen und längeres Halten beim Grimassen-Spiegel.</p>
+    </div>
+    <div class="sec">
+      <h3>Ton &amp; Anzeige</h3>
       <div class="lbl">Sprechtempo von Nuki</div>
       <div class="seg" id="segRate"></div>
       <div class="lbl">Wörter unter den Bildern zeigen</div>
@@ -707,16 +750,11 @@ body{background:#e8f7ff}
       <div class="seg" id="segSound"></div>
     </div>
     <div class="sec">
-      <h3>Übungsbericht</h3>
-      <div id="bericht"></div>
-      <button class="bigbtn light" id="btnPrint">🖨 Bericht für die Logopädin drucken</button>
+      <h3>Zurücksetzen</h3>
+      <button class="danger" id="btnReset">Sterne &amp; Fortschritt löschen</button>
     </div>
-    <div class="sec">
-      <h3>Fortschritt</h3>
-      <div id="progress"></div>
-      <div class="lbl">Diese Wörter noch üben</div>
-      <div class="wchips" id="practiceList"></div>
     </div>
+    <div class="ptab" id="pt-info" role="tabpanel" hidden>
     <div class="sec">
       <h3>So nutzen Sie den Wort-Spielplatz</h3>
       <p><b>Kurz und oft:</b> 5–10 Minuten täglich wirken besser als eine lange Sitzung. Eine Runde hat 6 Aufgaben.</p>
@@ -740,11 +778,8 @@ body{background:#e8f7ff}
       <p><b>Wie die neuen Spiele helfen:</b> „Nuki versteht dich“ folgt dem Minimalpaar-Ansatz aus der Logopädie: erst den Unterschied hören, dann selbst sagen, und erleben, dass Nuki etwas anderes bringt, wenn der Laut nicht stimmt. Die „Laut-Leiter“ geht die Stufen der Lautanbahnung: Laut, Silbe, Wort, Satz. Mit „Mich hören“ vergleicht Ihr Kind die eigene Aufnahme mit Nuki. Aufnahmen und Kamera-Spiegel bleiben nur auf diesem Gerät und werden nicht gespeichert oder gesendet.</p>
       <p class="src">Quellen (Auswahl): Fox-Boyer, Kindliche Aussprachestörungen · Ulster University: Conventional Minimal Pairs · Hair u. a. 2020 (CHI): Sprachtherapie-Spiele und Spracherkennung bei Kindern · Lof 2009/ASHA: Mundmotorik-Übungen ohne Nachweis für bessere Aussprache · Siegmüller (DBL): Inputspezifizierung · AOK: Lispeln.</p>
     </div>
-    <div class="sec">
-      <h3>Zurücksetzen</h3>
-      <button class="danger" id="btnReset">Sterne &amp; Fortschritt löschen</button>
     </div>
-    <div style="height:20px"></div>
+    <div style="height:24px"></div>
   </div>
 </section>
 
@@ -902,9 +937,9 @@ async function say(text,rate){
   const tok=sayToken;
   if(CLIPS){
     const parts=chunks(text),files=parts.map(p=>CLIPS[ckey(p)]);
-    if(!(hasTTS&&deVoice)&&(files.every(Boolean)||!hasTTS)){
+    if(files.every(Boolean)||!hasTTS){ /* Nukis aufgenommene Stimme hat Vorrang vor der Geräte-Stimme */
       const r=((rate||S.rate)/0.85);const pr=Math.min(1.4,Math.max(.7,r));
-      for(const f of files){if(tok!==sayToken)return;if(f)await playFile('a/'+f,pr,tok)}
+      for(const f of files){if(tok!==sayToken)return;if(f)await playFile('n/'+f,pr,tok)}
       return;
     }
   }
@@ -1701,7 +1736,13 @@ function renderParents(){
   $('#voiceWarn').innerHTML=micWarn+(CLIPS?'':(!hasTTS?'<div class="warn" style="margin-bottom:14px">Dieser Browser kann keine Sprache ausgeben. Öffnen Sie die App über canzo-kinder.github.io/wort-spielplatz, dort spricht Nuki in jedem Browser.</div>':
     (!deVoice?'<div class="warn" style="margin-bottom:14px">Keine deutsche Stimme gefunden. Auf dem iPhone: Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen → Deutsch laden.</div>':'')));
 }
-function openParents(){hush();renderParents();renderParents2();show('parents');$('#parents').scrollTop=0}
+function openParents(){hush();renderParents();renderParents2();renderPStats();ptab('ov');show('parents');$('#parents').scrollTop=0}
+function ptab(t){document.querySelectorAll('.ptabs button').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.t===t)));['ov','set','info'].forEach(k=>$('#pt-'+k).hidden=k!==t);$('#parents').scrollTop=0}
+document.querySelectorAll('.ptabs button').forEach(b=>b.onclick=()=>ptab(b.dataset.t));
+function renderPStats(){const days=[...Array(7)].map((_,k)=>{const t=new Date(Date.now()-k*864e5);return S.log[t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0')]||null});
+  const n7=days.reduce((a,L)=>a+(L?L.n:0),0),g7=days.reduce((a,L)=>a+(L?L.g:0),0),act=days.filter(L=>L&&L.n).length,tn=todayN();
+  const T=(v,l,c)=>`<div class="pst2" style="--c:${c}"><b>${v}</b><span>${l}</span></div>`;
+  $('#pStatsP').innerHTML=T(tn+' / '+S.goal,'Übungen heute','#7c6cf2')+T(n7,'Übungen in 7 Tagen','#2bb3b1')+T(n7?Math.round(g7/n7*100)+' %':'–','gut gesagt (7 Tage)','#3fae6a')+T(act+' von 7','Tage geübt','#ff7a59')}
 $('#btnPrint').onclick=printBericht;
 $('#btnBack').onclick=goHome;
 let resetArmed=false;
