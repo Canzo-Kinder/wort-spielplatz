@@ -428,6 +428,24 @@ body{background:#e8f7ff}
 .kcard{width:150px;height:150px;border-radius:26px;background:#fff;border:4px dashed #ffc542;box-shadow:0 7px 0 var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;touch-action:none;cursor:grab;position:relative;z-index:5}
 .kcard .em{font-size:96px;line-height:1}.kcard.drag{cursor:grabbing;box-shadow:0 14px 24px rgba(43,47,74,.25)}
 @media (max-height:500px) and (orientation:landscape){.kof{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:16px;row-gap:8px}.ksky{grid-column:1/-1;height:52px;border-radius:16px}.kplane{width:90px;bottom:6px}.krun{height:14px}.krun::after{top:5px}.kof .stage-note{display:none}.kcase .kpic{width:46px;height:46px;font-size:32px}.kcase b{font-size:20px}.kcardw{flex-direction:column;gap:8px;margin:0}.kcard{width:120px;height:120px}.kcard .em{font-size:72px}.kcardw .bigbtn{min-height:44px;font-size:15px;padding:6px 12px}}
+/* Spielplatz (3D) und Menüs im neuen Look */
+.hbtn{background:#fff!important;border-radius:16px!important;box-shadow:var(--shadow)!important;width:48px!important;height:48px!important}
+.hbtn svg{stroke:var(--grape)!important;width:26px!important;height:26px!important}
+.hbtn.pulse{box-shadow:var(--shadow),0 0 0 6px rgba(124,108,242,.3)!important}
+.chip .ci{width:24px;height:24px;flex:none}
+.hud .chip{box-shadow:var(--shadow)}
+.pager{background:#fff!important;box-shadow:var(--shadow)!important}
+.pager svg{stroke:var(--grape)!important}
+.mitem{border:0!important;border-radius:20px!important;background:#f4f7fb!important;box-shadow:0 3px 0 rgba(43,47,74,.06)!important}
+.mitem .mi{background:#fff!important;border-radius:16px!important;display:grid;place-items:center}
+.mitem .mi svg{width:34px;height:34px}
+.stickers div{border-radius:18px;background:#f4f7fb;border:2px dashed #dfe5f0}
+.stickers div.got{background:#fff;border:0;box-shadow:0 4px 0 #e6ebf3}
+.mirror svg [stroke="#26303a"]{stroke:#7a5a52}
+.mundpic svg [stroke="#26303a"]{stroke:#4b4f6a}
+@media (max-width:520px){.mlist{grid-template-columns:1fr}.mitem small{display:inline}}
+.panel.menu{max-height:calc(100% - 20px)}
+@media (max-width:420px){.hud{gap:8px}.hud-l .hbtn{width:44px!important;height:44px!important}.hud .chip{padding:0 10px!important;gap:5px!important;font-size:16px!important}.hud .chip .ci{width:20px;height:20px}}
 /* Eltern-Bereich im neuen Look */
 #parents{background:#f4f7fb}
 .phead{display:flex;align-items:center;gap:12px;padding:calc(14px + env(safe-area-inset-top,0px)) 0 10px}
@@ -682,7 +700,7 @@ body{background:#e8f7ff}
   <button class="hbtn" id="btnHelp" aria-label="Erklär-Video ansehen"><svg viewBox="0 0 24 24"><path d="M9.2 9a3 3 0 1 1 4.3 2.7c-1 .5-1.5 1.2-1.5 2.3"/><circle cx="12" cy="18" r=".6"/></svg></button>
   <button class="hbtn" id="btnMute" aria-label="Ton an oder aus"><svg viewBox="0 0 24 24"><path d="M4 10v4h4l5 4V6L8 10Z"/><path id="muteWaves" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/><path id="muteX" d="M16 9l5 6M21 9l-5 6" style="display:none"/></svg></button>
  </div>
- <div class="hud hud-r"><div class="chip goal" id="goalChip" aria-label="Tagesziel"><span>🌻</span><span id="goalCount">0/30</span></div><div class="chip" aria-label="Sterne"><span>⭐</span><span id="starCount">0</span></div></div>
+ <div class="hud hud-r"><div class="chip goal" id="goalChip" aria-label="Tagesziel"><svg class="ci" viewBox="0 0 40 40" aria-hidden="true"><g fill="#ffcf4a"><ellipse cx="20" cy="9" rx="5" ry="8"/><ellipse cx="20" cy="31" rx="5" ry="8"/><ellipse cx="9" cy="20" rx="8" ry="5"/><ellipse cx="31" cy="20" rx="8" ry="5"/></g><circle cx="20" cy="20" r="7" fill="#a0612e"/></svg><span id="goalCount">0/30</span></div><div class="chip" aria-label="Sterne"><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17l-5.9 3.3 1.3-6.5L2.5 9.3l6.6-.8z" fill="#ffc542"/></svg><span id="starCount">0</span></div></div>
  <button class="pager pl" id="pgL" aria-label="Nach links"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
  <button class="pager pr" id="pgR" aria-label="Nach rechts"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
  <div class="toast" id="toast" hidden><div class="tNuki" id="toastNuki"></div><div class="tText" id="toastText"></div></div>
@@ -694,7 +712,7 @@ body{background:#e8f7ff}
     <div class="gbar">
       <button class="round" id="btnHome" aria-label="Spiel beenden, zurück zum Spielpfad"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
       <div class="gtitle" id="gTitle">Spiel</div>
-      <div class="chip"><span>⭐</span><span id="gStars">0</span></div>
+      <div class="chip"><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17l-5.9 3.3 1.3-6.5L2.5 9.3l6.6-.8z" fill="#ffc542"/></svg><span id="gStars">0</span></div>
     </div>
     <div class="gleft"><div class="dots" id="dots"></div>
     <div class="ask">
@@ -817,7 +835,7 @@ body{background:#e8f7ff}
   <div class="panel menu">
     <h2>Wort-Spielplatz</h2>
     <div class="mlist" id="menuList"></div>
-    <div class="row"><button class="bigbtn light" id="btnMenuTreasure">🧰 Schatzkiste</button><button class="bigbtn" id="btnCloseMenu">Schließen</button></div>
+    <div class="row"><button class="bigbtn light" id="btnMenuTreasure">Sticker</button><button class="bigbtn" id="btnCloseMenu">Schließen</button></div>
     <button class="hold" id="btnParents"><i></i><span>🔒 Für Eltern &amp; Therapeuten: gedrückt halten</span></button>
   </div>
 </div>
@@ -1047,7 +1065,7 @@ $('#btnMute').onclick=()=>{S.mute=!S.mute;save();paintMute();if(S.mute)hush();el
 
 /* Menü */
 function openMenu(){
-  $('#menuList').innerHTML=GAMES.map(g=>`<button class="mitem" style="--c:${g.c}" data-g="${g.id}"><span class="mi">${g.pic}</span><span class="mt"><b>${g.name}</b><small>${g.desc}</small></span><span class="ms">⭐ ${S.perGame[g.id]||0}</span></button>`).join('');
+  $('#menuList').innerHTML=GAMES.map(g=>`<button class="mitem" style="--c:${g.c}" data-g="${g.id}"><span class="mi">${GICON[g.id]||g.pic}</span><span class="mt"><b>${g.name}</b><small>${g.desc}</small></span><span class="ms">⭐ ${S.perGame[g.id]||0}</span></button>`).join('');
   $('#menuList').querySelectorAll('.mitem').forEach(b=>b.onclick=()=>{$('#menuOv').hidden=true;startGame(b.dataset.g)});
   $('#menuOv').hidden=false;
 }
@@ -1840,15 +1858,15 @@ let USE3D=false;
     const sky=new THREE.Sky();sky.scale.setScalar(4500);scene.add(sky);
     const u=sky.material.uniforms;u.turbidity.value=2.0;u.rayleigh.value=3.2;u.mieCoefficient.value=0.003;u.mieDirectionalG.value=0.8;u.sunPosition.value.copy(SUN_DIR);
   }else{
-    const g=new THREE.SphereGeometry(500,32,16),col=[],top=lin('#3d9fe8'),hor=lin('#d4f0ff'),p=g.attributes.position;
+    const g=new THREE.SphereGeometry(500,32,16),col=[],top=lin('#7cc6f2'),hor=lin('#e8f7ff'),p=g.attributes.position;
     for(let i=0;i<p.count;i++){const y=Math.max(0,p.getY(i)/500);const c=hor.clone().lerp(top,Math.pow(y,.55));col.push(c.r,c.g,c.b)}
     g.setAttribute('color',new THREE.Float32BufferAttribute(col,3));scene.add(new THREE.Mesh(g,new THREE.MeshBasicMaterial({vertexColors:true,side:THREE.BackSide,fog:false})));
   }
-  scene.fog=new THREE.Fog(lin('#d4f0ff'),38,140);
+  scene.fog=new THREE.Fog(lin('#e8f7ff'),38,140);
 
   /* --- Licht --- */
   const pm=new THREE.PMREMGenerator(renderer);
-  const hemi=new THREE.HemisphereLight(lin('#ffffff'),lin('#b5dc95'),1.75);scene.add(hemi);
+  const hemi=new THREE.HemisphereLight(lin('#ffffff'),lin('#c4e6a8'),2.15);scene.add(hemi);
   const sun=new THREE.DirectionalLight(lin('#fff6e6'),1.45);sun.castShadow=true;
   sun.shadow.mapSize.set(2048,2048);const sc=sun.shadow.camera;sc.left=-16;sc.right=16;sc.top=14;sc.bottom=-10;sc.near=1;sc.far=90;sun.shadow.bias=-0.0006;sun.shadow.normalBias=0.05;sun.shadow.radius=4;
   scene.add(sun,sun.target);
@@ -2081,10 +2099,11 @@ let USE3D=false;
       const mx=new THREE.AnimationMixer(b);mx.clipAction(gt.animations[0]).setDuration(1.2).play();mixers.push(mx);birds.push(b)},undefined,()=>{}))}
 
   /* --- Comic-Stil: weiche Toon-Schattierung, klare Farben, dunkle Umrisse wie bei den Figuren --- */
-  const grad=(()=>{const d=new Uint8Array([150,150,150,255, 215,215,215,255, 255,255,255,255]);const t=new THREE.DataTexture(d,3,1,THREE.RGBAFormat);t.minFilter=t.magFilter=THREE.NearestFilter;t.generateMipmaps=false;t.needsUpdate=true;return t})();
+  const grad=(()=>{const d=new Uint8Array([196,196,196,255, 226,226,226,255, 255,255,255,255]);const t=new THREE.DataTexture(d,3,1,THREE.RGBAFormat);t.minFilter=t.magFilter=THREE.NearestFilter;t.generateMipmaps=false;t.needsUpdate=true;return t})();
   const toonCache=new Map();
   function toonMat(m){if(!m||m.isMeshBasicMaterial||m.isMeshToonMaterial)return m;if(toonCache.has(m))return toonCache.get(m);
     let c=m.color?m.color.clone():new THREE.Color(1,1,1);if(m.metalness>.5){const hs={};c.getHSL(hs);if(hs.s<.2)c=lin('#cfe3f0')}
+    if(!(m.userData&&m.userData.gltf)){const hs={};c.getHSL(hs);c.setHSL(hs.h,Math.min(1,hs.s*.96),hs.l+(1-hs.l)*.09)} /* Bilderbuch-Pastell: weicher, heller */
     const t=new THREE.MeshToonMaterial({color:c,gradientMap:grad,side:m.side,transparent:m.transparent,opacity:m.opacity,alphaTest:m.alphaTest,
       map:(m.userData&&m.userData.keep)||m.userData.gltf?m.map:null,emissive:m.emissive?m.emissive.clone():undefined,emissiveIntensity:m.emissiveIntensity||1,skinning:!!m.skinning,flatShading:!!m.flatShading});
     toonCache.set(m,t);return t}
@@ -2093,7 +2112,7 @@ let USE3D=false;
   lineMat.onBeforeCompile=sh=>{sh.vertexShader=sh.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\n transformed+=normalize(normal)*0.03;')};
   function outline(root){const list=[];root.traverse(o=>{if(o.isMesh&&!o.isInstancedMesh&&!o.userData.noLine&&o!==root.userData.marker&&o.geometry&&o.geometry.attributes.normal)list.push(o)});
     list.forEach(o=>{const l=new THREE.Mesh(o.geometry,lineMat);l.castShadow=false;l.receiveShadow=false;l.raycast=()=>{};o.add(l)})}
-  stations.forEach(outline);
+  /* neuer Look: keine dunklen Umrisse mehr */
   scene.traverse(o=>{if(o.isMesh&&o.material&&o.material.metalness>.5&&o.material.roughness<.05&&!o.material.map){o.material=new THREE.MeshToonMaterial({color:lin('#bfe8ff'),emissive:lin('#4aa8d8'),emissiveIntensity:.25,gradientMap:grad})}});
   toonify(scene);
   /* Wolken */
