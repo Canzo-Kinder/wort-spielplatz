@@ -484,6 +484,39 @@ body{background:#e8f7ff}
 .qsent{font-family:var(--f-display);font-size:clamp(24px,6.4vw,34px);font-weight:800;text-align:center;line-height:1.25;background:#fff;border-radius:22px;padding:12px 18px;box-shadow:0 5px 0 var(--line)}
 .qsent mark{background:#ffe9a8;color:inherit;border-radius:6px;padding:0 2px}
 @media (max-height:500px) and (orientation:landscape){.qslot{width:76px;height:76px}.qslot .em{font-size:44px}.quatsch{gap:8px}.quatsch .qcards{display:flex!important;justify-content:center;gap:14px}.quatsch .qcards .card{width:min(30vh,150px)!important;height:min(30vh,150px);aspect-ratio:1;grid-column:auto!important}.quatsch .qcards .card .em{font-size:min(15vh,72px)}}
+/* Laut-Leiter aufgeräumt */
+.leiter3{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;max-width:520px;margin:0 auto}
+.lsteps{display:flex;align-items:center;gap:5px;background:#fff;border-radius:999px;padding:7px 16px 7px 12px;box-shadow:var(--shadow)}
+.lsteps i{width:18px;height:9px;border-radius:5px;background:#e4e8f2}.lsteps i.on{background:#ffdf9a}.lsteps i.now{background:var(--sun);width:30px}
+.lsteps span{margin-left:6px;font-family:var(--f-display);font-weight:800;font-size:16px;color:var(--ink)}
+.lcard{display:flex;flex-direction:column;align-items:center;gap:4px}
+.leiter3 .hero{padding:0}.leiter3 .hero .frame{width:min(210px,52vw,30dvh);border-radius:30px}.leiter3 .hero .frame .em{font-size:min(120px,30vw,17dvh)}
+.leiter3 .lword .word{font-size:clamp(26px,7vw,34px)}
+.lctl3{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
+.lctl3>#lModel{min-width:min(280px,80vw)}
+.ltools{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.ltools .bigbtn{min-height:48px;font-size:16px;padding:6px 16px}
+.leiter3 .pbox{flex-direction:row;flex-wrap:wrap;justify-content:center;gap:10px}.leiter3 .pbox .stage-note{display:none}
+.leiter3 .micbtn{width:64px;height:64px}.leiter3 .micbtn svg{width:32px;height:32px}
+.leiter3 .raterow .stage-note{display:none}
+.leiter3 .raterow .row{flex-wrap:nowrap;gap:10px;width:min(420px,100%)}.leiter3 .raterow .bigbtn{flex:1 1 0;min-width:0;font-size:16px;padding:6px 10px}
+.lsheet{position:fixed;inset:0;z-index:60;background:rgba(43,47,74,.35);display:grid;place-items:center;padding:16px}
+.lsheet[hidden]{display:none}
+.lsheetin{position:relative;background:#fff;border-radius:28px;padding:18px 18px 20px;width:min(440px,100%);max-height:calc(100dvh - 32px);overflow:auto;display:flex;flex-direction:column;align-items:center;gap:12px;box-shadow:0 10px 0 rgba(43,47,74,.12)}
+.lsheetin .lst{font-family:var(--f-display);font-size:24px}
+.lsheetin .mundpic{width:100%;border-radius:22px;overflow:hidden;box-shadow:0 5px 0 var(--line)}.lsheetin .mundpic svg{display:block;width:100%;height:auto}
+.lsheetin .ltip{margin:0;text-align:center;font-weight:700;font-size:16px;line-height:1.35}
+.lsheetin .mirrorcam{width:min(220px,60vw);aspect-ratio:1;object-fit:cover;border-radius:50%;transform:scaleX(-1)}
+.lx{position:absolute;right:12px;top:12px;width:40px;height:40px;border-radius:14px;background:#f4f7fb;display:grid;place-items:center}
+.lx svg{width:22px;height:22px;stroke:#4b5a7a;stroke-width:2.8;stroke-linecap:round;fill:none}
+@media (max-height:500px) and (orientation:landscape){
+ .leiter3{display:grid;grid-template-columns:auto minmax(0,340px);grid-template-areas:'steps ctl' 'card ctl';align-items:center;justify-content:center;column-gap:24px;row-gap:8px;max-width:none}
+ .leiter3 .lsteps{grid-area:steps}.leiter3 .lcard{grid-area:card}.leiter3 .lctl3{grid-area:ctl;gap:8px}
+ .leiter3 .hero .frame{width:min(150px,36dvh)}.leiter3 .hero .frame .em{font-size:min(84px,20dvh)}
+ .leiter3 .lword .word{font-size:22px}.lsheetin{width:min(600px,100%);padding:12px 16px;gap:8px}.lsheetin .lst{font-size:20px}.lsheetin .mundpic{width:auto}.lsheetin .mundpic svg{height:44dvh;width:auto}.lsheetin .ltip{font-size:14px}.lsheetin .mirrorcam{width:40dvh}}
+.mirror{position:relative}.mirror .mcam{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1);border-radius:inherit}
+.mirror.live>svg{visibility:hidden}
+.mirrorbox #mCam{min-height:44px;font-size:15px;padding:6px 14px;margin-top:4px}
 /* Eltern-Bereich im neuen Look */
 #parents{background:#f4f7fb}
 .phead{display:flex;align-items:center;gap:12px;padding:calc(14px + env(safe-area-inset-top,0px)) 0 10px}
@@ -1001,12 +1034,14 @@ let sayToken=0,unlocked=false;
 document.addEventListener('pointerdown',()=>{if(unlocked)return;unlocked=true;try{player.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';player.play().catch(()=>{})}catch(e){}},{capture:true});
 function chunks(t){return (t.match(/[^.!?:]+[.!?:]?/g)||[]).map(x=>x.trim()).filter(Boolean)}
 function ckey(t){return t.toLowerCase().replace(/[^a-zäöüß0-9 ]/g,'').replace(/\s+/g,' ').trim()}
-function playFile(f,rate,tok){return new Promise(res=>{
+function playFile(f,rate,tok){aSess('playback');return new Promise(res=>{
   if(tok!==sayToken)return res();let done=false;const fin=()=>{if(!done){done=true;clearTimeout(t);player.onended=player.onerror=null;res()}};
   player.onended=fin;player.onerror=fin;const t=setTimeout(fin,9000);
   try{player.src=f;player.playbackRate=rate;player.preservesPitch=true;player.webkitPreservesPitch=true;const p=player.play();if(p&&p.catch)p.catch(fin)}catch(e){fin()}
 })}
-function sayTTS(text,rate){
+/* iPhone: nach dem Mikrofon schaltet Safari auf Telefon-Modus (leise über die Hörmuschel). So geht der Ton wieder normal über den Lautsprecher. */
+function aSess(t){try{const a=navigator.audioSession;if(a&&a.type!==t)a.type=t}catch(e){}}
+function sayTTS(text,rate){aSess('playback');
   if(!hasTTS)return Promise.resolve();
   return new Promise(res=>{
     const u=new SpeechSynthesisUtterance(text);u.lang='de-DE';if(deVoice)u.voice=deVoice;
@@ -1267,7 +1302,7 @@ function similarity(alts,word){const w=norm(word);let best=0;
   return best}
 function listenOnce(onStart){
   return new Promise(res=>{
-    let r;try{r=new SR()}catch(e){return res({error:'unsupported',alts:[]})}
+    let r;try{r=(aSess('play-and-record'),new SR())}catch(e){return res({error:'unsupported',alts:[]})}
     r.lang='de-DE';r.interimResults=false;r.maxAlternatives=5;r.continuous=false;
     const alts=[];let err=null,done=false;const fin=()=>{if(!done){done=true;clearTimeout(t);res({error:err,alts})}};
     r.onaudiostart=()=>onStart&&onStart();
@@ -1363,13 +1398,21 @@ function faceSVG(id){
 function renderMund(){
   const T=G.task;let timer=0,running=false;
   $('#stage').innerHTML=`<div class="split mund">
-    <div class="mirrorbox"><div class="mirror">${faceSVG(T.target.id)}</div><div class="mname">${T.target.e} ${T.target.name}</div></div>
+    <div class="mirrorbox"><div class="mirror">${faceSVG(T.target.id)}<video id="mVideo" class="mcam" playsinline muted hidden></video></div><div class="mname">${T.target.e} ${T.target.name}</div>
+      ${navigator.mediaDevices&&navigator.mediaDevices.getUserMedia?`<button class="bigbtn light" id="mCam">🪞 ${G.cam?'Bild zeigen':'Echter Spiegel'}</button>`:''}</div>
     <div class="mctl">
       <div class="ringwrap"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="50" fill="none" stroke="rgba(38,48,58,.12)" stroke-width="12"/><circle id="ring" cx="60" cy="60" r="50" fill="none" stroke="var(--leaf)" stroke-width="12" stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="314.16" transform="rotate(-90 60 60)"/></svg><b id="ringNum">${T.hold}</b></div>
       <div class="row"><button class="bigbtn light" id="btnListen">🔊</button><button class="bigbtn green" id="btnGo">▶ Los!</button></div>
       <p class="stage-note">Tipp für Erwachsene: Macht es gemeinsam vor einem Spiegel. ${T.hold} Sekunden halten.</p>
     </div></div>`;
   $('#btnListen').onclick=()=>{hush();say(T.text)};
+  /* Echter Spiegel: Frontkamera im Spiegel-Rahmen (nichts wird aufgenommen oder gesendet) */
+  const camOn=async()=>{const v=$('#mVideo');if(!v||MED.lock)return;MED.lock=true;
+    try{await mirrorOn(v);if(!document.body.contains(v)){stopCam();return}v.hidden=false;$('.mirror').classList.add('live');G.cam=true;const b=$('#mCam');if(b)b.lastChild.textContent=' Bild zeigen'}
+    catch(e){G.cam=false;toast('Die Kamera ist nicht erlaubt. Nimm einfach einen Spiegel!',false)}finally{MED.lock=false}};
+  const camOff=()=>{const v=$('#mVideo');if(v)v.hidden=true;stopCam();$('.mirror').classList.remove('live');G.cam=false;const b=$('#mCam');if(b)b.lastChild.textContent=' Echter Spiegel'};
+  if($('#mCam'))$('#mCam').onclick=()=>{hush();G.cam?camOff():camOn()};
+  if(G.cam)camOn();
   $('#btnGo').onclick=()=>{
     if(running||G.busy)return;running=true;hush();say('Los!');tone([660],.1,'triangle');
     const ring=$('#ring'),num=$('#ringNum'),t0=performance.now(),dur=T.hold*1000;
@@ -1487,46 +1530,50 @@ function lautNoise(type){return new Promise(res=>{
 
 /* --- Mund-Bild: Seitenansicht (Schnitt durch die Mitte des Kopfes, Blick von links) – wo Zunge, Zähne und Lippen sind --- */
 function mundSVG(t){
-  const K='stroke="#26303a" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"',k2='stroke="#26303a" stroke-width="2.4" stroke-linejoin="round"';
-  /* Zunge: hinten im Rachen verankert, Spitze vorne; je Laut andere Form */
-  const TON={
-    s:'M58 180 Q54 122 78 108 Q108 96 140 93 Q155 92 161 95 Q160 101 150 104 Q128 110 112 124 Q102 142 100 180Z',
-    sch:'M58 180 Q54 120 80 104 Q108 91 138 91 Q151 92 156 97 Q151 103 138 107 Q118 114 106 128 Q98 146 98 180Z',
-    t:'M58 180 Q54 122 80 110 Q110 100 140 92 Q156 86 165 88 Q164 95 152 99 Q128 108 110 124 Q100 142 100 180Z',
-    l:'M58 180 Q54 122 80 110 Q110 100 140 92 Q156 86 165 88 Q164 95 152 99 Q128 108 110 124 Q100 142 100 180Z',
-    k:'M58 180 Q52 112 66 96 Q78 84 94 90 Q114 100 140 104 Q156 106 161 109 Q158 115 146 115 Q122 118 106 130 Q98 150 98 180Z',
-    g:'M58 180 Q52 112 66 96 Q78 84 94 90 Q114 100 140 104 Q156 106 161 109 Q158 115 146 115 Q122 118 106 130 Q98 150 98 180Z',
-    r:'M58 180 Q52 122 60 110 Q70 100 88 104 Q116 108 144 108 Q157 108 161 111 Q157 116 145 116 Q120 120 106 132 Q98 150 98 180Z',
-    f:'M58 180 Q54 126 82 116 Q112 108 144 108 Q157 108 161 111 Q157 116 145 116 Q120 120 106 132 Q98 150 98 180Z',
-    cl:'M58 180 Q52 122 72 106 Q94 88 120 85 Q144 86 156 104 Q161 110 156 114 Q140 116 122 122 Q104 134 100 180Z'};
-  const round=t==='sch',fl=t==='f',tg=TON[t]||TON.s;
-  /* Ruhe-Lage der Zunge (gleicher Aufbau wie die Laut-Formen, damit sie hineingleiten kann) */
-  const REST={6:'M58 180 Q54 128 82 118 Q112 110 142 110 Q156 110 160 113 Q157 117 145 117 Q120 121 106 133 Q98 150 98 180Z',
-    7:'M58 180 Q52 128 70 120 Q86 114 100 114 Q120 112 142 111 Q156 111 160 114 Q157 118 145 118 Q120 122 106 134 Q98 150 98 180Z'};
-  /* Lippen: normal, gerundet nach vorne (Sch), oder Unterlippe an den oberen Zähnen (F) */
-  const lipU=round?`<path d="M174 82 Q200 82 202 91 Q202 97 190 98 L174 98Z" fill="#e8708a" ${k2}/>`:`<path d="M174 83 Q191 85 191 92 Q190 98 176 98Z" fill="#e8708a" ${k2}/>`;
-  const lipL=round?`<path d="M174 103 L190 103 Q202 104 202 110 Q200 119 174 120Z" fill="#e8708a" ${k2}/>`:fl?`<path d="M166 100 Q178 97 184 104 Q185 114 172 118 L170 118Z" fill="#e8708a" ${k2}/>`:`<path d="M175 102 Q190 103 189 110 Q187 118 173 118Z" fill="#e8708a" ${k2}/>`;
-  const air={s:'<path d="M164 100 H206" stroke="#1fb3a8" stroke-width="4" stroke-dasharray="6 5" marker-end="url(#ar)"/>',
-    sch:'<path d="M200 96 Q208 92 216 88 M202 101 H216 M200 106 Q208 110 216 114" stroke="#1fb3a8" stroke-width="3.5" stroke-dasharray="5 4" fill="none"/>',
-    f:'<path d="M176 95 Q192 92 210 92" stroke="#1fb3a8" stroke-width="4" stroke-dasharray="6 5" fill="none" marker-end="url(#ar)"/>',
-    cl:'<path d="M118 92 Q150 96 168 100 L206 100" stroke="#1fb3a8" stroke-width="3.5" stroke-dasharray="6 5" fill="none" marker-end="url(#ar)"/>',
-    k:'<text x="195" y="107" font-size="21" font-weight="900" fill="#ff7559" font-family="sans-serif">k!</text>',
-    g:'<text x="195" y="107" font-size="21" font-weight="900" fill="#ff7559" font-family="sans-serif">g!</text><path d="M50 170 q5 -5 0 -10 q-5 -5 0 -10 M42 170 q5 -5 0 -10 q-5 -5 0 -10" stroke="#8566db" stroke-width="3" fill="none"/>',
-    t:'<text x="195" y="107" font-size="21" font-weight="900" fill="#ff7559" font-family="sans-serif">t!</text>',
-    l:'<path d="M118 120 Q148 128 168 112 M118 86 Q146 76 166 86" stroke="#1fb3a8" stroke-width="3.2" stroke-dasharray="5 5" fill="none"/>',
-    r:'<path d="M60 104 q-5 4 0 8 q5 4 0 8" stroke="#8566db" stroke-width="3" fill="none"/>'}[t]||'';
-  const spot={s:[160,90],sch:[152,92],t:[164,88],l:[164,88],k:[82,86],g:[82,86],r:[70,104],f:[169,100],cl:[120,82]}[t]||[160,90];
-  const uv=t==='r'?'M72 92 Q66 100 68 110 Q74 112 76 104':'M72 92 Q70 100 72 108 Q77 109 77 101';
-  return `<svg viewBox="34 28 186 152" aria-hidden="true"><defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#1fb3a8"/></marker></defs>
-   <path d="M14 0 H118 Q158 4 166 30 L170 42 Q186 56 194 66 Q194 73 182 74 L176 76 L176 120 Q172 126 174 132 Q182 144 170 154 Q148 162 122 164 L112 180 H14Z" fill="#f6cfae" ${K}/>
-   <path d="M168 78 Q150 64 120 63 Q92 63 76 76 L72 92 Q92 76 120 74 Q148 74 166 86Z" fill="#fde7d6" opacity=".9"/>
-   <path d="M168 88 Q150 78 120 77 Q94 77 78 86 L72 92 L48 104 L46 180 H100 Q102 140 124 128 Q152 116 170 112 L176 100Z" fill="#7a2338" opacity=".9"/>
-   <path d="M168 88 Q150 76 120 75 Q94 75 76 88" fill="none" stroke="#c96b7a" stroke-width="6" stroke-linecap="round"/>
-   <path d="${uv}" fill="#c96b7a" stroke="#c96b7a" stroke-width="2"/>
-   <path d="${tg}" fill="#ff7f8a" ${K}><animate class="tg" attributeName="d" values="${REST[tg.split('Q').length-1]};${REST[tg.split('Q').length-1]};${tg}" keyTimes="0;.25;1" calcMode="spline" keySplines="0 0 1 1;.4 0 .2 1" dur="1.2s" begin="indefinite" fill="freeze"/></path>
-   <path d="M161 85 H170 L169 99 H164Z" fill="#fff" ${k2}/><path d="M161 101 H168 L168 114 H162Z" fill="#fff" ${k2}/>
-   ${lipU}${lipL}<g>${air}<animate class="tg" attributeName="opacity" values="0;0;1" keyTimes="0;.75;1" dur="1.5s" begin="indefinite" fill="freeze"/></g>
-   <g><circle cx="${spot[0]}" cy="${spot[1]}" r="8" fill="none" stroke="#ffc63a" stroke-width="4" class="mspot"/><animate class="tg" attributeName="opacity" values="0;0;1" keyTimes="0;.8;1" dur="1.5s" begin="indefinite" fill="freeze"/></g>
+  /* Seitenansicht im Bilderbuch-Look: Nase, Lippen, Zähne, Gaumen mit Zäpfchen, Zunge. Die Zunge gleitet aus der Ruhe in die Laut-Stellung. */
+  const ln='stroke="rgba(43,47,74,.32)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"';
+  /* Zunge aus Parametern: Rücken (bx,by), Mitte (mx,my), Spitze (tx,ty) – gleiche Befehle, damit sie gleiten kann */
+  const TG=(bx,by,mx,my,tx,ty)=>`M68 196 Q62 ${by+26} ${bx} ${by} Q${mx} ${my} ${tx} ${ty} Q${tx+5} ${ty+6} ${tx-6} ${ty+10} Q${tx-30} ${ty+16} 118 ${ty+22} Q102 ${ty+34} 100 196Z`;
+  const P={rest:[98,120,140,116,168,126],s:[102,110,144,104,170,110],sch:[102,106,140,100,163,105],t:[100,112,144,104,172,100],l:[100,112,144,104,172,100],
+    k:[90,94,126,108,168,127],g:[90,94,126,108,168,127],r:[82,104,124,112,168,126],f:[98,118,140,114,168,125],cl:[102,106,142,100,168,106]};
+  const tg=TG(...(P[t]||P.s)),rest=TG(...P.rest);
+  const round=t==='sch',fl=t==='f',closed=t==='s'||t==='sch'||t==='cl';
+  const lowY=closed?0:fl?2:5; /* Unterkiefer etwas offen bei K, G, R, T, L */
+  const upLip=round?`<path d="M180 92 Q206 88 212 100 Q212 106 200 107 L182 106Z" fill="#ef8b97" ${ln}/>`:`<path d="M182 92 Q200 90 204 100 Q204 106 192 107 L183 106Z" fill="#ef8b97" ${ln}/>`;
+  const loLip=round?`<path d="M182 ${118+lowY} L200 ${117+lowY} Q212 ${118+lowY} 212 ${126+lowY} Q206 ${138+lowY} 180 ${136+lowY}Z" fill="#ef8b97" ${ln}/>`
+    :fl?`<path d="M170 113 Q186 109 194 116 Q196 128 182 134 L176 134Z" fill="#ef8b97" ${ln}/>`
+    :`<path d="M183 ${119+lowY} Q200 ${118+lowY} 203 ${126+lowY} Q200 ${136+lowY} 182 ${136+lowY}Z" fill="#ef8b97" ${ln}/>`;
+  const air={s:'<path d="M172 112 H226" stroke="#20b2a6" stroke-width="5" stroke-dasharray="7 6" stroke-linecap="round" marker-end="url(#mar)"/>',
+    sch:'<path d="M212 102 Q222 96 230 90 M214 112 H232 M212 122 Q222 128 230 134" stroke="#20b2a6" stroke-width="4.5" stroke-dasharray="6 5" stroke-linecap="round" fill="none"/>',
+    f:'<path d="M186 110 Q206 106 226 106" stroke="#20b2a6" stroke-width="5" stroke-dasharray="7 6" stroke-linecap="round" fill="none" marker-end="url(#mar)"/>',
+    cl:'<path d="M130 96 Q160 100 176 110 L226 112" stroke="#20b2a6" stroke-width="4.5" stroke-dasharray="7 6" stroke-linecap="round" fill="none" marker-end="url(#mar)"/>',
+    k:'<text x="214" y="122" font-size="24" font-weight="900" fill="#ff7a59" font-family="Baloo 2,sans-serif">k!</text>',
+    g:'<text x="214" y="122" font-size="24" font-weight="900" fill="#ff7a59" font-family="Baloo 2,sans-serif">g!</text><path d="M44 176 q6 -6 0 -12 q-6 -6 0 -12 M34 176 q6 -6 0 -12 q-6 -6 0 -12" stroke="#7c6cf2" stroke-width="3.5" stroke-linecap="round" fill="none"/>',
+    t:'<text x="214" y="122" font-size="24" font-weight="900" fill="#ff7a59" font-family="Baloo 2,sans-serif">t!</text>',
+    l:'<path d="M128 124 Q156 134 176 120 M128 84 Q154 74 172 88" stroke="#20b2a6" stroke-width="4" stroke-dasharray="6 6" stroke-linecap="round" fill="none"/>',
+    r:'<path d="M66 96 q-6 5 0 10 q6 5 0 10 q-6 5 0 10" stroke="#7c6cf2" stroke-width="3.5" stroke-linecap="round" fill="none"/>'}[t]||'';
+  const spot={s:[170,105],sch:[162,100],t:[172,98],l:[172,98],k:[88,88],g:[88,88],r:[80,100],f:[180,112],cl:[150,94]}[t]||[170,105];
+  const uv=t==='r'?'M84 92 Q78 102 81 112 Q88 114 89 104Z':'M84 92 Q82 102 84 112 Q90 113 90 103Z';
+  return `<svg viewBox="52 46 186 150" aria-hidden="true"><defs><marker id="mar" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#20b2a6"/></marker>
+     <linearGradient id="mskin" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f3c6a3"/><stop offset="1" stop-color="#f9dcc4"/></linearGradient></defs>
+   <rect x="52" y="46" width="186" height="150" fill="#fff"/>
+   <!-- Kopf von der Seite: Stirn, Nase, Oberlippe, Kinn, Hals -->
+   <path d="M0 0 H150 Q170 20 176 46 L178 58 Q196 72 206 82 Q208 90 194 90 L184 91 L184 140 Q178 146 182 154 Q190 170 172 180 Q150 188 126 190 L118 200 H0Z" fill="url(#mskin)" ${ln}/>
+   <!-- Mundraum -->
+   <path d="M180 97 Q150 83 120 82 Q96 82 82 92 L66 104 L62 200 H112 Q112 168 124 154 Q150 146 170 142 Q180 138 183 128 L184 110Z" fill="#8c2f45"/>
+   <!-- harter Gaumen und Gaumensegel mit Zäpfchen -->
+   <path d="M180 92 Q154 78 120 77 Q96 77 82 90 L84 94 Q98 84 120 85 Q152 86 176 98Z" fill="#f4b3be"/>
+   <path d="${uv}" fill="#f19aa9"/>
+   <!-- Zahnfleisch und Zähne -->
+   <path d="M168 88 Q176 88 182 92 L180 99 Q174 96 168 97Z" fill="#f08da0"/>
+   <path d="M171 95 Q180 94 182 97 L181 108 Q178 113 174 112 Q171 108 171 103Z" fill="#fff" ${ln}/>
+   <g transform="translate(0 ${lowY})"><path d="M170 132 Q178 132 184 128 L182 136 Q176 138 170 138Z" fill="#f08da0"/>
+   <path d="M172 117 Q176 114 180 116 L182 126 Q180 131 173 131 Q171 124 172 117Z" fill="#fff" ${ln}/></g>
+   <!-- Zunge mit Mittelrille -->
+   <path d="${tg}" fill="#ff8a98" ${ln}><animate class="tg" attributeName="d" values="${rest};${rest};${tg}" keyTimes="0;.25;1" calcMode="spline" keySplines="0 0 1 1;.4 0 .2 1" dur="1.2s" begin="indefinite" fill="freeze"/></path>
+   ${upLip}${loLip}
+   <g>${air}<animate class="tg" attributeName="opacity" values="0;0;1" keyTimes="0;.75;1" dur="1.5s" begin="indefinite" fill="freeze"/></g>
+   <g><circle cx="${spot[0]}" cy="${spot[1]}" r="9" fill="none" stroke="#ffc542" stroke-width="4.5" class="mspot"/><animate class="tg" attributeName="opacity" values="0;0;1" keyTimes="0;.8;1" dur="1.5s" begin="indefinite" fill="freeze"/></g>
   </svg>`;
 }
 
@@ -1536,7 +1583,7 @@ function mundGlide(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)r
 /* --- Mikrofon-Aufnahme „Hör dich selbst“ und Kamera-Spiegel (nur auf diesem Gerät, nichts wird gesendet) --- */
 var noiseSrc=null;
 var MED={a:null,v:null,g:null,p:null,u:null,lock:false};
-async function micStream(){if(MED.a&&MED.a.active)return MED.a;MED.a=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});return MED.a}
+async function micStream(){if(MED.a&&MED.a.active)return MED.a;MED.a=await (aSess('play-and-record'),navigator.mediaDevices).getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});return MED.a}
 function stopMedia(){['a','v','g'].forEach(k=>{if(MED[k]){MED[k].getTracks().forEach(t=>t.stop());MED[k]=null}});try{MED.p&&MED.p.pause()}catch(e){}}
 document.addEventListener('visibilitychange',()=>{if(document.hidden){stopMedia();hush()}});
 function canRecord(){return !!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder)}
@@ -1549,7 +1596,7 @@ async function recordClip(ms,onLevel){
   const meter=()=>{if(an&&onLevel){an.getByteTimeDomainData(buf);let m=0;for(const v of buf)m=Math.max(m,Math.abs(v-128));onLevel(Math.min(1,m/70))}raf=requestAnimationFrame(meter)};
   return new Promise(res=>{mr.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};mr.onstop=()=>{cancelAnimationFrame(raf);onLevel&&onLevel(0);free();if(MED.u){URL.revokeObjectURL(MED.u);MED.u=null}res(ch.length?URL.createObjectURL(new Blob(ch,{type:mr.mimeType||mime||'audio/webm'})):null)};
     mr.start();meter();setTimeout(()=>{try{mr.stop()}catch(e){free();res(null)}},ms)})}
-function playUrl(u){MED.u=u;return new Promise(r=>{const a=MED.p=MED.p||new Audio();a.onended=a.onerror=()=>r();a.src=u;a.play().catch(()=>r())})}
+function playUrl(u){aSess('playback');MED.u=u;return new Promise(r=>{const a=MED.p=MED.p||new Audio();a.onended=a.onerror=()=>r();a.src=u;a.play().catch(()=>r())})}
 function stopCam(){if(MED.v){MED.v.getTracks().forEach(t=>t.stop());MED.v=null}}
 async function mirrorOn(video){MED.v=MED.v||await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:480},height:{ideal:480}},audio:false});video.srcObject=MED.v;try{await video.play()}catch(e){}}
 
@@ -1599,7 +1646,7 @@ function openVoiceGame(z){
   async function start(){
     if(live)return;go.disabled=true;hint.textContent='Einen Moment …';
     try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')await ac.resume();
-      MED.g=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+      MED.g=await (aSess('play-and-record'),navigator.mediaDevices).getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
       src=ac.createMediaStreamSource(MED.g);an=ac.createAnalyser();an.fftSize=2048;an.smoothingTimeConstant=.25;src.connect(an);fl=new Float32Array(an.frequencyBinCount);td=new Float32Array(an.fftSize)}
     catch(e){hint.textContent='Das Mikrofon ist hier nicht erlaubt. Frag einen Erwachsenen.';go.disabled=false;return}
     live=true;p=0;cnt=0;won=false;floor=null;cal=performance.now();calN=0;hint.textContent='Psst … kurz ganz leise sein …';go.textContent='🎤 Ich höre zu';
@@ -1711,23 +1758,33 @@ function leiterItem(z,st,i){
 }
 function renderLeiter(){
   const T=G.task,z=G.z,Z=ZIEL[z],st=G.st;
-  const rungs2=STUFEN.map((n,k)=>`<li class="${k+1===st?'now':k+1<st?'done':''}"><b>${k+1}</b><span>${n}</span></li>`).join('');
-  $('#stage').innerHTML=`<div class="leiter2">
-   <ol class="ladder lh" aria-label="Stufen">${rungs2}</ol>
-   <div class="lmain">
-     <div class="hero"><div class="frame ${T.kind==='silbe'?'syl-frame':''}"><span class="em">${T.show}</span></div></div>
-     <div class="mundbox"><div class="mundpic">${mundSVG(Z.mund)}</div>
-       <div class="mrow"><button class="bigbtn light small" id="lTipp" aria-label="So geht's">👄 So geht's</button><button class="bigbtn light small" id="lMirror" aria-label="Spiegel">🪞 Spiegel</button></div>
-       <video id="lVideo" class="mirrorcam" playsinline muted hidden></video></div>
+  const vg=T.kind==='laut'&&vgUsable()?(VG[z]||VG.CL):null;
+  const steps=STUFEN.map((n,k)=>`<i class="${k+1===st?'now':k+1<st?'on':''}"></i>`).join('');
+  $('#stage').innerHTML=`<div class="leiter3">
+   <div class="lsteps" aria-label="Sprosse ${st} von 5: ${STUFEN[st-1]}">${steps}<span>${st}. ${STUFEN[st-1]}</span></div>
+   <div class="lcard"><div class="hero"><div class="frame ${T.kind==='silbe'?'syl-frame':''}"><span class="em">${T.show}</span></div></div>
+     ${T.kind==='laut'?'':`<div class="lword"><div class="word">${T.label}</div>${T.word&&T.kind==='wort'&&G.L<5?`<div class="syl">${T.word.s.split('-').join(' · ')}</div>`:''}</div>`}</div>
+   <div class="lctl3">
+     <button class="bigbtn" id="lModel">🔊 Nuki zeigt es</button>
+     <div class="ltools">${T.word?'<button class="bigbtn light" id="lSlow">🐢 Langsam</button>':''}<button class="bigbtn light" id="lMund">👄 So geht's</button>${vg?`<button class="bigbtn sun" id="lVoice" aria-label="${vg.btn.slice(3)}">${vg.btn.split(' ')[0]} Spiel</button>`:''}</div>
+     ${practiceBox('l')}${rateRow('l')}
    </div>
-   <div class="lword"><div class="word">${T.kind==='laut'?T.say:T.label}</div>${T.word&&T.kind==='wort'&&G.L<5?`<div class="syl">${T.word.s.split('-').join(' · ')}</div>`:''}</div>
-   <div class="lctl"><div class="speak"><button class="bigbtn" id="lModel">🔊 Nuki zeigt es</button>${T.word?'<button class="bigbtn light" id="lSlow">🐢 Langsam</button>':''}${T.kind==='laut'&&vgUsable()?`<button class="bigbtn sun" id="lVoice" aria-label="${(VG[z]||VG.CL).btn.slice(3)}"><span class="vgi">${(VG[z]||VG.CL).btn.split(' ')[0]}</span><span class="vgt"> ${(VG[z]||VG.CL).btn.split(' ').slice(1).join(' ')}</span></button>`:''}</div>
-   ${practiceBox('l')}${rateRow('l')}</div>
+   <div class="lsheet" id="lSheet" hidden><div class="lsheetin" role="dialog" aria-label="So geht der Laut">
+     <button class="lx" id="lSheetX" aria-label="Schließen"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+     <b class="lst">So geht ${Z.name}</b>
+     <div class="mundpic">${mundSVG(Z.mund)}</div>
+     <p class="ltip">${Z.tipp}</p>
+     <video id="lVideo" class="mirrorcam" playsinline muted hidden></video>
+     <div class="row"><button class="bigbtn light" id="lTipp">🔊 Nochmal</button><button class="bigbtn light" id="lMirror">🪞 Spiegel</button></div>
+   </div></div>
   </div>`;
-  $('#lModel').onclick=()=>{hush();mundGlide();T.model()};
+  $('#lModel').onclick=()=>{hush();T.model()};
   if($('#lVoice'))$('#lVoice').onclick=()=>openVoiceGame(z);
   if(T.word)$('#lSlow').onclick=()=>{hush();saySyllables(T.word)};
-  $('#lTipp').onclick=()=>{hush();mundGlide();bubble(Z.tipp);say(Z.tipp)};
+  const closeSheet=()=>{$('#lSheet').hidden=true;const v=$('#lVideo');if(!v.hidden){v.hidden=true;stopCam()}};
+  $('#lMund').onclick=()=>{hush();$('#lSheet').hidden=false;setTimeout(mundGlide,60);say(Z.tipp)};
+  $('#lSheetX').onclick=()=>{hush();closeSheet()};$('#lSheet').onclick=e=>{if(e.target.id==='lSheet'){hush();closeSheet()}};
+  $('#lTipp').onclick=()=>{hush();mundGlide();say(Z.tipp)};
   $('.mundpic').onclick=()=>mundGlide();
   $('#lMirror').onclick=async()=>{const v=$('#lVideo');if(MED.lock)return;if(!v.hidden){v.hidden=true;stopCam();fitSoon();return}
     MED.lock=true;try{v.hidden=false;fitSoon();await mirrorOn(v);if(v.hidden||!document.body.contains(v))stopCam()}catch(e){v.hidden=true;toast('Die Kamera ist nicht erlaubt. Nimm einfach einen Spiegel!',false)}MED.lock=false};
@@ -1737,7 +1794,7 @@ function renderLeiter(){
     const t=good?rnd(['Wunderbar gesprochen!','Super, das klang toll!','Klasse!']):'Toll, dass du es probiert hast!';
     bubble(t);if(good)confetti(14);await say(t);await wait(200);G.i++;nextTask()};
   $('#lGood').onclick=()=>done(true);$('#lAgain').onclick=()=>done(false);
-  wait(250).then(()=>{mundGlide();T.model()});
+  wait(250).then(()=>T.model());
 }
 
 /* --- Spiel: Nuki versteht dich (Minimalpaare mit echter Folge) --- */
@@ -1769,8 +1826,9 @@ function renderQuatsch(){
       <div class="speak"><button class="bigbtn light" id="qHear">🔊 Nochmal hören</button></div></div>`;
     $('#qHear').onclick=()=>{hush();say(T.text)};
     document.querySelectorAll('#stage .card').forEach(c=>c.onclick=async()=>{if(G.busy)return;G.busy=true;hush();const o=WX[c.dataset.w];c.classList.add('right');tone([660],.08,'triangle');
-      if(step===1){T.sub=o;await say(qSubjText(o.w));T.text='Und was gehört dazu?'}else{T.obj=o;(G.qo=G.qo||[]).push(o.w);T.text='Jetzt du! Sag den ganzen Satz.'}
-      G.busy=false;bubble(T.text);renderQuatsch();if(step===2){confetti(10);await qSay(T);await wait(150);say(T.text)}else say(T.text)});
+      if(step===1){T.sub=o;T.text='Und was gehört dazu?'}else{T.obj=o;(G.qo=G.qo||[]).push(o.w);T.text='Jetzt du! Sag den ganzen Satz.'}
+      G.busy=false;bubble(T.text);renderQuatsch(); /* sofort weiter – Nuki spricht dabei, ein neuer Tipp unterbricht ihn */
+      const tk=sayToken;if(step===1){await say(qSubjText(o.w));if(tk===sayToken)say(T.text)}else{confetti(10);await qSay(T);if(tk===sayToken)say(T.text)}});
     fitSoon();return}
   const sent=`${qSubjText(T.sub.w)} ${qObjText(T.obj.w)}`;
   $('#stage').innerHTML=`<div class="quatsch">${strip}<div class="qsent">${qMark(sent,z)}</div>
@@ -1781,7 +1839,7 @@ function renderQuatsch(){
   wireRecord('q',null,4200);
   const done=async good=>{if(G.busy)return;G.busy=true;hush();logTrial(z,good);recordWord(T.obj.w,good);G.rec=true;if(good){G.first++}
     addStar();fxRight();setMood($('#gameMascot'),'happy');const t=good?rnd(['Wunderbar gesprochen!','Super, das klang toll!','Klasse!']):'Toll, dass du es probiert hast!';
-    bubble(t);if(good)confetti(16);await say(t);await wait(200);G.i++;nextTask()};
+    bubble(t);if(good)confetti(16);await Promise.race([say(t),wait(1600)]);G.i++;nextTask()};
   $('#qGood').onclick=()=>done(true);$('#qAgain').onclick=()=>done(false);
   fitSoon();
 }
