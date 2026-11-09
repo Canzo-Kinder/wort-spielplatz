@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="theme-color" content="#5ab8ea"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}img{max-width:100%}</style></head><body>
 <title>Wort-Spielplatz</title>
+<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-180.png"><link rel="icon" type="image/png" href="icon-192.png"><meta name="theme-color" content="#5ab8ea"><meta name="apple-mobile-web-app-title" content="Wort-Spielplatz">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800&display=swap">
@@ -1932,6 +1933,13 @@ let USE3D=false;
 
 paintMute();renderHome();show('home');
 setTimeout(()=>{if(!$('#home').hidden)toast('Hallo! Ich bin Nuki. Willkommen auf dem Spielplatz!',false)},700);
+
+/* Als App installierbar und ohne Internet spielbar (Service Worker) */
+if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+  navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.t==='offline-bereit'){let seen=null;try{seen=localStorage.getItem('ws-offline')}catch(x){}
+    if(!seen){try{localStorage.setItem('ws-offline','1')}catch(x){}toast('Fertig! Der Wort-Spielplatz geht jetzt auch ohne Internet.',false)}}});
+}
 </script>
 
 </body></html>
