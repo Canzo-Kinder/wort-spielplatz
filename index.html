@@ -270,6 +270,8 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
 .bar .t i{display:block;height:100%;background:var(--sun);border-radius:6px}
 .bar b{text-align:right;font-variant-numeric:tabular-nums}
 .wchips{display:flex;flex-wrap:wrap;gap:8px}
+.bar .gi{display:inline-grid;place-items:center;width:26px;height:26px;margin-right:6px;vertical-align:-7px;font-style:normal}.bar .gi svg{width:26px;height:26px}
+.wchips span.wk{display:inline-flex;align-items:center;gap:6px;background:#fff;border:2px solid #ffd2c6;font-size:15px}.wchips span.wk svg{width:26px;height:26px}
 .wchips span{background:#fff1ec;border:2px solid #ffd2c6;border-radius:999px;padding:4px 12px;font-weight:800;font-size:14px}
 .warn{background:#fff6dd;border:2px solid #ffe08a;border-radius:14px;padding:10px 12px;font-weight:700;font-size:14px}
 .danger{background:#fff;border:2px solid var(--coral);color:#c4513a;border-radius:12px;min-height:44px;padding:6px 16px;font-weight:800;align-self:flex-start}
@@ -1114,10 +1116,10 @@ function makeTask(id,i){
   const LV=G.L, n=[0,2,3,3,4,4][LV];
   if(id==='versteht')return nvTask(i);
   if(id==='leiter')return leiterItem(G.z,G.st,i);
-  if(id==='koffer'){const pool=W.filter(w=>G.kof.includes(w.l)&&w.w!==byName[LAUTE[w.l].ref].w);const t=pickN(pool,1,G.used)[0]||rnd(pool);G.used.push(t);return {target:t,text:'Wo passt das hin? Pack es in den richtigen Koffer!'}}
+  if(id==='koffer'){const pool=W.filter(w=>G.kof.includes(w.l)&&w.w!==byName[LAUTE[w.l].ref].w);const t=pickT(pool,G.used)||rnd(pool);G.used.push(t);return {target:t,text:'Wo passt das hin? Pack es in den richtigen Koffer!'}}
   if(id==='mund'){const ok=MUND.filter(m=>m.lv<=LV);const ex=ok.filter(m=>!G.used.includes(m));const t=rnd(ex.length?ex:ok);G.used.push(t);return {target:t,text:t.say,hold:[0,3,4,5,6,8][LV]}}
   if(id==='hoeren'){
-    const pool=anlautPool(); const t=pickN(pool,1,G.used)[0]||rnd(pool); G.used.push(t);
+    const pool=anlautPool(); const t=pickT(pool,G.used)||rnd(pool); G.used.push(t);
     // gleiche Anlaute als Ablenker machen genaues Hinhören nötig
     const same=pickN(W.filter(w=>w.l===t.l&&w.l!=='X'),n-1,[t]);
     const opts=same.length>=n-1&&LV>=3?same:pickN(W,n-1,[t]);
@@ -1145,17 +1147,17 @@ function makeTask(id,i){
     const pool=S.laut==='ALLE'?W:anlautPool(); let t;
     // abwechslungsreiche Silbenzahl
     const maxS=[0,2,3,4,4,5][LV];const want=1+(i%maxS);const c=pool.filter(w=>w.s.split('-').length===want&&!G.used.includes(w));
-    t=c.length?rnd(c):pickN(pool,1,G.used)[0]||rnd(pool); G.used.push(t);
+    t=c.length?rnd(c):pickT(pool,G.used)||rnd(pool); G.used.push(t);
     return {target:t,text:'Wie viele Silben hörst du? Trommle mit!',n:t.s.split('-').length};
   }
   if(id==='sprechen'){
-    const maxS=[0,2,2,3,4,5][LV];let pool=anlautPool().filter(w=>w.s.split('-').length<=maxS);if(pool.length<3)pool=anlautPool(); const t=pickN(pool,1,G.used)[0]||rnd(pool); G.used.push(t);
+    const maxS=[0,2,2,3,4,5][LV];let pool=anlautPool().filter(w=>w.s.split('-').length<=maxS);if(pool.length<3)pool=anlautPool(); const t=pickT(pool,G.used)||rnd(pool); G.used.push(t);
     return {target:t,text:`Sag mal: ${t.w}!`,speak:`Sag mal: ${t.w}`};
   }
 }
 function startGame(id){
   hush(); const g=GAMES.find(x=>x.id===id);
-  G={id,g,L:lvl(id),first:0,i:0,won:0,used:[],rhymes:shuffle(RHYMES),minimal:shuffle(MINIMAL),busy:false};
+  G={task:null,rec:false,id,g,L:lvl(id),first:0,i:0,won:0,used:[],rhymes:shuffle(RHYMES),minimal:shuffle(MINIMAL),busy:false};
   let sub=`Stufe ${G.L} von ${AGES[S.age].max}`;
   if(id==='versteht'){G.pairs=shuffle(nvPairs())}
   if(id==='koffer'){G.kof=kofferLaute(G.L);G.inK={};G.R=6}
@@ -1174,6 +1176,7 @@ let fitRaf=0,fitT1=0,fitT2=0;const fitSoon=()=>{cancelAnimationFrame(fitRaf);cle
 try{new MutationObserver(fitSoon).observe(document.getElementById('stage'),{childList:true})}catch(e){}
 addEventListener('resize',fitSoon);addEventListener('orientationchange',()=>setTimeout(fitStage,350));try{document.fonts&&(document.fonts.ready.then(fitSoon),document.fonts.addEventListener('loadingdone',fitSoon))}catch(e){}
 function nextTask(){
+  if(G.task&&!G.rec&&G.task.target&&G.task.target.w&&G.id!=='mund')recordWord(G.task.target.w,!G.tries);G.rec=false;
   if(G.i>=(G.R||ROUND))return finish();
   stopCam(); G.task=makeTask(G.id,G.i); G.tries=0; G.busy=false; renderDots(); setMood($('#gameMascot'),'normal');
   const T=G.task; bubble(T.text);
@@ -1271,7 +1274,7 @@ function renderSprechen(){
   $('#btnSlow').onclick=()=>{hush();saySyllables(T.target)};
   const done=async(good,msg)=>{
     if(G.busy)return;G.busy=true;hush();
-    if(good&&!tries)G.first++;logTrial(zOf(T.target.w),good);const k=T.target.w;S.practice[k]=Math.max(0,(S.practice[k]||0)+(good?-1:1));if(!S.practice[k])delete S.practice[k];
+    if(good&&!tries)G.first++;logTrial(zOf(T.target.w),good);recordWord(T.target.w,good);G.rec=true;const k=T.target.w;S.practice[k]=Math.max(0,(S.practice[k]||0)+(good?-1:1));if(!S.practice[k])delete S.practice[k];
     addStar();fxRight();setMood($('#gameMascot'),'happy');
     const t=msg||(good?rnd(['Wunderbar gesprochen!','Super, das klang toll!','Klasse!']):'Toll, dass du es probiert hast!');
     bubble(t);if(good)confetti(18);await say(t);await wait(250);G.i++;nextTask();
@@ -1435,6 +1438,14 @@ const NV=[ // Nuki versteht dich: Minimalpaare mit Alltags-Situation für jedes 
 ];
 S.ziel=S.ziel||'ALLE';S.pos=S.pos||'alle';S.goal=S.goal||30;S.leiter=S.leiter||{};S.log=S.log||{};S.ear=S.ear||'erwachsen';
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+/* Kluges Wiederholen: Wörter in 5 Kästchen. Falsch -> zurück in Kästchen 0 (kommt gleich wieder), richtig -> eins weiter (kommt nach 1, 2, 4, 7 Tagen wieder) */
+const GAP=[0,1,2,4,7];
+function dayNo(){const d=new Date();return Math.floor((d.getTime()-d.getTimezoneOffset()*6e4)/864e5)}
+function recordWord(w,good){if(!w||!(WX[w]||byName[w]))return;S.wm=S.wm||{};const m=S.wm[w]||{b:0,d:0,x:0,n:0};m.n++;if(good){m.b=Math.min(4,m.b+1)}else{m.b=0;m.x++}m.d=dayNo()+GAP[m.b];S.wm[w]=m;save()}
+function wWeight(w){const m=S.wm&&S.wm[w.w];if(!m)return 1;if(m.d>dayNo())return .3;return m.b===0&&m.x?4:m.b<=1?2.5:1.2}
+function pickT(arr,ex){const e=new Set((ex||[]).map(x=>x.w));const c=arr.filter(x=>!e.has(x.w));if(!c.length)return null;const ws=c.map(wWeight);let r=Math.random()*ws.reduce((a,b)=>a+b,0);for(let k=0;k<c.length;k++){r-=ws[k];if(r<=0)return c[k]}return c[c.length-1]}
+function weakWords(){return Object.entries(S.wm||{}).filter(([w,m])=>m.x>0&&m.b<=1&&(WX[w]||byName[w])).sort((a,b)=>b[1].x-a[1].x).slice(0,24)}
+function streak(){let k=0,t=new Date();const key=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');if(!(S.log[key(t)]||{}).n)t.setDate(t.getDate()-1);while((S.log[key(t)]||{}).n){k++;t.setDate(t.getDate()-1)}return k}
 function todayN(){return (S.log[today()]||{n:0}).n}
 function zOf(w){if(S.ziel!=='ALLE'&&ZIEL[S.ziel]&&Object.values(ZIEL[S.ziel].pos).some(l=>l.includes(w)))return S.ziel;return Object.keys(ZIEL).find(z=>Object.values(ZIEL[z].pos).some(l=>l.includes(w)))||null}
 function logTrial(z,good){
@@ -1702,7 +1713,7 @@ function renderLeiter(){
   $('#lMirror').onclick=async()=>{const v=$('#lVideo');if(MED.lock)return;if(!v.hidden){v.hidden=true;stopCam();fitSoon();return}
     MED.lock=true;try{v.hidden=false;fitSoon();await mirrorOn(v);if(v.hidden||!document.body.contains(v))stopCam()}catch(e){v.hidden=true;toast('Die Kamera ist nicht erlaubt. Nimm einfach einen Spiegel!',false)}MED.lock=false};
   wireRecord('l');
-  const done=async good=>{if(G.busy)return;G.busy=true;hush();logTrial(z,good);if(good){G.first++;G.good++}
+  const done=async good=>{if(G.busy)return;G.busy=true;hush();logTrial(z,good);if(G.task&&G.task.word)recordWord(G.task.word.w,good);G.rec=true;if(good){G.first++;G.good++}
     addStar();fxRight();setMood($('#gameMascot'),'happy');
     const t=good?rnd(['Wunderbar gesprochen!','Super, das klang toll!','Klasse!']):'Toll, dass du es probiert hast!';
     bubble(t);if(good)confetti(14);await say(t);await wait(200);G.i++;nextTask()};
@@ -1781,7 +1792,7 @@ function renderParents2(){
   const z=S.ziel!=='ALLE'?ZIEL[S.ziel]:null;
   $('#zielInfo').innerHTML=z?`<b>${z.titel}</b> · Mund-Tipp: ${z.tipp} ${z.pos[S.pos]&&!z.pos[S.pos].length?'<br><i>Für diesen Laut gibt es an dieser Stelle im Wort keine Übungswörter, die App nimmt dann Wörter mit dem Laut am Anfang.</i>':''}`:'Alle Laute gemischt. Tipp: Stellen Sie den Laut ein, an dem Ihr Kind gerade in der Logopädie arbeitet.';
 }
-function printBericht(){const r=$('#reportPrint');r.innerHTML=`<h1>Wort-Spielplatz · Übungsbericht</h1><p>Erstellt am ${new Date().toLocaleDateString('de-DE')} · Übe-Laut: ${S.ziel==='ALLE'?'alle':ZIEL[S.ziel].name} · Stelle im Wort: ${{alle:'überall',an:'Anfang',mitte:'Mitte',ende:'Ende'}[S.pos]}</p>${berichtHTML()}<p style="margin-top:18px;font-size:12px">„gut“ = von Erwachsenen oder dem Kind als gut gesprochen bewertet. Die App ersetzt keine logopädische Diagnostik oder Therapie.</p>`;window.print()}
+function printBericht(){const r=$('#reportPrint');r.innerHTML=`<h1>Wort-Spielplatz · Übungsbericht</h1><p>Erstellt am ${new Date().toLocaleDateString('de-DE')} · Übe-Laut: ${S.ziel==='ALLE'?'alle':ZIEL[S.ziel].name} · Stelle im Wort: ${{alle:'überall',an:'Anfang',mitte:'Mitte',ende:'Ende'}[S.pos]}</p>${berichtHTML()}${(()=>{const wk=weakWords();return wk.length?`<h2 style="font-size:16px;margin-top:16px">Wörter, die zuletzt schwer waren</h2><p>${wk.map(([w,m])=>w+(m.x>1?' ('+m.x+'×)':'')).join(', ')}</p>`:''})()}<p style="margin-top:18px;font-size:12px">„gut“ = von Erwachsenen oder dem Kind als gut gesprochen bewertet. Die App ersetzt keine logopädische Diagnostik oder Therapie.</p>`;window.print()}
 
 /* --- Rundenende --- */
 function finish(){
@@ -1840,10 +1851,11 @@ function renderParents(){
   seg($('#segMic'),[[false,'Aus'],[true,'An']],S.mic,v=>{S.mic=v==='true';micBroken=false});
   seg($('#segSound'),[[true,'An'],[false,'Aus']],S.sound,v=>S.sound=v==='true');
   const max=Math.max(6,...GAMES.map(g=>S.perGame[g.id]||0));
-  $('#progress').innerHTML=GAMES.map(g=>{const v=S.perGame[g.id]||0;const lv=g.id==='leiter'?(Object.keys(S.leiter).length?Object.entries(S.leiter).map(([z,n])=>ZIEL[z].name+' '+n).join(', '):'Sprosse 1'):'Stufe '+lvl(g.id);return `<div class="bar"><span>${g.pic} ${g.name} · ${lv}</span><div class="t"><i style="width:${v/max*100}%"></i></div><b>${v}</b></div>`}).join('')+
+  $('#progress').innerHTML=GAMES.map(g=>{const v=S.perGame[g.id]||0;const lv=g.id==='leiter'?(Object.keys(S.leiter).length?Object.entries(S.leiter).map(([z,n])=>ZIEL[z].name+' '+n).join(', '):'Sprosse 1'):'Stufe '+lvl(g.id);return `<div class="bar"><span><i class="gi">${GICON[g.id]||g.pic}</i>${g.name} · ${lv}</span><div class="t"><i style="width:${v/max*100}%"></i></div><b>${v}</b></div>`}).join('')+
     `<div class="bar"><span><b style="text-align:left">Gesamt</b></span><span></span><b>${S.stars}</b></div>`;
   const pr=Object.entries(S.practice).sort((a,b)=>b[1]-a[1]);
-  $('#practiceList').innerHTML=pr.length?pr.map(([w,c])=>`<span>${byName[w]?.e||''} ${w} · ${c}×</span>`).join(''):'<p>Noch nichts. Markierungen aus „Sprich mit Nuki“ erscheinen hier.</p>';
+  const wk=weakWords(),seen=new Set(wk.map(x=>x[0]));pr.forEach(([w,c])=>{if(!seen.has(w)&&(WX[w]||byName[w]))wk.push([w,{x:c}])});
+  $('#practiceList').innerHTML=wk.length?wk.map(([w,m])=>`<span class="wk">${(WX[w]||byName[w]).e} ${w}${m.x>1?' · '+m.x+'×':''}</span>`).join('')+'<p class="hint" style="width:100%">Diese Wörter waren zuletzt schwer. Nuki bringt sie automatisch öfter, bis sie sitzen. Gut zum Üben zu Hause oder für die Logopädie.</p>':'<p>Noch nichts. Wörter, die Ihrem Kind schwerfallen, erscheinen hier automatisch.</p>';
   const micWarn=S.mic&&!SR?'<div class="warn" style="margin-bottom:14px">Dieser Browser kann keine Sprache erkennen. Das klappt in Safari und Chrome. In allen anderen Browsern bewerten Sie mit den Knöpfen „Gut gesagt“ und „Üben wir noch“.</div>':'';
   $('#voiceWarn').innerHTML=micWarn+(CLIPS?'':(!hasTTS?'<div class="warn" style="margin-bottom:14px">Dieser Browser kann keine Sprache ausgeben. Öffnen Sie die App über canzo-kinder.github.io/wort-spielplatz, dort spricht Nuki in jedem Browser.</div>':
     (!deVoice?'<div class="warn" style="margin-bottom:14px">Keine deutsche Stimme gefunden. Auf dem iPhone: Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen → Deutsch laden.</div>':'')));
@@ -1854,13 +1866,13 @@ document.querySelectorAll('.ptabs button').forEach(b=>b.onclick=()=>ptab(b.datas
 function renderPStats(){const days=[...Array(7)].map((_,k)=>{const t=new Date(Date.now()-k*864e5);return S.log[t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0')]||null});
   const n7=days.reduce((a,L)=>a+(L?L.n:0),0),g7=days.reduce((a,L)=>a+(L?L.g:0),0),act=days.filter(L=>L&&L.n).length,tn=todayN();
   const T=(v,l,c)=>`<div class="pst2" style="--c:${c}"><b>${v}</b><span>${l}</span></div>`;
-  $('#pStatsP').innerHTML=T(tn+' / '+S.goal,'Übungen heute','#7c6cf2')+T(n7,'Übungen in 7 Tagen','#2bb3b1')+T(n7?Math.round(g7/n7*100)+' %':'–','gut gesagt (7 Tage)','#3fae6a')+T(act+' von 7','Tage geübt','#ff7a59')}
+  $('#pStatsP').innerHTML=T(tn+' / '+S.goal,'Übungen heute','#7c6cf2')+T(n7,'Übungen in 7 Tagen','#2bb3b1')+T(n7?Math.round(g7/n7*100)+' %':'–','gut gesagt (7 Tage)','#3fae6a')+T(act+' von 7','Tage geübt','#ff7a59')+T(streak(),'Tage in Folge','#ffb020')+T(Object.values(S.wm||{}).filter(m=>m.b>=3).length,'Wörter sitzen sicher','#5b8def')}
 $('#btnPrint').onclick=printBericht;
 $('#btnBack').onclick=goHome;
 let resetArmed=false;
 $('#btnReset').onclick=()=>{
   if(!resetArmed){resetArmed=true;$('#btnReset').textContent='Wirklich löschen? Nochmal tippen';setTimeout(()=>{resetArmed=false;$('#btnReset').textContent='Sterne & Fortschritt löschen'},4000);return}
-  S.stars=0;S.perGame={};S.practice={};S.lvl={};S.leiter={};S.log={};save();paintGoal();resetArmed=false;$('#btnReset').textContent='Gelöscht ✓';renderParents();renderParents2();
+  S.stars=0;S.perGame={};S.practice={};S.wm={};S.lvl={};S.leiter={};S.log={};save();paintGoal();resetArmed=false;$('#btnReset').textContent='Gelöscht ✓';renderParents();renderParents2();
 };
 
 /* ================= 3D-SPIELPLATZ (realistisch) ================= */
