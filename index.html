@@ -2299,8 +2299,8 @@ function renderPath(){
   const n=Math.min(todayN(),S.goal);$('#pGoalT').textContent=n>=S.goal?'Tagesziel geschafft!':`Tagesziel: ${n} von ${S.goal} Übungen`;$('#pGoalB').style.width=Math.round(n/S.goal*100)+'%';
   $('#pWaves').style.display=S.mute?'none':'';$('#pX').style.display=S.mute?'':'none';
   const d=doneToday(),nx=nextStation(),RH=150,top=90,H=top+PATH_ORDER.length*RH+40,X=[50,72,50,28];
-  const pos=PATH_ORDER.map((id,k)=>({id,x:X[k%4],y:top+k*RH}));
-  let dd='M'+pos[0].x+' '+pos[0].y;for(let k=1;k<pos.length;k++){const a=pos[k-1],b=pos[k];dd+=` C${a.x} ${a.y+RH*.55} ${b.x} ${b.y-RH*.55} ${b.x} ${b.y}`}
+  const NP=PATH_ORDER.length,pos=PATH_ORDER.map((id,k)=>({id,x:X[k%4],y:top+(NP-1-k)*RH})); /* Pfad geht von unten nach oben */
+  let dd='M'+pos[0].x+' '+pos[0].y;for(let k=1;k<pos.length;k++){const a=pos[k-1],b=pos[k];const sg=b.y>a.y?1:-1;dd+=` C${a.x} ${a.y+sg*RH*.55} ${b.x} ${b.y-sg*RH*.55} ${b.x} ${b.y}`}
   const deco=pos.map((p,k)=>{const L=p.x>50||(p.x===50&&k%2),x=L?10:90,y=p.y+(k%3)*18-10;return k%2?`<svg class="pdeco" style="left:calc(${x}% - 30px);top:${y}px" width="60" height="64" viewBox="0 0 60 64" aria-hidden="true"><rect x="27" y="40" width="7" height="22" rx="3" fill="#b98a5e"/><ellipse cx="30" cy="30" rx="26" ry="23" fill="#6dbb6a"/><ellipse cx="38" cy="22" rx="16" ry="14" fill="#7fca73"/></svg>`:`<svg class="pdeco" style="left:calc(${x}% - 22px);top:${y+20}px" width="44" height="26" viewBox="0 0 44 26" aria-hidden="true"><ellipse cx="22" cy="18" rx="20" ry="8" fill="#8fd16a"/><circle cx="12" cy="12" r="4" fill="#ff9fb7"/><circle cx="24" cy="9" r="4" fill="#ffd166"/><circle cx="34" cy="13" r="3.5" fill="#ff9fb7"/></svg>`}).join('');
   const st=pos.map(p=>{const lk=isLocked(p.id),cls=lk?'lock':p.id===nx?'next':d.includes(p.id)?'done':'';return `<button class="pst ${cls}" data-g="${p.id}" style="left:${p.x}%;top:${p.y}px" aria-label="${PNAME(p.id)}${cls==='done'?' (heute schon gespielt)':lk?' (noch zu)':''}"><span class="pc">${cls==='next'?GICON.play:GICON[p.id]}${lk?LOCKSVG:''}</span><span class="pl">${PNAME(p.id)}</span></button>`}).join('');
   const np=pos.find(p=>p.id===nx),nkx=np.x>50?np.x-34:np.x<50?np.x+34:np.x-34;
@@ -2308,9 +2308,10 @@ function renderPath(){
   $('#pMap').style.height=H+'px';
   $('#pMap').innerHTML=`<svg class="pway" viewBox="0 0 100 ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${dd}" fill="none" stroke="#f6e3b8" stroke-width="36" stroke-linecap="round" vector-effect="non-scaling-stroke"/><path d="${dd}" fill="none" stroke="#efd49c" stroke-width="3" stroke-dasharray="2 14" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>${deco}${st}<div class="pnuki" style="left:${nkx}%;top:${np.y+24}px"><div class="bub">${msg}</div><div class="mascot" id="pathNuki"></div></div>`;
   setMood($('#pathNuki'),'normal');
+  {const pn=$('#pMap .pnuki');if(pn){const fit=()=>{const r=pn.getBoundingClientRect(),W=$('#pMap').getBoundingClientRect(),bub=pn.querySelector('.bub'),bw=bub.offsetWidth,cx=r.left+r.width/2-W.left;let dx=0;if(cx-bw/2<8)dx=8-(cx-bw/2);if(cx+bw/2>W.width-8)dx=(W.width-8)-(cx+bw/2);bub.style.left=`calc(50% + ${dx}px)`};requestAnimationFrame(fit)}}
   if(S.justOpened){const jb=$('#pMap').querySelector(`.pst[data-g="${S.justOpened}"]`);S.justOpened=null;save();if(jb){jb.classList.add('opened');setTimeout(()=>{confetti(30);tone([523,784],.12,'triangle')},500)}}
   $('#pMap').querySelectorAll('.pst').forEach(b=>b.onclick=()=>{hush();const id=b.dataset.g;if(isLocked(id)){b.classList.remove('wob');void b.offsetWidth;b.classList.add('wob');tone([330,262],.1,'triangle');const nb=$('#pMap').querySelector(`.pst[data-g="${PATH_ORDER[S.unl]}"]`);if(nb){const sc=$('#pScroll');sc.scrollTo({top:Math.max(0,nb.offsetTop-sc.clientHeight*.45),behavior:'smooth'});setTimeout(()=>{nb.classList.remove('hop');void nb.offsetWidth;nb.classList.add('hop')},450)}say('Komm, wir spielen zusammen!');return}if(id==='park'){renderHome();show('home')}else startGame(id)});
-  requestAnimationFrame(()=>{const sc=$('#pScroll'),y=np.y-sc.clientHeight*.45;sc.scrollTo({top:Math.max(0,y),behavior:'smooth'})});
+  requestAnimationFrame(()=>{const sc=$('#pScroll'),y=np.y-sc.clientHeight*.45;sc.scrollTo({top:Math.max(0,y),behavior:sc.dataset.seen?'smooth':'auto'});sc.dataset.seen='1'});
 }
 $('#pHelp').onclick=()=>openVid();
 $('#pMute').onclick=()=>{S.mute=!S.mute;save();paintMute();renderPath();if(S.mute)hush();else toast('Ton ist an!')};
