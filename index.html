@@ -234,6 +234,12 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
 .overlay{position:fixed;inset:0;background:rgba(20,40,60,.55);display:grid;place-items:center;z-index:30;padding:20px max(16px,env(safe-area-inset-right,0px)) 20px max(16px,env(safe-area-inset-left,0px))}
 .panel{background:var(--paper);border-radius:30px;padding:24px 20px;width:min(440px,100%);text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center;box-shadow:0 10px 0 rgba(0,0,0,.15);max-height:100%;overflow:auto}
 .panel h2{font-family:var(--f-display);font-weight:800;font-size:30px;margin:0;line-height:1.1;text-wrap:balance}
+.vgpanel{width:min(560px,100%)}.vgpanel canvas{width:100%;height:auto;aspect-ratio:16/10;border-radius:22px;border:4px solid #26303a;display:block}
+.vgbar{width:100%;height:16px;border-radius:99px;background:#e3edf3;border:3px solid #26303a;overflow:hidden}.vgbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#3fb071,#ffc63a);transition:width .15s}
+.vgnote{font-size:12px!important;font-weight:600!important;opacity:.75}.vgside{display:flex;flex-direction:column;gap:12px;align-items:center;width:100%}
+@media (max-height:500px) and (orientation:landscape){.vgpanel{width:min(820px,100%);display:grid;grid-template-columns:auto minmax(220px,1fr);grid-template-rows:auto 1fr;gap:10px 16px;padding:12px 16px}.vgpanel h2{grid-column:1/-1;font-size:22px}.vgpanel canvas{height:calc(100dvh - 120px);width:auto;max-width:56vw}.vgside{gap:8px;justify-content:center}.vgside p{font-size:14px}.vgside .bigbtn{min-height:44px;font-size:16px;padding:6px 12px}
+  .leiter2 #lVoice .vgt{display:none}.leiter2 #lVoice{padding:6px 12px;font-size:22px;min-width:0}}
+.bigbtn.sun{background:var(--sun);color:var(--ink);box-shadow:0 6px 0 #d49b12}
 .panel p{margin:0;font-weight:700;color:var(--ink-soft)}
 .bigstars{font-size:44px;letter-spacing:4px}
 .stickers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;width:100%}
@@ -1266,9 +1272,9 @@ function mundSVG(t){
 
 /* --- Mikrofon-Aufnahme „Hör dich selbst“ und Kamera-Spiegel (nur auf diesem Gerät, nichts wird gesendet) --- */
 var noiseSrc=null;
-var MED={a:null,v:null,p:null,u:null,lock:false};
+var MED={a:null,v:null,g:null,p:null,u:null,lock:false};
 async function micStream(){if(MED.a&&MED.a.active)return MED.a;MED.a=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});return MED.a}
-function stopMedia(){['a','v'].forEach(k=>{if(MED[k]){MED[k].getTracks().forEach(t=>t.stop());MED[k]=null}});try{MED.p&&MED.p.pause()}catch(e){}}
+function stopMedia(){['a','v','g'].forEach(k=>{if(MED[k]){MED[k].getTracks().forEach(t=>t.stop());MED[k]=null}});try{MED.p&&MED.p.pause()}catch(e){}}
 document.addEventListener('visibilitychange',()=>{if(document.hidden){stopMedia();hush()}});
 function canRecord(){return !!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder)}
 async function recordClip(ms,onLevel){
@@ -1300,6 +1306,86 @@ function wireRecord(id,after){
   me.onclick=()=>{if(url){hush();playUrl(url)}}}
 function rateRow(id){return `<div class="raterow"><p class="stage-note" style="margin:0 0 4px">Wie hat es geklappt?</p><div class="row"><button class="bigbtn green" id="${id}Good">😊 Gut gesagt</button><button class="bigbtn orange" id="${id}Again">💪 Üben wir noch</button></div></div>`}
 
+/* --- Stimm-Spiel: die eigene Stimme bewegt etwas (nur auf diesem Gerät, nichts wird aufgenommen oder gesendet) --- */
+const VG={
+ S:{t:'hiss',lo:4000,hi:11000,r:.5,vis:'snake',btn:'🐍 Schlangen-Spiel',title:'Zisch wie die Schlange!',hint:'Mach „Sssss“. Je länger du zischst, desto länger wird die Schlange.',win:'Super gezischt! Die Schlange ist ganz lang!'},
+ SCH:{t:'hiss',lo:1600,hi:5200,r:.35,vis:'train',btn:'🚂 Lok-Spiel',title:'Sch macht die Lok!',hint:'Mach „Schhhh“ mit einem Kussmund. Dann fährt die Lok zum Bahnhof.',win:'Tschu-tschu! Die Lok ist angekommen!'},
+ F:{t:'hiss',lo:1500,hi:9000,r:.22,vis:'feather',btn:'🪶 Feder-Spiel',title:'Puste die Feder weg!',hint:'Mach „Ffff“: obere Zähne auf die Unterlippe. Dann fliegt die Feder.',win:'Die Feder ist weggeflogen! Toll gepustet!'},
+ K:{t:'burst',n:6,vis:'slots',emo:'🐦',slot:'🪵',btn:'🐦 Specht-Spiel',title:'Klopf wie der Specht!',hint:'Sag „k – k – k“. Bei jedem K klopft der Specht.',win:'Klopf, klopf! Super gemacht!'},
+ T:{t:'burst',n:8,vis:'slots',emo:'⏰',slot:'⭐',btn:'⏰ Uhr-Spiel',title:'Die Uhr tickt!',hint:'Sag „t – t – t“. Bei jedem T tickt die Uhr.',win:'Tick, tack! Die Uhr läuft!'},
+ G:{t:'burst',n:5,vis:'slots',emo:'🐔',slot:'🥚',btn:'🐔 Hühner-Spiel',title:'Das Huhn gackert!',hint:'Sag „g – g – g“. Bei jedem G legt das Huhn ein Ei.',win:'Gack, gack! Fünf Eier im Nest!'},
+ R:{t:'voice',vis:'grow',emo:'🦁',btn:'🦁 Löwen-Spiel',title:'Brumm wie der Löwe!',hint:'Mach „Rrrrr“. Je länger du brummst, desto größer wird der Löwe.',win:'Was für ein starker Löwe!'},
+ L:{t:'voice',vis:'notes',emo:'🎵',btn:'🎵 Sing-Spiel',title:'Sing mit!',hint:'Sing „La – la – la“. Dann fliegen die Noten.',win:'Wunderschön gesungen!'},
+ CL:{t:'voice',vis:'balloon',emo:'🎈',btn:'🎈 Ballon-Spiel',title:'Blas den Ballon auf!',hint:'Sag die Laute laut und deutlich. Mit deiner Stimme wird der Ballon groß.',win:'Peng! Der Ballon ist geplatzt!'}};
+function vgUsable(){return !!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&(window.AudioContext||window.webkitAudioContext))}
+function vgStop(){if(MED.g){MED.g.getTracks().forEach(t=>t.stop());MED.g=null}}
+function openVoiceGame(z){
+  const C=VG[z]||VG.CL;hush();vgStop();
+  const ov=document.createElement('div');ov.className='overlay';ov.id='vgame';
+  ov.innerHTML=`<div class="panel vgpanel"><h2>${C.title}</h2><canvas id="vgCv" width="640" height="400" aria-hidden="true"></canvas>
+    <div class="vgside"><div class="vgbar"><i id="vgBar"></i></div><p id="vgHint">${C.hint}</p>
+    <div class="row"><button class="bigbtn" id="vgGo">🎤 Los geht's</button><button class="bigbtn light" id="vgX">Fertig</button></div>
+    <p class="vgnote">Das Mikrofon hört nur zu, während das Spiel läuft. Nichts wird aufgenommen oder verschickt.</p></div></div>`;
+  document.body.appendChild(ov);
+  const cv=$('#vgCv'),cx=cv.getContext('2d'),W=cv.width,H=cv.height,bar=$('#vgBar'),hint=$('#vgHint'),go=$('#vgGo');
+  let raf=0,p=0,cnt=0,act=false,live=false,won=false,t0=performance.now(),last=t0,parts=[],an=null,src=null,fl=null,td=null,floor=null,cal=0,calN=0,lastB=0,prevR=0;
+  const close=()=>{cancelAnimationFrame(raf);try{src&&src.disconnect()}catch(e){}vgStop();ov.remove();document.removeEventListener('visibilitychange',vis)};
+  const vis=()=>{if(document.hidden)close()};document.addEventListener('visibilitychange',vis);
+  $('#vgX').onclick=close;ov.addEventListener('click',e=>{if(e.target===ov)close()});
+  const band=(lo,hi)=>{const hz=ac.sampleRate/an.fftSize;let s=0;for(let i=Math.max(1,Math.floor(lo/hz));i<=Math.min(fl.length-1,Math.ceil(hi/hz));i++)s+=Math.pow(10,fl[i]/10);return s};
+  async function start(){
+    if(live)return;go.disabled=true;hint.textContent='Einen Moment …';
+    try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')await ac.resume();
+      MED.g=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+      src=ac.createMediaStreamSource(MED.g);an=ac.createAnalyser();an.fftSize=2048;an.smoothingTimeConstant=.25;src.connect(an);fl=new Float32Array(an.frequencyBinCount);td=new Float32Array(an.fftSize)}
+    catch(e){hint.textContent='Das Mikrofon ist hier nicht erlaubt. Frag einen Erwachsenen.';go.disabled=false;return}
+    live=true;p=0;cnt=0;won=false;floor=null;cal=performance.now();calN=0;hint.textContent='Psst … kurz ganz leise sein …';go.textContent='🎤 Ich höre zu';
+  }
+  go.onclick=start;
+  function measure(now){
+    an.getFloatFrequencyData(fl);an.getFloatTimeDomainData(td);let r=0;for(const v of td)r+=v*v;r=Math.sqrt(r/td.length);
+    const lo=band(120,1000),hs=C.t==='hiss'?band(C.lo,C.hi):0;
+    if(now-cal<600){floor=floor?{lo:floor.lo+lo,hs:floor.hs+hs,r:floor.r+r}:{lo,hs,r};calN++;return null}
+    if(calN&&!floor.n){floor={lo:floor.lo/calN,hs:floor.hs/calN,r:floor.r/calN,n:1};hint.textContent=C.hint}
+    if(C.t==='hiss')return hs>Math.max(floor.hs*8,1e-7)&&hs>lo*C.r&&r>floor.r*2;
+    if(C.t==='voice')return lo>Math.max(floor.lo*10,1e-6)&&r>floor.r*3;
+    const on=r>Math.max(floor.r*5,.02)&&r>prevR*1.8&&now-lastB>220;prevR=r*.6+prevR*.4;if(on)lastB=now;return on}
+  function frame(now){
+    const dt=Math.min(.1,(now-last)/1000);last=now;const t=(now-t0)/1000;
+    if(live&&!won){const m=measure(now);if(m!==null){act=!!m;
+      if(C.t==='burst'){if(m){cnt++;p=cnt/C.n;tone([660+cnt*40],.06,'triangle',.12)}}else if(act)p=Math.min(1,p+dt/(C.t==='hiss'?2.4:3))}
+      if(p>=1){won=true;act=false;live=false;vgStop();confetti(40);tone([523,659,784,1047],.12,'triangle');hint.textContent=C.win;say(C.win);go.disabled=false;go.textContent='🔁 Nochmal'}}
+    bar.style.width=Math.round(p*100)+'%';draw(t);raf=requestAnimationFrame(frame)}
+  const emo=(e,x,y,s,rot=0)=>{cx.save();cx.translate(x,y);cx.rotate(rot);cx.font=`${s}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`;cx.textAlign='center';cx.textBaseline='middle';cx.fillText(e,0,0);cx.restore()};
+  function bg(){const g=cx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#bfe7fb');g.addColorStop(1,'#eaf8ff');cx.fillStyle=g;cx.fillRect(0,0,W,H);
+    cx.fillStyle='#8fd16a';cx.beginPath();cx.ellipse(W/2,H+120,W*.8,200,0,0,Math.PI*2);cx.fill();cx.strokeStyle='#26303a';cx.lineWidth=5;cx.stroke()}
+  function draw(t){bg();const K='#26303a';
+    if(C.vis==='snake'){const len=.18+.7*p,n=60,x0=60,yb=H*.62,pts=[];
+      for(let i=0;i<=n;i++){const u=i/n,x=x0+u*len*(W-150);pts.push([x,yb+Math.sin(u*len*14-t*(act?7:2))*28*(.4+u*.6)])}
+      cx.lineCap='round';cx.lineJoin='round';const path=()=>{cx.beginPath();pts.forEach(([x,y],i)=>i?cx.lineTo(x,y):cx.moveTo(x,y))};
+      path();cx.strokeStyle=K;cx.lineWidth=52;cx.stroke();path();cx.strokeStyle='#6cc04a';cx.lineWidth=40;cx.stroke();
+      cx.setLineDash([4,22]);path();cx.strokeStyle='#ffd34a';cx.lineWidth=14;cx.stroke();cx.setLineDash([]);
+      const [hx,hy]=pts[n];cx.fillStyle='#6cc04a';cx.strokeStyle=K;cx.lineWidth=6;cx.beginPath();cx.ellipse(hx+14,hy,36,28,0,0,Math.PI*2);cx.fill();cx.stroke();
+      [[-4,-12],[12,-14]].forEach(([dx,dy])=>{cx.fillStyle='#fff';cx.beginPath();cx.arc(hx+14+dx,hy+dy,8,0,7);cx.fill();cx.stroke();cx.fillStyle=K;cx.beginPath();cx.arc(hx+16+dx,hy+dy,3.5,0,7);cx.fill()});
+      if(act&&Math.sin(t*20)>-.3){cx.strokeStyle='#e5393b';cx.lineWidth=5;cx.beginPath();cx.moveTo(hx+48,hy+6);cx.lineTo(hx+72,hy+6);cx.lineTo(hx+82,hy-2);cx.moveTo(hx+72,hy+6);cx.lineTo(hx+82,hy+14);cx.stroke()}
+      if(act){cx.fillStyle='#1fb3a8';cx.font='bold 34px sans-serif';cx.fillText('sss',Math.min(W-90,hx+60),hy-46)}}
+    else if(C.vis==='train'){const y=H*.66;cx.strokeStyle='#8a5a33';cx.lineWidth=8;cx.beginPath();cx.moveTo(20,y+52);cx.lineTo(W-20,y+52);cx.stroke();
+      for(let x=30;x<W;x+=40){cx.fillStyle='#8a5a33';cx.fillRect(x,y+48,22,14)}
+      emo('🏠',W-60,y-10,90);const x=70+p*(W-270);emo('🚂',x,y,120);
+      if(act)for(let k=0;k<3;k++){const q=(t*1.5+k/3)%1;cx.fillStyle=`rgba(255,255,255,${.9-q})`;cx.beginPath();cx.arc(x+26-q*60,y-70-q*90,18+q*26,0,7);cx.fill()}}
+    else if(C.vis==='feather'){const u=p,x=90+u*(W-160),y=H*.72-u*H*.55+Math.sin(t*3)*10,rot=-.5+Math.sin(t*(act?6:2))*.25;emo('🌬️',60,H*.7,70);emo('🪶',x,y,110,rot);
+      if(act)for(let k=0;k<4;k++){const q=(t*2+k/4)%1;cx.strokeStyle=`rgba(31,179,168,${1-q})`;cx.lineWidth=5;cx.beginPath();cx.moveTo(100+q*120,H*.68-k*14);cx.lineTo(140+q*120,H*.66-k*14);cx.stroke()}}
+    else if(C.vis==='slots'){const b=act||performance.now()-lastB<180?-22:0;emo(C.emo,W/2,H*.36+b,150);
+      for(let k=0;k<C.n;k++){const x=W/2+(k-(C.n-1)/2)*Math.min(80,(W-60)/C.n),y=H*.8;cx.fillStyle='#fff';cx.strokeStyle=K;cx.lineWidth=4;cx.beginPath();cx.arc(x,y,30,0,7);cx.fill();cx.stroke();if(k<cnt)emo(C.slot,x,y,44)}}
+    else if(C.vis==='grow'){const s=110+p*190;emo(C.emo,W/2,H*.5,s);if(act)for(let k=0;k<3;k++){const q=(t*1.4+k/3)%1;cx.strokeStyle=`rgba(255,117,89,${1-q})`;cx.lineWidth=6;cx.beginPath();cx.arc(W/2,H*.5,s*.55+q*90,-.6,.6);cx.stroke()}}
+    else if(C.vis==='notes'){if(act&&Math.random()<.25)parts.push({x:W*.3+Math.random()*W*.4,y:H*.75,v:60+Math.random()*60,e:Math.random()<.5?'🎵':'🎶'});
+      parts=parts.filter(o=>(o.y-=o.v/60)>-40);parts.forEach(o=>emo(o.e,o.x+Math.sin(o.y/30)*14,o.y,54));emo('😊',W/2,H*.78,90)}
+    else{const r=30+p*120;cx.strokeStyle=K;cx.lineWidth=3;cx.beginPath();cx.moveTo(W/2,H*.5+r);cx.quadraticCurveTo(W/2-20,H*.8,W/2,H);cx.stroke();
+      if(!won){cx.fillStyle='#ff7559';cx.lineWidth=6;cx.beginPath();cx.ellipse(W/2,H*.5,r*.88,r,0,0,7);cx.fill();cx.stroke();cx.fillStyle='rgba(255,255,255,.6)';cx.beginPath();cx.ellipse(W/2-r*.35,H*.5-r*.4,r*.14,r*.24,-.5,0,7);cx.fill()}else emo('💥',W/2,H*.5,160)}
+  }
+  raf=requestAnimationFrame(frame);
+}
+
 /* --- Spiel: Laut-Leiter --- */
 function leiterItem(z,st,i){
   const Z=ZIEL[z];
@@ -1322,10 +1408,11 @@ function renderLeiter(){
        <video id="lVideo" class="mirrorcam" playsinline muted hidden></video></div>
    </div>
    <div class="lword"><div class="word">${T.kind==='laut'?Z.bildText:T.label}</div>${T.word&&T.kind==='wort'&&G.L<5?`<div class="syl">${T.word.s.split('-').join(' · ')}</div>`:''}</div>
-   <div class="lctl"><div class="speak"><button class="bigbtn" id="lModel">🔊 Nuki zeigt es</button>${T.word?'<button class="bigbtn light" id="lSlow">🐢 Langsam</button>':''}</div>
+   <div class="lctl"><div class="speak"><button class="bigbtn" id="lModel">🔊 Nuki zeigt es</button>${T.word?'<button class="bigbtn light" id="lSlow">🐢 Langsam</button>':''}${T.kind==='laut'&&vgUsable()?`<button class="bigbtn sun" id="lVoice" aria-label="${(VG[z]||VG.CL).btn.slice(3)}"><span class="vgi">${(VG[z]||VG.CL).btn.split(' ')[0]}</span><span class="vgt"> ${(VG[z]||VG.CL).btn.split(' ').slice(1).join(' ')}</span></button>`:''}</div>
    ${practiceBox('l')}${rateRow('l')}</div>
   </div>`;
   $('#lModel').onclick=()=>{hush();T.model()};
+  if($('#lVoice'))$('#lVoice').onclick=()=>openVoiceGame(z);
   if(T.word)$('#lSlow').onclick=()=>{hush();saySyllables(T.word)};
   $('#lTipp').onclick=()=>{hush();bubble(Z.tipp);say(Z.tipp)};
   $('#lMirror').onclick=async()=>{const v=$('#lVideo');if(MED.lock)return;if(!v.hidden){v.hidden=true;stopCam();fitSoon();return}
