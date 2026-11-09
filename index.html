@@ -446,6 +446,28 @@ body{background:#e8f7ff}
 @media (max-width:520px){.mlist{grid-template-columns:1fr}.mitem small{display:inline}}
 .panel.menu{max-height:calc(100% - 20px)}
 @media (max-width:420px){.hud{gap:8px}.hud-l .hbtn{width:44px!important;height:44px!important}.hud .chip{padding:0 10px!important;gap:5px!important;font-size:16px!important}.hud .chip .ci{width:20px;height:20px}}
+/* Pfotenspuren statt Balken */
+.dots .paws{display:flex;align-items:center;justify-content:space-between;gap:2px;height:38px;padding:0 4px}
+.paw{flex:1;display:grid;place-items:center;max-width:34px;transform:translateY(var(--y)) rotate(var(--r))}
+.paw svg{width:100%;max-width:32px;height:auto;fill:#dfe3f2;transition:fill .3s,transform .3s}
+.paw.on svg{fill:var(--grape);animation:pawIn .45s ease-out}
+.paw.cur svg{fill:#c9c2fb;animation:pawCur 1.2s ease-in-out infinite}
+@keyframes pawIn{0%{transform:scale(.3)}70%{transform:scale(1.25)}100%{transform:scale(1)}}
+@keyframes pawCur{50%{transform:scale(1.15)}}
+/* Schloss-Stationen */
+.pst.lock .pc{background:#eef1f7!important;box-shadow:0 6px 0 #d7dce8!important}
+.pst.lock .pc>svg:first-child{opacity:.35;filter:grayscale(1)}
+.pst.lock .pl{opacity:.6}
+.pst .pc{position:relative}.plk{position:absolute;right:-6px;bottom:-6px;width:30px!important;height:30px!important;background:#fff;border-radius:50%;padding:4px;box-shadow:0 2px 0 #d7dce8}
+.pst.wob{animation:wob .45s}@keyframes wob{20%,60%{translate:-6px 0}40%,80%{translate:6px 0}}
+.pst.hop .pc{animation:hop .8s ease-out}@keyframes hop{0%,100%{transform:translateY(0)}25%{transform:translateY(-22px)}50%{transform:translateY(0)}70%{transform:translateY(-10px)}}
+.pst.opened .pc{animation:opn 1s ease-out .3s both}@keyframes opn{0%{transform:scale(.6) rotate(-12deg)}60%{transform:scale(1.2) rotate(6deg)}100%{transform:scale(1)}}
+/* untere Leiste größer */
+.pnav{height:84px!important}.pnav button{font-size:14px!important;min-width:72px!important;min-height:68px!important}.pnav button svg{width:34px!important;height:34px!important}
+.pnav button.on{background:#f0edff}
+@media (max-height:500px) and (orientation:landscape){.pnav{height:60px!important}.pnav button{min-height:50px!important;font-size:12px!important}.pnav button svg{width:26px!important;height:26px!important}}
+/* Koffer-Karte größer */
+@media (min-height:640px){.kcard{width:184px;height:184px;border-width:5px;border-radius:30px}.kcard .em{font-size:118px}}
 /* Eltern-Bereich im neuen Look */
 #parents{background:#f4f7fb}
 .phead{display:flex;align-items:center;gap:12px;padding:calc(14px + env(safe-area-inset-top,0px)) 0 10px}
@@ -779,6 +801,9 @@ body{background:#e8f7ff}
       <div class="seg" id="segRate"></div>
       <div class="lbl">Wörter unter den Bildern zeigen</div>
       <div class="seg" id="segCap"></div>
+      <div class="lbl">Stationen nacheinander freischalten</div>
+      <div class="seg" id="segLock"></div>
+      <p class="hint">Bei „An“ öffnet sich auf dem Spielpfad immer die nächste Station, wenn die vorige einmal geschafft ist. Bei „Aus“ sind alle Stationen offen. Ohne Einstellung gilt: für 7–8 Jahre an, für jüngere Kinder aus. Das Laut-Training unten in der Leiste ist immer offen.</p>
       <div class="lbl">Mikrofon bei „Sprich mit Nuki“</div>
       <div class="seg" id="segMic"></div>
       <p id="micInfo">Mit Mikrofon hört die App, ob Ihr Kind das Wort gesagt hat. Die Erkennung ist großzügig eingestellt, weil Spracherkennung für Erwachsenen-Stimmen gebaut ist und Kinder mit Aussprachestörungen oft nicht sicher erkennt. Die Knöpfe zum Selbst-Bewerten bleiben deshalb immer da. <b>Datenschutz:</b> In Chrome und Edge wird die Aufnahme zur Erkennung an den Browser-Anbieter (Google bzw. Microsoft) geschickt, in Safari teils an Apple. Gespeichert wird in der App nichts.</p>
@@ -1138,7 +1163,8 @@ function startGame(id){
   $('#gTitle').innerHTML=`${g.name}<small class="lvl">${sub}</small>`; $('#gStars').textContent=S.stars;
   show('game'); $('#game').scrollTop=0; nextTask();
 }
-function renderDots(){ const n=G.R||ROUND;$('#dots').innerHTML=`<div class="pbar" role="progressbar" aria-valuemin="0" aria-valuemax="${n}" aria-valuenow="${Math.min(G.i,n)}" aria-label="Fortschritt"><i style="width:${Math.min(100,Math.round(Math.min(G.i,n)/n*100))}%"></i></div>` }
+const PAW='<svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="15.5" rx="5.2" ry="4.6"/><ellipse cx="5.6" cy="10.4" rx="2.2" ry="2.8"/><ellipse cx="9.6" cy="6.4" rx="2.2" ry="2.9"/><ellipse cx="14.4" cy="6.4" rx="2.2" ry="2.9"/><ellipse cx="18.4" cy="10.4" rx="2.2" ry="2.8"/></svg>';
+function renderDots(){ const n=G.R||ROUND,i=Math.min(G.i,n);$('#dots').innerHTML=`<div class="paws" role="progressbar" aria-valuemin="0" aria-valuemax="${n}" aria-valuenow="${i}" aria-label="Fortschritt: ${i} von ${n}">${Array.from({length:n},(_,k)=>`<span class="paw${k<i?' on':k===i?' cur':''}" style="--r:${k%2?12:-12}deg;--y:${k%2?-4:4}px">${PAW}</span>`).join('')}</div>` }
 function bubble(t){$('#gBubble').textContent=t}
 function fitStage(){const st=$('#stage'),g=$('#game');if(!st||!g||g.hidden)return;st.style.zoom='';
   const avail=g.clientHeight-(st.getBoundingClientRect().top-g.getBoundingClientRect().top+g.scrollTop)-4,need=st.scrollHeight;
@@ -1767,11 +1793,14 @@ function finish(){
   save();
   const before=Math.floor((S.stars-G.won)/PER_STICKER),after=Math.floor(S.stars/PER_STICKER);
   const newSticker=after>before&&after<=STICKERS.length?STICKERS[after-1]:null;
+  initUnl();const pi=PATH_ORDER.indexOf(G.id);let opened=null;if(pi>=0&&pi===S.unl&&S.unl<PATH_ORDER.length-1){S.unl++;save();opened=PATH_ORDER[S.unl]}
   markDone(G.id);$('#doneStars').innerHTML=STARSVG.repeat(Math.min(G.won,8));
   $('#doneTitle').textContent=up?(G.id==='leiter'?`Eine Sprosse höher: ${STUFEN[G.st]}!`:`Neue Stufe: ${G.L+1}!`):rnd(['Super gemacht!','Du bist ein Profi!','Was für eine Runde!']);
   const parts=[];
   if(up)parts.push('Ab jetzt wird es ein bisschen schwerer. Du schaffst das!');
   parts.push(newSticker?`Neuer Sticker für deine Schatzkiste: ${newSticker}`:`Noch ${PER_STICKER-(S.stars%PER_STICKER)===1?'ein Stern':(PER_STICKER-(S.stars%PER_STICKER))+' Sterne'} bis zum nächsten Sticker.`);
+  if(opened&&lockOn()){S.justOpened=opened;save()}
+  if(opened&&lockOn())parts.push(`Auf deinem Pfad ist jetzt offen: ${PNAME(opened)}!`);
   $('#doneText').textContent=parts.join(' ');
   $('#donePrize').innerHTML=newSticker?`<span aria-label="Neuer Sticker">${newSticker}</span>`:'<div class="mascot" id="doneMascot"></div>';if(!newSticker)setMood($('#doneMascot'),'happy');$('#doneOv').hidden=false;confetti(up?70:40);fxRight();if(up)setTimeout(()=>tone([523,659,784,1047],.12,'triangle'),400);
   say(up?'Juhu! Du hast eine neue Stufe geschafft!':(newSticker?'Super gemacht! Du hast einen neuen Sticker!':'Super gemacht! Du hast '+(G.won===1?'einen Stern':G.won+' Sterne')+' gesammelt.'));
@@ -1805,6 +1834,7 @@ function renderParents(){
   seg($('#segLaut'),[['ALLE','Alle'],...Object.entries(LAUTE).map(([k,v])=>[k,v.label])],S.laut,v=>S.laut=v);
   seg($('#segAge'),Object.entries(AGES).map(([k,v])=>[k,v.label]),S.age,v=>S.age=v);
   seg($('#segRate'),[[0.65,'Langsam'],[0.85,'Normal'],[1,'Zügig']],S.rate,v=>{S.rate=+v;say('So spricht Nuki jetzt.')});
+  seg($('#segLock'),[[true,'An'],[false,'Aus']],lockOn(),v=>{S.lock=v==='true';save()});
   seg($('#segCap'),[[false,'Aus'],[true,'An']],S.cap,v=>S.cap=v==='true');
   seg($('#segVg'),[['leicht','Leicht'],['normal','Normal'],['streng','Streng']],S.vg||'normal',v=>{S.vg=v});
   seg($('#segMic'),[[false,'Aus'],[true,'An']],S.mic,v=>{S.mic=v==='true';micBroken=false});
@@ -2181,10 +2211,14 @@ const GICON={
  park:'<svg viewBox="0 0 40 40"><path d="M8 36V16M24 36V16" stroke="#c98d55" stroke-width="3.4" stroke-linecap="round"/><path d="M5 17l11-9 11 9z" fill="#ff7a59"/><path d="M24 22q8 2 12 14" fill="none" stroke="#ffc542" stroke-width="4" stroke-linecap="round"/><path d="M8 26h16" stroke="#c98d55" stroke-width="3"/></svg>',
  koffer:'<svg viewBox="0 0 40 40"><rect x="6" y="12" width="28" height="22" rx="5" fill="#ffc542"/><path d="M15 12V8a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v4" fill="none" stroke="#d99a12" stroke-width="3"/><path d="M6 20h28" stroke="#d99a12" stroke-width="2.4"/><circle cx="12" cy="36" r="2.4" fill="#4b5a7a"/><circle cx="28" cy="36" r="2.4" fill="#4b5a7a"/></svg>',
  play:'<svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="#fff"/></svg>'};
+const LOCKSVG='<svg class="plk" viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="10" width="15" height="11" rx="3.5" fill="#a9b3c9"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10" fill="none" stroke="#a9b3c9" stroke-width="2.6"/><circle cx="12" cy="15.5" r="1.8" fill="#fff"/></svg>';
 const PNAME=id=>id==='park'?'Spielplatz':(GAMES.find(g=>g.id===id)||{}).name||id;
 function doneToday(){const t=S.today&&S.today.d===today()?S.today.ids:[];return t}
 function markDone(id){if(!S.today||S.today.d!==today())S.today={d:today(),ids:[]};if(!S.today.ids.includes(id))S.today.ids.push(id);save()}
-function nextStation(){const d=doneToday();return PATH_ORDER.find(id=>id!=='park'&&!d.includes(id))||'versteht'}
+function initUnl(){if(S.unl===undefined){let k=0;while(k<PATH_ORDER.length-2&&S.perGame&&S.perGame[PATH_ORDER[k]])k++;S.unl=k;save()}}
+function lockOn(){return S.lock===undefined?S.age==='gross':S.lock}
+function isLocked(id){initUnl();if(!lockOn()||id==='park')return false;return PATH_ORDER.indexOf(id)>S.unl}
+function nextStation(){const d=doneToday();return PATH_ORDER.find(id=>id!=='park'&&!d.includes(id)&&!isLocked(id))||PATH_ORDER[Math.min(S.unl,PATH_ORDER.length-2)]||'versteht'}
 function renderPath(){
   $('#pStars').textContent=S.stars;
   const n=Math.min(todayN(),S.goal);$('#pGoalT').textContent=n>=S.goal?'Tagesziel geschafft!':`Tagesziel: ${n} von ${S.goal} Übungen`;$('#pGoalB').style.width=Math.round(n/S.goal*100)+'%';
@@ -2193,13 +2227,14 @@ function renderPath(){
   const pos=PATH_ORDER.map((id,k)=>({id,x:X[k%4],y:top+k*RH}));
   let dd='M'+pos[0].x+' '+pos[0].y;for(let k=1;k<pos.length;k++){const a=pos[k-1],b=pos[k];dd+=` C${a.x} ${a.y+RH*.55} ${b.x} ${b.y-RH*.55} ${b.x} ${b.y}`}
   const deco=pos.map((p,k)=>{const L=p.x>50||(p.x===50&&k%2),x=L?10:90,y=p.y+(k%3)*18-10;return k%2?`<svg class="pdeco" style="left:calc(${x}% - 30px);top:${y}px" width="60" height="64" viewBox="0 0 60 64" aria-hidden="true"><rect x="27" y="40" width="7" height="22" rx="3" fill="#b98a5e"/><ellipse cx="30" cy="30" rx="26" ry="23" fill="#6dbb6a"/><ellipse cx="38" cy="22" rx="16" ry="14" fill="#7fca73"/></svg>`:`<svg class="pdeco" style="left:calc(${x}% - 22px);top:${y+20}px" width="44" height="26" viewBox="0 0 44 26" aria-hidden="true"><ellipse cx="22" cy="18" rx="20" ry="8" fill="#8fd16a"/><circle cx="12" cy="12" r="4" fill="#ff9fb7"/><circle cx="24" cy="9" r="4" fill="#ffd166"/><circle cx="34" cy="13" r="3.5" fill="#ff9fb7"/></svg>`}).join('');
-  const st=pos.map(p=>{const cls=p.id===nx?'next':d.includes(p.id)?'done':'';return `<button class="pst ${cls}" data-g="${p.id}" style="left:${p.x}%;top:${p.y}px" aria-label="${PNAME(p.id)}${cls==='done'?' (heute schon gespielt)':''}"><span class="pc">${cls==='next'?GICON.play:GICON[p.id]}</span><span class="pl">${PNAME(p.id)}</span></button>`}).join('');
+  const st=pos.map(p=>{const lk=isLocked(p.id),cls=lk?'lock':p.id===nx?'next':d.includes(p.id)?'done':'';return `<button class="pst ${cls}" data-g="${p.id}" style="left:${p.x}%;top:${p.y}px" aria-label="${PNAME(p.id)}${cls==='done'?' (heute schon gespielt)':lk?' (noch zu)':''}"><span class="pc">${cls==='next'?GICON.play:GICON[p.id]}${lk?LOCKSVG:''}</span><span class="pl">${PNAME(p.id)}</span></button>`}).join('');
   const np=pos.find(p=>p.id===nx),nkx=np.x>50?np.x-34:np.x<50?np.x+34:np.x-34;
   const msg=d.length?rnd(['Weiter geht\'s!','Noch eine Runde?','Du bist super!']):'Komm, wir spielen!';
   $('#pMap').style.height=H+'px';
   $('#pMap').innerHTML=`<svg class="pway" viewBox="0 0 100 ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${dd}" fill="none" stroke="#f6e3b8" stroke-width="36" stroke-linecap="round" vector-effect="non-scaling-stroke"/><path d="${dd}" fill="none" stroke="#efd49c" stroke-width="3" stroke-dasharray="2 14" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>${deco}${st}<div class="pnuki" style="left:${nkx}%;top:${np.y+24}px"><div class="bub">${msg}</div><div class="mascot" id="pathNuki"></div></div>`;
   setMood($('#pathNuki'),'normal');
-  $('#pMap').querySelectorAll('.pst').forEach(b=>b.onclick=()=>{hush();const id=b.dataset.g;if(id==='park'){renderHome();show('home')}else startGame(id)});
+  if(S.justOpened){const jb=$('#pMap').querySelector(`.pst[data-g="${S.justOpened}"]`);S.justOpened=null;save();if(jb){jb.classList.add('opened');setTimeout(()=>{confetti(30);tone([523,784],.12,'triangle')},500)}}
+  $('#pMap').querySelectorAll('.pst').forEach(b=>b.onclick=()=>{hush();const id=b.dataset.g;if(isLocked(id)){b.classList.remove('wob');void b.offsetWidth;b.classList.add('wob');tone([330,262],.1,'triangle');const nb=$('#pMap').querySelector(`.pst[data-g="${PATH_ORDER[S.unl]}"]`);if(nb){const sc=$('#pScroll');sc.scrollTo({top:Math.max(0,nb.offsetTop-sc.clientHeight*.45),behavior:'smooth'});setTimeout(()=>{nb.classList.remove('hop');void nb.offsetWidth;nb.classList.add('hop')},450)}say('Komm, wir spielen zusammen!');return}if(id==='park'){renderHome();show('home')}else startGame(id)});
   requestAnimationFrame(()=>{const sc=$('#pScroll'),y=np.y-sc.clientHeight*.45;sc.scrollTo({top:Math.max(0,y),behavior:'smooth'})});
 }
 $('#pHelp').onclick=()=>openVid();
