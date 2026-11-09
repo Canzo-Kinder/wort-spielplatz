@@ -74,6 +74,11 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
 .tText{font-family:var(--f-display);font-weight:800;font-size:19px;line-height:1.2;min-width:0}
 .mascot svg,.tNuki svg{display:block;width:100%;height:auto}
 .mascot{animation:bob 3.2s ease-in-out infinite}
+.nukisvg .mtalk{display:none}html.talk .nukisvg .mrest{display:none}html.talk .nukisvg .mtalk{display:inline;transform-box:fill-box;transform-origin:50% 0;animation:jaw .17s ease-in-out infinite alternate}
+@keyframes jaw{from{transform:scaleY(.3)}to{transform:scaleY(1)}}
+.nukisvg .eyes{transform-box:fill-box;transform-origin:50% 55%;animation:blink 4.6s infinite}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}96.5%{transform:scaleY(.08)}}
+@media (prefers-reduced-motion:reduce){.nukisvg .eyes,html.talk .nukisvg .mtalk{animation:none}}
 .mascot.jump{animation:jump .7s ease}
 @keyframes bob{50%{transform:translateY(-6px) rotate(-2deg)}}
 @keyframes jump{30%{transform:translateY(-26px) scale(1.06)}60%{transform:translateY(0) scale(.97)}}
@@ -757,6 +762,9 @@ if(hasTTS){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
 /* Aufgenommene Stimme (funktioniert in jedem Browser), Geräte-Stimme als Reserve */
 const CLIPS=window.CLIPS||null;
 const player=new Audio();player.preload='auto';
+/* Nuki bewegt den Mund, solange er spricht */
+let talkN=0;function talk(on){document.documentElement.classList.toggle('talk',on)}
+player.addEventListener('playing',()=>talk(true));['pause','ended','emptied','error'].forEach(ev=>player.addEventListener(ev,()=>talk(false)));
 let sayToken=0,unlocked=false;
 document.addEventListener('pointerdown',()=>{if(unlocked)return;unlocked=true;try{player.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';player.play().catch(()=>{})}catch(e){}},{capture:true});
 function chunks(t){return (t.match(/[^.!?:]+[.!?:]?/g)||[]).map(x=>x.trim()).filter(Boolean)}
@@ -771,7 +779,7 @@ function sayTTS(text,rate){
   return new Promise(res=>{
     const u=new SpeechSynthesisUtterance(text);u.lang='de-DE';if(deVoice)u.voice=deVoice;
     u.rate=rate||S.rate;u.pitch=1.12;let done=false;const fin=()=>{if(!done){done=true;res()}};
-    u.onend=fin;u.onerror=fin;speechSynthesis.speak(u);setTimeout(fin,1500+text.length*140);
+    u.onstart=()=>talk(true);u.onend=()=>{talk(false);fin()};u.onerror=()=>{talk(false);fin()};speechSynthesis.speak(u);setTimeout(fin,1500+text.length*140);
   });
 }
 async function say(text,rate){
@@ -787,7 +795,7 @@ async function say(text,rate){
   }
   return sayTTS(text,rate);
 }
-function hush(){sayToken++;try{player.pause()}catch(e){}try{MED.p&&MED.p.pause()}catch(e){}try{noiseSrc&&noiseSrc.stop()}catch(e){}noiseSrc=null;if(hasTTS)try{speechSynthesis.cancel()}catch(e){}}
+function hush(){sayToken++;talk(false);try{player.pause()}catch(e){}try{MED.p&&MED.p.pause()}catch(e){}try{noiseSrc&&noiseSrc.stop()}catch(e){}noiseSrc=null;if(hasTTS)try{speechSynthesis.cancel()}catch(e){}}
 async function saySyllables(word){
   await say(word.w);
   for(const s of word.s.split('-')){await say(s,Math.max(.6,S.rate-.1));await wait(180)}
@@ -809,7 +817,7 @@ const fxDrum=()=>tone([140],.09,'square',.12);
 function mascotSVG(mood){
   const K='stroke="#2a2622" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"';
   const mouth=mood==='happy'?`<path d="M48 70 Q60 84 72 70Z" fill="#7a2338" ${K}/>`:mood==='think'?`<ellipse cx="60" cy="72" rx="5" ry="5" fill="#7a2338" ${K}/>`:`<path d="M50 70 Q60 78 70 70" fill="none" ${K}/><rect x="56" y="72" width="8" height="7" rx="1.5" fill="#fff" ${K}/>`;
-  return `<svg viewBox="0 0 120 125" aria-hidden="true">
+  return `<svg class="nukisvg" viewBox="0 0 120 125" aria-hidden="true">
   <path d="M80 108 C122 102 126 40 98 22 C84 13 68 24 76 40 C92 38 104 62 88 82 C84 90 80 98 80 108Z" fill="#e0782c" ${K}/>
   <path d="M92 40 C100 52 100 66 92 76" fill="none" stroke="#f4a25e" stroke-width="5" stroke-linecap="round"/>
   <ellipse cx="56" cy="94" rx="28" ry="27" fill="#f08a3a" ${K}/><ellipse cx="56" cy="100" rx="16" ry="18" fill="#ffe3c2"/>
@@ -817,11 +825,12 @@ function mascotSVG(mood){
   <path d="M34 34 L30 6 L50 26Z" fill="#f08a3a" ${K}/><path d="M86 34 L90 6 L70 26Z" fill="#f08a3a" ${K}/>
   <circle cx="60" cy="52" r="30" fill="#f08a3a" ${K}/>
   <ellipse cx="60" cy="66" rx="17" ry="13" fill="#ffe3c2"/>
-  <circle cx="47" cy="48" r="8" fill="#fff" ${K}/><circle cx="73" cy="48" r="8" fill="#fff" ${K}/>
-  <circle cx="48" cy="50" r="4" fill="#2a2622"/><circle cx="74" cy="50" r="4" fill="#2a2622"/><circle cx="49.5" cy="48.5" r="1.4" fill="#fff"/><circle cx="75.5" cy="48.5" r="1.4" fill="#fff"/>
+  <g class="eyes"><circle cx="47" cy="48" r="8" fill="#fff" ${K}/><circle cx="73" cy="48" r="8" fill="#fff" ${K}/>
+  <circle cx="48" cy="50" r="4" fill="#2a2622"/><circle cx="74" cy="50" r="4" fill="#2a2622"/><circle cx="49.5" cy="48.5" r="1.4" fill="#fff"/><circle cx="75.5" cy="48.5" r="1.4" fill="#fff"/></g>
   <ellipse cx="60" cy="61" rx="5" ry="3.6" fill="#2a2622"/>
   <circle cx="38" cy="64" r="5" fill="#ff7f8a" opacity=".55"/><circle cx="82" cy="64" r="5" fill="#ff7f8a" opacity=".55"/>
-  ${mouth}
+  <g class="mrest">${mouth}</g>
+  <g class="mtalk"><path d="M49 69 Q60 67 71 69 Q70 82 60 83 Q50 82 49 69Z" fill="#7a2338" ${K}/><path d="M53 79 Q60 74 67 79 Q63 82 60 82 Q56 82 53 79Z" fill="#ff7f8a"/><rect x="56" y="69" width="8" height="5" rx="1.2" fill="#fff" stroke="#2a2622" stroke-width="2"/></g>
   <ellipse cx="56" cy="98" rx="10" ry="12" fill="#a8693a" ${K}/><path d="M45 92 Q56 78 67 92Z" fill="#6b4224" ${K}/>
   <circle cx="44" cy="100" r="6" fill="#f08a3a" ${K}/><circle cx="68" cy="100" r="6" fill="#f08a3a" ${K}/>
   </svg>`;
@@ -1242,7 +1251,10 @@ function mundSVG(t){
     r:'M58 180 Q52 122 60 110 Q70 100 88 104 Q116 108 144 108 Q157 108 161 111 Q157 116 145 116 Q120 120 106 132 Q98 150 98 180Z',
     f:'M58 180 Q54 126 82 116 Q112 108 144 108 Q157 108 161 111 Q157 116 145 116 Q120 120 106 132 Q98 150 98 180Z',
     cl:'M58 180 Q52 122 72 106 Q94 88 120 85 Q144 86 156 104 Q161 110 156 114 Q140 116 122 122 Q104 134 100 180Z'};
-  const round=t==='sch',fl=t==='f';
+  const round=t==='sch',fl=t==='f',tg=TON[t]||TON.s;
+  /* Ruhe-Lage der Zunge (gleicher Aufbau wie die Laut-Formen, damit sie hineingleiten kann) */
+  const REST={6:'M58 180 Q54 128 82 118 Q112 110 142 110 Q156 110 160 113 Q157 117 145 117 Q120 121 106 133 Q98 150 98 180Z',
+    7:'M58 180 Q52 128 70 120 Q86 114 100 114 Q120 112 142 111 Q156 111 160 114 Q157 118 145 118 Q120 122 106 134 Q98 150 98 180Z'};
   /* Lippen: normal, gerundet nach vorne (Sch), oder Unterlippe an den oberen Zähnen (F) */
   const lipU=round?`<path d="M174 82 Q200 82 202 91 Q202 97 190 98 L174 98Z" fill="#e8708a" ${k2}/>`:`<path d="M174 83 Q191 85 191 92 Q190 98 176 98Z" fill="#e8708a" ${k2}/>`;
   const lipL=round?`<path d="M174 103 L190 103 Q202 104 202 110 Q200 119 174 120Z" fill="#e8708a" ${k2}/>`:fl?`<path d="M166 100 Q178 97 184 104 Q185 114 172 118 L170 118Z" fill="#e8708a" ${k2}/>`:`<path d="M175 102 Q190 103 189 110 Q187 118 173 118Z" fill="#e8708a" ${k2}/>`;
@@ -1263,12 +1275,15 @@ function mundSVG(t){
    <path d="M168 88 Q150 78 120 77 Q94 77 78 86 L72 92 L48 104 L46 180 H100 Q102 140 124 128 Q152 116 170 112 L176 100Z" fill="#7a2338" opacity=".9"/>
    <path d="M168 88 Q150 76 120 75 Q94 75 76 88" fill="none" stroke="#c96b7a" stroke-width="6" stroke-linecap="round"/>
    <path d="${uv}" fill="#c96b7a" stroke="#c96b7a" stroke-width="2"/>
-   <path d="${TON[t]||TON.s}" fill="#ff7f8a" ${K}/>
+   <path d="${tg}" fill="#ff7f8a" ${K}><animate class="tg" attributeName="d" values="${REST[tg.split('Q').length-1]};${REST[tg.split('Q').length-1]};${tg}" keyTimes="0;.25;1" calcMode="spline" keySplines="0 0 1 1;.4 0 .2 1" dur="1.2s" begin="indefinite" fill="freeze"/></path>
    <path d="M161 85 H170 L169 99 H164Z" fill="#fff" ${k2}/><path d="M161 101 H168 L168 114 H162Z" fill="#fff" ${k2}/>
-   ${lipU}${lipL}${air}
-   <circle cx="${spot[0]}" cy="${spot[1]}" r="8" fill="none" stroke="#ffc63a" stroke-width="4" class="mspot"/>
+   ${lipU}${lipL}<g>${air}<animate class="tg" attributeName="opacity" values="0;0;1" keyTimes="0;.75;1" dur="1.5s" begin="indefinite" fill="freeze"/></g>
+   <g><circle cx="${spot[0]}" cy="${spot[1]}" r="8" fill="none" stroke="#ffc63a" stroke-width="4" class="mspot"/><animate class="tg" attributeName="opacity" values="0;0;1" keyTimes="0;.8;1" dur="1.5s" begin="indefinite" fill="freeze"/></g>
   </svg>`;
 }
+
+/* Zunge gleitet in die richtige Stellung (Mund-Bild in der Laut-Leiter) */
+function mundGlide(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;document.querySelectorAll('.mundpic animate.tg').forEach(a=>{try{a.beginElement()}catch(e){}})}
 
 /* --- Mikrofon-Aufnahme „Hör dich selbst“ und Kamera-Spiegel (nur auf diesem Gerät, nichts wird gesendet) --- */
 var noiseSrc=null;
@@ -1411,10 +1426,11 @@ function renderLeiter(){
    <div class="lctl"><div class="speak"><button class="bigbtn" id="lModel">🔊 Nuki zeigt es</button>${T.word?'<button class="bigbtn light" id="lSlow">🐢 Langsam</button>':''}${T.kind==='laut'&&vgUsable()?`<button class="bigbtn sun" id="lVoice" aria-label="${(VG[z]||VG.CL).btn.slice(3)}"><span class="vgi">${(VG[z]||VG.CL).btn.split(' ')[0]}</span><span class="vgt"> ${(VG[z]||VG.CL).btn.split(' ').slice(1).join(' ')}</span></button>`:''}</div>
    ${practiceBox('l')}${rateRow('l')}</div>
   </div>`;
-  $('#lModel').onclick=()=>{hush();T.model()};
+  $('#lModel').onclick=()=>{hush();mundGlide();T.model()};
   if($('#lVoice'))$('#lVoice').onclick=()=>openVoiceGame(z);
   if(T.word)$('#lSlow').onclick=()=>{hush();saySyllables(T.word)};
-  $('#lTipp').onclick=()=>{hush();bubble(Z.tipp);say(Z.tipp)};
+  $('#lTipp').onclick=()=>{hush();mundGlide();bubble(Z.tipp);say(Z.tipp)};
+  $('.mundpic').onclick=()=>mundGlide();
   $('#lMirror').onclick=async()=>{const v=$('#lVideo');if(MED.lock)return;if(!v.hidden){v.hidden=true;stopCam();fitSoon();return}
     MED.lock=true;try{v.hidden=false;fitSoon();await mirrorOn(v);if(v.hidden||!document.body.contains(v))stopCam()}catch(e){v.hidden=true;toast('Die Kamera ist nicht erlaubt. Nimm einfach einen Spiegel!',false)}MED.lock=false};
   wireRecord('l');
@@ -1423,7 +1439,7 @@ function renderLeiter(){
     const t=good?rnd(['Wunderbar gesprochen!','Super, das klang toll!','Klasse!']):'Toll, dass du es probiert hast!';
     bubble(t);if(good)confetti(14);await say(t);await wait(200);G.i++;nextTask()};
   $('#lGood').onclick=()=>done(true);$('#lAgain').onclick=()=>done(false);
-  wait(250).then(()=>T.model());
+  wait(250).then(()=>{mundGlide();T.model()});
 }
 
 /* --- Spiel: Nuki versteht dich (Minimalpaare mit echter Folge) --- */
