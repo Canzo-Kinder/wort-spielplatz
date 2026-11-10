@@ -558,6 +558,25 @@ body{background:#e8f7ff}
 .kname input{font:inherit;font-size:17px;font-weight:700;color:var(--ink);padding:12px 14px;border-radius:14px;border:2px solid var(--line);background:#fff}
 .kname input:focus{outline:0;border-color:var(--grape)}
 #btnShare{width:100%;margin-bottom:10px}
+/* Kinder und Sicherung */
+.kidlist{display:flex;flex-direction:column;gap:10px;margin:10px 0}
+.kidrow{display:flex;align-items:center;gap:10px;background:#f4f7fb;border-radius:18px;padding:8px 10px}
+.kidrow.cur{background:#efecff;box-shadow:inset 0 0 0 2px #c9c1fb}
+.kavbtn{width:52px;height:52px;flex:none;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 3px 0 var(--line)}
+.kav{width:40px;height:40px;display:grid;place-items:center}.kav svg{width:100%;height:100%;overflow:visible}
+.kidname{flex:1;min-width:0;font:inherit;font-weight:800;font-size:17px;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--ink)}
+.kidname:focus{outline:0;border-color:var(--grape)}
+.kidnow{font-size:12px;font-weight:800;color:var(--grape);white-space:nowrap}
+.kidrow .bigbtn.small{flex:none!important;width:auto!important;min-width:0!important;min-height:40px;font-size:13px;padding:4px 10px}
+.kidname{min-width:80px!important}
+.kiddel{min-width:36px;height:36px;border-radius:12px;background:#fff;color:#8a93ad;font-weight:800;font-size:14px;padding:0 8px}.kiddel.armed{background:#ffe1d9;color:#c9452c}
+#btnRestore.armed{background:#ffe9a8!important}
+#restoreMsg{font-weight:700}
+#pHello.pick{text-decoration:underline dotted;text-underline-offset:3px;cursor:pointer}
+.panel.who{text-align:center}.panel.who h2{font-family:var(--f-display);margin:4px 0 14px}
+.whoList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.whoKid{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 8px;border-radius:24px;background:#f4f7fb;box-shadow:0 5px 0 var(--line)}
+.whoKid.cur{background:#efecff}.whoKid .kav{width:84px;height:84px;background:#fff;border-radius:50%;padding:12px}.whoKid b{font-family:var(--f-display);font-size:22px;color:var(--ink)}
 /* Eltern-Bereich im neuen Look */
 #parents{background:#f4f7fb}
 .phead{display:flex;align-items:center;gap:12px;padding:calc(14px + env(safe-area-inset-top,0px)) 0 10px}
@@ -882,6 +901,19 @@ body{background:#e8f7ff}
     <div class="ptab" id="pt-set" role="tabpanel" hidden>
     <div id="voiceWarn"></div>
     <div class="sec">
+      <h3>Kinder</h3>
+      <p class="hint">Jedes Kind hat seinen eigenen Pfad, eigene Sterne, Sticker, Übe-Liste und Bericht. Tippen Sie auf das Tier, um es zu ändern. Gibt es mehr als ein Kind, fragt die App beim Start: „Wer spielt heute?“</p>
+      <div id="kidList" class="kidlist"></div>
+      <div class="row"><button class="bigbtn light" id="btnKidAdd">＋ Kind hinzufügen</button></div>
+    </div>
+    <div class="sec">
+      <h3>Sichern &amp; auf ein anderes Gerät übertragen</h3>
+      <p class="hint">Alles liegt nur auf diesem Gerät. Mit einer Sicherung nehmen Sie alle Kinder samt Sternen, Stickern und Fortschritt auf ein neues Handy oder Tablet mit, oder Sie bewahren sie für den Fall auf, dass die App gelöscht wird. Die Sicherung ist eine kleine Datei; sie geht nirgendwohin, außer Sie verschicken oder speichern sie selbst.</p>
+      <div class="row"><button class="bigbtn" id="btnBackup"><svg class="bi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 19h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg> Sicherung erstellen</button><button class="bigbtn light" id="btnRestore"><svg class="bi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20V9M7 14l5-5 5 5M5 5h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg> Sicherung laden</button></div>
+      <input type="file" id="restoreFile" accept=".json,application/json" hidden>
+      <p class="hint" id="restoreMsg"></p>
+    </div>
+    <div class="sec">
       <h3>Mein Übe-Laut</h3>
       <div class="seg" id="segZiel"></div>
       <div class="seg" id="segLaut" hidden></div>
@@ -923,7 +955,7 @@ body{background:#e8f7ff}
     </div>
     <div class="sec">
       <h3>Zurücksetzen</h3>
-      <button class="danger" id="btnReset">Sterne &amp; Fortschritt löschen</button>
+      <button class="danger" id="btnReset">Sterne &amp; Fortschritt dieses Kindes löschen</button>
     </div>
     </div>
     <div class="ptab" id="pt-info" role="tabpanel" hidden>
@@ -954,7 +986,7 @@ body{background:#e8f7ff}
       <h3>Datenschutz</h3>
       <p><b>Kurz gesagt:</b> Der Wort-Spielplatz braucht kein Konto, zeigt keine Werbung und verfolgt niemanden. Was Ihr Kind spielt, bleibt auf diesem Gerät.</p>
       <h4>Was wird gespeichert?</h4>
-      <p>Fortschritt, Sterne, Sticker, Einstellungen, die Übe-Liste und, falls eingetragen, den Vornamen für den Bericht speichert die App nur im Speicher dieses Browsers auf diesem Gerät. Nichts davon wird an uns oder an andere geschickt. Den Übungsbericht als PDF erzeugt die App ebenfalls nur auf dem Gerät; verschickt wird er nur, wenn Sie ihn selbst über das Teilen-Menü weitergeben. Den Fortschritt löschen Sie unter <b>Einstellungen → Sterne &amp; Fortschritt löschen</b>. Alles, auch die Einstellungen, verschwindet, wenn Sie in den Browser-Einstellungen die Website-Daten löschen. Damit die App auch ohne Internet funktioniert, legt der Browser außerdem eine Kopie der App (Bilder, Töne, Programm) auf dem Gerät ab.</p>
+      <p>Fortschritt, Sterne, Sticker, Einstellungen, die Übe-Liste und, falls eingetragen, den Vornamen für den Bericht speichert die App nur im Speicher dieses Browsers auf diesem Gerät. Nichts davon wird an uns oder an andere geschickt. Eine Sicherung (Einstellungen → Sichern) ist eine Datei mit diesen Daten, die ebenfalls nur auf dem Gerät entsteht. Den Übungsbericht als PDF erzeugt die App ebenfalls nur auf dem Gerät; verschickt wird er nur, wenn Sie ihn selbst über das Teilen-Menü weitergeben. Den Fortschritt löschen Sie unter <b>Einstellungen → Sterne &amp; Fortschritt löschen</b>. Alles, auch die Einstellungen, verschwindet, wenn Sie in den Browser-Einstellungen die Website-Daten löschen. Damit die App auch ohne Internet funktioniert, legt der Browser außerdem eine Kopie der App (Bilder, Töne, Programm) auf dem Gerät ab.</p>
       <h4>Mikrofon</h4>
       <p>Das Mikrofon wird nur benutzt, wenn Ihr Kind auf einen Mikrofon-Knopf tippt.</p>
       <ul><li><b>„Mich hören“ und die Stimm-Spiele</b> (zum Beispiel Schlange oder Lok) laufen nur auf dem Gerät. Die Aufnahme wird kurz abgespielt und dann verworfen, nicht gespeichert und nicht gesendet.</li>
@@ -982,6 +1014,7 @@ body{background:#e8f7ff}
 
 <div id="reportPrint"></div>
 <!-- ================= OVERLAYS ================= -->
+<div class="overlay" id="whoOv" hidden><div class="panel who"><h2>Wer spielt heute?</h2><div class="whoList" id="whoList"></div></div></div>
 <div class="overlay" id="vidOv" hidden>
   <div class="panel vidpanel">
     <h2>So geht der Spielplatz</h2>
@@ -1098,9 +1131,19 @@ const MUND=[
 ];
 /* ================= STATE ================= */
 const DEF={mic:false,age:'mittel',lvl:{},mute:false,stars:0,perGame:{},laut:'ALLE',level:3,rate:0.85,cap:false,sound:true,practice:{}};
+/* Mehrere Kinder: jedes Kind hat einen eigenen Speicher. Das erste Kind nutzt den alten Speicher weiter, damit nichts verloren geht. */
+const AVATARE=['Fuchs','Eule','Igel','Frosch','Biene','Marienkäfer','Schmetterling','Pilz'];
+function loadKids(){let K=null;try{K=JSON.parse(localStorage.getItem('ws-kinder')||'null')}catch(e){}
+  if(!K||!Array.isArray(K.list)||!K.list.length)K={cur:'k1',list:[{id:'k1',name:'',av:'Fuchs'}]};
+  if(!K.list.some(k=>k.id===K.cur))K.cur=K.list[0].id;return K}
+let KIDS=loadKids();
+function saveKids(){try{localStorage.setItem('ws-kinder',JSON.stringify(KIDS))}catch(e){}}
+const skey=id=>id==='k1'?'wortinsel-v1':'wortinsel-v1-'+id;
+const curKid=()=>KIDS.list.find(k=>k.id===KIDS.cur)||KIDS.list[0];
+function load(){try{return Object.assign({},DEF,JSON.parse(localStorage.getItem(skey(KIDS.cur))||'{}'))}catch(e){return {...DEF}}}
+function save(){try{localStorage.setItem(skey(KIDS.cur),JSON.stringify(S))}catch(e){}}
+function switchKid(id){if(!KIDS.list.some(k=>k.id===id))return;save();KIDS.cur=id;saveKids();try{sessionStorage.setItem('ws-gewaehlt','1')}catch(e){}location.reload()}
 let S=load();
-function load(){try{return Object.assign({},DEF,JSON.parse(localStorage.getItem('wortinsel-v1')||'{}'))}catch(e){return {...DEF}}}
-function save(){try{localStorage.setItem('wortinsel-v1',JSON.stringify(S))}catch(e){}}
 
 /* ================= HELPERS ================= */
 const $=s=>document.querySelector(s);
@@ -2134,7 +2177,54 @@ async function shareBericht(){
   catch(e){toast('Der Bericht konnte nicht erstellt werden. Bitte nochmal versuchen.',false)}
   finally{b.disabled=false;b.innerHTML=old}}
 $('#btnShare').onclick=shareBericht;
-$('#kindName').value=S.kindName||'';$('#kindName').oninput=e=>{S.kindName=e.target.value.slice(0,40);save()};
+$('#kindName').value=S.kindName||'';$('#kindName').oninput=e=>{S.kindName=e.target.value.slice(0,40);save();curKid().name=S.kindName.slice(0,24);saveKids()};
+/* --- Kinder verwalten --- */
+function kidAv(k){return `<span class="kav">${stickerSVG(k.av||'Fuchs')}</span>`}
+function renderKids(){const el=$('#kidList');if(!el)return;
+  el.innerHTML=KIDS.list.map(k=>`<div class="kidrow ${k.id===KIDS.cur?'cur':''}" data-id="${k.id}">
+    <button class="kavbtn" data-av="${k.id}" aria-label="Tier ändern">${kidAv(k)}</button>
+    <input class="kidname" data-n="${k.id}" maxlength="24" placeholder="Name" value="${(k.name||'').replace(/"/g,'&quot;')}">
+    ${k.id===KIDS.cur?'<span class="kidnow">spielt gerade</span>':`<button class="bigbtn light small" data-sw="${k.id}">Wechseln</button>`}
+    ${KIDS.list.length>1?`<button class="kiddel" data-del="${k.id}" aria-label="Kind löschen">✕</button>`:''}</div>`).join('');
+  el.querySelectorAll('[data-av]').forEach(b=>b.onclick=()=>{const k=KIDS.list.find(x=>x.id===b.dataset.av);k.av=AVATARE[(AVATARE.indexOf(k.av)+1)%AVATARE.length];saveKids();renderKids()});
+  el.querySelectorAll('[data-n]').forEach(i=>i.oninput=()=>{const k=KIDS.list.find(x=>x.id===i.dataset.n);k.name=i.value.slice(0,24);saveKids();if(k.id===KIDS.cur){S.kindName=k.name;save();const f=$('#kindName');if(f)f.value=k.name}});
+  el.querySelectorAll('[data-sw]').forEach(b=>b.onclick=()=>switchKid(b.dataset.sw));
+  el.querySelectorAll('[data-del]').forEach(b=>{let armed=false;b.onclick=()=>{const k=KIDS.list.find(x=>x.id===b.dataset.del);
+    if(!armed){armed=true;b.textContent='Löschen?';b.classList.add('armed');setTimeout(()=>{armed=false;b.textContent='✕';b.classList.remove('armed')},3500);return}
+    try{localStorage.removeItem(skey(k.id))}catch(e){}KIDS.list=KIDS.list.filter(x=>x.id!==k.id);
+    if(KIDS.cur===k.id){KIDS.cur=KIDS.list[0].id;saveKids();location.reload();return}saveKids();renderKids()}});
+}
+$('#btnKidAdd').onclick=()=>{let n=2;while(KIDS.list.some(k=>k.id==='k'+n))n++;const used=KIDS.list.map(k=>k.av);
+  KIDS.list.push({id:'k'+n,name:'',av:AVATARE.find(a=>!used.includes(a))||AVATARE[n%AVATARE.length]});saveKids();renderKids();
+  const inp=$('#kidList').querySelector(`[data-n="k${n}"]`);if(inp)inp.focus()};
+function openWho(){if(KIDS.list.length<2)return;$('#whoList').innerHTML=KIDS.list.map(k=>`<button class="whoKid ${k.id===KIDS.cur?'cur':''}" data-who="${k.id}">${kidAv(k)}<b>${k.name||'Kind'}</b></button>`).join('');
+  $('#whoList').querySelectorAll('[data-who]').forEach(b=>b.onclick=()=>{try{sessionStorage.setItem('ws-gewaehlt','1')}catch(e){}if(b.dataset.who===KIDS.cur){$('#whoOv').hidden=true;renderPath()}else switchKid(b.dataset.who)});
+  $('#whoOv').hidden=false}
+$('#pHello').onclick=()=>{if(KIDS.list.length>1)openWho()};
+{let chosen=false;try{chosen=!!sessionStorage.getItem('ws-gewaehlt')}catch(e){}if(!chosen&&KIDS.list.length>1)setTimeout(openWho,400)}
+/* Name für den Bericht = Name des Kindes */
+if(!S.kindName&&curKid().name)S.kindName=curKid().name;
+/* --- Sichern und Wiederherstellen --- */
+async function makeBackup(){const daten={};KIDS.list.forEach(k=>{try{daten[k.id]=JSON.parse(localStorage.getItem(skey(k.id))||'{}')}catch(e){daten[k.id]={}}});daten[KIDS.cur]=S;
+  const obj={app:'wort-spielplatz',version:1,erstellt:new Date().toISOString(),kinder:KIDS,daten};
+  const blob=new Blob([JSON.stringify(obj)],{type:'application/json'}),fn=`Wort-Spielplatz-Sicherung-${today()}.json`,file=new File([blob],fn,{type:'application/json'});
+  try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'Wort-Spielplatz Sicherung'});return}}catch(e){if(e&&e.name==='AbortError')return}
+  const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=fn;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);toast('Die Sicherung wurde gespeichert.',false)}
+$('#btnBackup').onclick=makeBackup;
+let restoreData=null;
+$('#btnRestore').onclick=()=>{if(restoreData){applyRestore();return}$('#restoreFile').value='';$('#restoreFile').click()};
+$('#restoreFile').onchange=async e=>{const f=e.target.files&&e.target.files[0];if(!f)return;const m=$('#restoreMsg');
+  try{const o=JSON.parse(await f.text());if(!o||o.app!=='wort-spielplatz'||!o.kinder||!Array.isArray(o.kinder.list)||!o.daten)throw 0;
+    restoreData=o;const names=o.kinder.list.map(k=>k.name||'Kind').join(', ');
+    m.textContent=`Sicherung vom ${new Date(o.erstellt).toLocaleDateString('de-DE')} mit ${o.kinder.list.length===1?'1 Kind':o.kinder.list.length+' Kindern'} (${names}). Achtung: Das ersetzt alles auf diesem Gerät. Zum Bestätigen nochmal auf „Sicherung laden“ tippen.`;
+    $('#btnRestore').lastChild.textContent=' Ja, jetzt laden';$('#btnRestore').classList.add('armed');
+    setTimeout(()=>{if(restoreData===o){restoreData=null;m.textContent='';$('#btnRestore').lastChild.textContent=' Sicherung laden';$('#btnRestore').classList.remove('armed')}},20000)}
+  catch(x){restoreData=null;m.textContent='Das ist keine Sicherung vom Wort-Spielplatz.'}};
+function applyRestore(){const o=restoreData;restoreData=null;try{
+  KIDS.list.forEach(k=>localStorage.removeItem(skey(k.id)));
+  o.kinder.list.forEach(k=>{localStorage.setItem(skey(k.id),JSON.stringify(o.daten[k.id]||{}))});
+  localStorage.setItem('ws-kinder',JSON.stringify(o.kinder));sessionStorage.setItem('ws-gewaehlt','1')}catch(e){$('#restoreMsg').textContent='Das hat nicht geklappt. Bitte nochmal versuchen.';return}
+  $('#restoreMsg').textContent='Geladen! Die App startet neu …';setTimeout(()=>location.reload(),900)}
 function printBericht(){const r=$('#reportPrint');r.innerHTML=`<h1>Wort-Spielplatz · Übungsbericht</h1><p>Erstellt am ${new Date().toLocaleDateString('de-DE')} · Übe-Laut: ${S.ziel==='ALLE'?'alle':ZIEL[S.ziel].name} · Stelle im Wort: ${{alle:'überall',an:'Anfang',mitte:'Mitte',ende:'Ende'}[S.pos]}</p>${berichtHTML()}${(()=>{const wk=weakWords();return wk.length?`<h2 style="font-size:16px;margin-top:16px">Wörter, die zuletzt schwer waren</h2><p>${wk.map(([w,m])=>w+(m.x>1?' ('+m.x+'×)':'')).join(', ')}</p>`:''})()}<p style="margin-top:18px;font-size:12px">„gut“ = von Erwachsenen oder dem Kind als gut gesprochen bewertet. Die App ersetzt keine logopädische Diagnostik oder Therapie.</p>`;window.print()}
 
 /* --- Rundenende --- */
@@ -2203,7 +2293,7 @@ function renderParents(){
   $('#voiceWarn').innerHTML=micWarn+(CLIPS?'':(!hasTTS?'<div class="warn" style="margin-bottom:14px">Dieser Browser kann keine Sprache ausgeben. Öffnen Sie die App über canzo-kinder.github.io/wort-spielplatz, dort spricht Nuki in jedem Browser.</div>':
     (!deVoice?'<div class="warn" style="margin-bottom:14px">Keine deutsche Stimme gefunden. Auf dem iPhone: Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen → Deutsch laden.</div>':'')));
 }
-function openParents(){hush();renderParents();renderParents2();renderPStats();ptab('ov');show('parents');$('#parents').scrollTop=0}
+function openParents(){hush();renderKids();renderParents();renderParents2();renderPStats();ptab('ov');show('parents');$('#parents').scrollTop=0}
 function ptab(t){document.querySelectorAll('.ptabs button').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.t===t)));['ov','set','info'].forEach(k=>$('#pt-'+k).hidden=k!==t);$('#parents').scrollTop=0}
 document.querySelectorAll('.ptabs button').forEach(b=>b.onclick=()=>ptab(b.dataset.t));
 document.querySelectorAll('[data-legal]').forEach(a=>a.onclick=e=>{e.preventDefault();ptab('info');const el=document.getElementById(a.dataset.legal);if(el)setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),60)});
@@ -2215,7 +2305,7 @@ $('#btnPrint').onclick=printBericht;
 $('#btnBack').onclick=goHome;
 let resetArmed=false;
 $('#btnReset').onclick=()=>{
-  if(!resetArmed){resetArmed=true;$('#btnReset').textContent='Wirklich löschen? Nochmal tippen';setTimeout(()=>{resetArmed=false;$('#btnReset').textContent='Sterne & Fortschritt löschen'},4000);return}
+  if(!resetArmed){resetArmed=true;$('#btnReset').textContent='Wirklich löschen? Nochmal tippen';setTimeout(()=>{resetArmed=false;$('#btnReset').textContent='Sterne & Fortschritt dieses Kindes löschen'},4000);return}
   S.stars=0;S.perGame={};S.practice={};S.wm={};S.lvl={};S.leiter={};S.log={};save();paintGoal();resetArmed=false;$('#btnReset').textContent='Gelöscht ✓';renderParents();renderParents2();
 };
 
@@ -2578,6 +2668,7 @@ function lockOn(){return S.lock===undefined?S.age==='gross':S.lock}
 function isLocked(id){initUnl();if(!lockOn()||id==='park')return false;return PATH_ORDER.indexOf(id)>S.unl}
 function nextStation(){const d=doneToday();return PATH_ORDER.find(id=>id!=='park'&&!d.includes(id)&&!isLocked(id))||PATH_ORDER[Math.min(S.unl,PATH_ORDER.length-2)]||'versteht'}
 function renderPath(){
+  {const k=curKid(),h=$('#pHello');if(h){h.textContent=k.name?`Hallo ${k.name}!`:'Hallo!';h.classList.toggle('pick',KIDS.list.length>1)}}
   $('#pStars').textContent=S.stars;
   const n=Math.min(todayN(),S.goal);$('#pGoalT').textContent=n>=S.goal?'Tagesziel geschafft!':`Tagesziel: ${n} von ${S.goal} Übungen`;$('#pGoalB').style.width=Math.round(n/S.goal*100)+'%';
   $('#pWaves').style.display=S.mute?'none':'';$('#pX').style.display=S.mute?'':'none';
