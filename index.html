@@ -989,6 +989,12 @@ button#pathNuki{display:block;width:100%;padding:0;border:0;background:none;poin
       <p><b>Was schwerer wird:</b> mehr Bilder zur Auswahl, ähnlich klingende Laute (S/Sch, K/T), längere Wörter, weniger Hilfen und längeres Halten beim Grimassen-Spiegel.</p>
     </div>
     <div class="sec">
+      <h3>Spielplatz (Belohnungs-Spiele)</h3>
+      <div class="lbl">Eine Runde kostet</div>
+      <div class="seg" id="segArcCost"></div>
+      <div class="lbl">Spielzeit pro Tag</div>
+      <div class="seg" id="segArcMin"></div>
+      <p class="hint">Die Sterne verdient Ihr Kind beim Üben. Ist die Spielzeit für heute aufgebraucht, darf die laufende Runde noch zu Ende gespielt werden; eine neue startet erst morgen. Heute gespielt: <b id="arcToday">0</b> Minuten.</p>
       <h3>Ton &amp; Anzeige</h3>
       <div class="lbl">Sprechtempo von Nuki</div>
       <div class="seg" id="segRate"></div>
@@ -1349,19 +1355,34 @@ function nukiTap(el,inGame){const now=Date.now();if(now-nukiTapT<900)return;nuki
 document.addEventListener('click',e=>{const m=e.target.closest&&e.target.closest('#pathNuki,#gameMascot');if(!m)return;nukiTap(m,m.id==='gameMascot')});
 
 /* ================= SPIELPLATZ: Belohnungs-Spiele ================= */
-const ARC_COST=3;
+const arcCost=()=>S.arcCost===undefined?3:S.arcCost;
 const freeStars=()=>Math.max(0,S.stars-(S.spent||0));
+const arcUsed=()=>S.arcDay&&S.arcDay.d===today()?S.arcDay.s:0;
+const arcTick=dt=>{if(!S.arcDay||S.arcDay.d!==today())S.arcDay={d:today(),s:0};S.arcDay.s+=dt;if((arcTick.n=(arcTick.n||0)+dt)>5){arcTick.n=0;save()}};
+const arcTimeUp=()=>!!S.arcMin&&arcUsed()>=S.arcMin*60;
+const arcLeft=()=>S.arcMin?Math.max(0,Math.ceil((S.arcMin*60-arcUsed())/60)):null;
+/* prüft Zeit und Sterne; zieht die Sterne ab. Gibt eine Meldung zurück, wenn es nicht geht. */
+function arcPay(){if(arcTimeUp()){hush();say('Für heute ist die Spielzeit vorbei. Morgen geht es weiter!');return 'Für heute ist die Spielzeit vorbei. Morgen geht es weiter!'}
+  const c=arcCost();if(freeStars()<c){hush();say('Sammle erst noch Sterne beim Üben!');return 'Du brauchst '+c+(c===1?' Stern':' Sterne')+'. Sammle sie beim Üben!'}
+  S.spent=(S.spent||0)+c;save();return null}
+const arcLv=id=>Math.min(5,(S.arcLv&&S.arcLv[id])||1);
+/* Sieg: Rekord je Stufe merken, nächste Stufe öffnen. low=true: kleiner ist besser. */
+function arcWin(id,score,low){S.arcLv=S.arcLv||{};S.rec=S.rec||{};const lv=arcLv(id),k=id+lv,old=S.rec[k];let t='',rec=false;
+  if(old===undefined||(low?score<old:score>old)){S.rec[k]=score;if(old!==undefined){t+=' Neuer Rekord!';rec=true}}
+  if(lv<5){S.arcLv[id]=lv+1;t+=` Jetzt kommt Stufe ${lv+1}!`}save();setTimeout(()=>say(rec?'Neuer Rekord!':lv<5?'Nächste Stufe!':''),1500);return t}
+const arcRec=(id,unit)=>{const r=S.rec&&S.rec[id+arcLv(id)];return `Stufe ${arcLv(id)}${r!==undefined?` · Rekord: ${r} ${unit}`:''}`};
+const arcInfo=id=>`${id?`<p style="font-size:14px;color:#7c6cf2">${arcRec(id,{fly:'Nüsse',race:'Sekunden',sling:'Nüsse übrig'}[id])}</p>`:''}<p style="font-size:13px">${arcCost()?`Eine Runde kostet ${arcCost()} ⭐ · du hast ${freeStars()} ⭐ frei`:'Spielen ist frei'}${arcLeft()!==null?` · noch ${arcLeft()} Min. Spielzeit`:''}</p>`;
 const ARC=[
  {id:'fly',name:'Nuki fliegt',desc:'Tippen oder „Schhh“ machen',ok:true,svg:'<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="18" fill="#bfe7fb"/><rect x="50" y="0" width="16" height="26" rx="5" fill="#6cc04a" stroke="#26303a" stroke-width="2.5"/><rect x="50" y="56" width="16" height="24" rx="5" fill="#6cc04a" stroke="#26303a" stroke-width="2.5"/><circle cx="26" cy="40" r="13" fill="#f2913d" stroke="#26303a" stroke-width="2.5"/><path d="M14 40q-10-8-6-18q8 4 10 12" fill="#e8823a" stroke="#26303a" stroke-width="2.5" stroke-linejoin="round"/><circle cx="30" cy="37" r="2.4" fill="#26303a"/><path d="M27 45q4 3 8 0" fill="none" stroke="#26303a" stroke-width="2" stroke-linecap="round"/></svg>'},
  {id:'race',name:'Laut-Rennen',desc:'Sammle Bilder mit deinem Laut',ok:true,svg:'<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="18" fill="#dfe9d2"/><path d="M28 80L34 0h12l6 80z" fill="#8a93a3"/><path d="M40 6v12M40 30v12M40 54v12" stroke="#fff" stroke-width="3" stroke-dasharray="1 0"/><rect x="30" y="40" width="20" height="28" rx="7" fill="#ff7a59" stroke="#26303a" stroke-width="2.5"/><rect x="33" y="46" width="14" height="8" rx="3" fill="#cfeefb"/></svg>'},
  {id:'sling',name:'Nuss-Schleuder',desc:'Wort sagen, Nuss schießen',ok:true,svg:'<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="18" fill="#ffeecb"/><path d="M22 70V46l-8-14M22 46l8-14" fill="none" stroke="#8a5a33" stroke-width="5" stroke-linecap="round"/><path d="M14 32q8 10 16 0" fill="none" stroke="#26303a" stroke-width="2"/><circle cx="22" cy="38" r="5" fill="#a0612e"/><rect x="50" y="52" width="12" height="18" fill="#e2c99c" stroke="#26303a" stroke-width="2.5"/><rect x="62" y="52" width="12" height="18" fill="#e2c99c" stroke="#26303a" stroke-width="2.5"/><rect x="56" y="34" width="12" height="18" fill="#e2c99c" stroke="#26303a" stroke-width="2.5"/></svg>'},
  {id:'park',name:'Nukis Park',desc:'Durch den Park spazieren',ok:true,free:true,svg:'<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="18" fill="#cfeefb"/><path d="M0 54q40-16 80 0v26H0z" fill="#8fd16a"/><path d="M22 60V40" stroke="#8a5a33" stroke-width="5" stroke-linecap="round"/><circle cx="22" cy="32" r="13" fill="#5fae4c"/><path d="M48 62V38M66 62V38M46 38h22" stroke="#c98d55" stroke-width="4" stroke-linecap="round"/><path d="M54 38v14M60 38v14M52 52h10" stroke="#26303a" stroke-width="2"/></svg>'}];
-function openArcade(){hush();$('#arcStars').textContent=freeStars();
-  $('#arcGrid').innerHTML=ARC.map(a=>`<button class="arct ${a.ok?'':'soon'}" data-a="${a.id}">${a.svg}<span class="cost">${a.ok?(a.free?'frei':ARC_COST+' ⭐'):'bald'}</span><b>${a.name}</b><small>${a.desc}</small></button>`).join('');
+function openArcade(){hush();$('#arcStars').textContent=freeStars();{const p=$('.arcsub');if(p){let e=p.querySelector('.arcleft');if(!e){e=document.createElement('span');e.className='arcleft';p.appendChild(e)}e.textContent=arcLeft()!==null?` · noch ${arcLeft()} Min.`:''}}
+  $('#arcGrid').innerHTML=ARC.map(a=>`<button class="arct ${a.ok?'':'soon'}" data-a="${a.id}">${a.svg}<span class="cost">${a.ok?(a.free||!arcCost()?'frei':arcCost()+' ⭐'):'bald'}</span><b>${a.name}</b><small>${a.desc}</small></button>`).join('');
   $('#arcGrid').querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const id=b.dataset.a;hush();
     if(id==='park'){$('#arcOv').hidden=true;renderHome();show('home');return}
 
-    if(freeStars()<ARC_COST){tone([330,262],.1,'triangle');b.classList.remove('wob');void b.offsetWidth;b.classList.add('wob');say('Sammle erst noch Sterne beim Üben!');return}
+    if(arcTimeUp()||freeStars()<arcCost()){tone([330,262],.1,'triangle');b.classList.remove('wob');void b.offsetWidth;b.classList.add('wob');say(arcTimeUp()?'Für heute ist die Spielzeit vorbei. Morgen geht es weiter!':'Sammle erst noch Sterne beim Üben!');return}
     $('#arcOv').hidden=true;(id==='race'?openRace:id==='sling'?openSling:openFly)()});
   $('#arcOv').hidden=false;say('Willkommen auf dem Spielplatz!')}
 $('#arcX').onclick=()=>{hush();$('#arcOv').hidden=true};
@@ -1371,7 +1392,7 @@ let FLY=null;
 function flyStop(){if(!FLY)return;cancelAnimationFrame(FLY.raf);try{FLY.cv.onpointerdown=FLY.cv.onpointermove=FLY.cv.onpointerup=null}catch(e){}try{FLY.src&&FLY.src.disconnect()}catch(e){}if(MED.f){MED.f.getTracks().forEach(t=>t.stop());MED.f=null}removeEventListener('resize',FLY.fit);document.removeEventListener('visibilitychange',FLY.vis);FLY=null}
 function openFly(){
   flyStop();try{$('#toast').hidden=true}catch(e){}const ov=$('#flyOv'),cv=$('#flyCv'),cx=cv.getContext('2d'),msg=$('#flyMsg');ov.hidden=false;
-  const A={klein:{sp:120,gap:270,n:6},mittel:{sp:150,gap:235,n:8},gross:{sp:185,gap:205,n:10}}[S.age]||{sp:150,gap:235,n:8};
+  let A;const mkA=()=>{const b={klein:{sp:120,gap:270,n:6},mittel:{sp:150,gap:235,n:8},gross:{sp:185,gap:205,n:10}}[S.age]||{sp:150,gap:235,n:8},l=arcLv('fly')-1;A={sp:b.sp*(1+.05*l),gap:b.gap-6*l,n:b.n+l}};mkA();
   const F=FLY={cv,raf:0,src:null,an:null,td:null,floor:0,calT:0,calN:0,voice:false,run:false};
   let VH=600,W=800,sc=1,dpr=1;
   F.fit=()=>{dpr=Math.min(2,devicePixelRatio||1);const w=ov.clientWidth,h=ov.clientHeight;cv.width=w*dpr;cv.height=h*dpr;sc=Math.min(h/600,w/520);VH=h/sc;W=w/sc};F.fit();addEventListener('resize',F.fit);
@@ -1379,19 +1400,19 @@ function openFly(){
   const img=m=>{const i=new Image();i.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(mascotSVG(m).replace('<svg','<svg xmlns="http://www.w3.org/2000/svg"'));return i};
   const IM={n:img('happy'),j:img('jubel'),t:img('staunen')};
   let y,vy,gates,nuts,hearts,passed,inv,t,last,clouds,parts,dist,won;
-  const reset=()=>{y=VH*.45;vy=0;gates=[];nuts=0;hearts=3;passed=0;inv=0;t=0;dist=0;won=false;parts=[];clouds=Array.from({length:5},(_,k)=>({x:k*260+Math.random()*120,y:40+Math.random()*180,s:.7+Math.random()*.7}));
+  const reset=()=>{mkA();y=VH*.45;vy=0;gates=[];nuts=0;hearts=3;passed=0;inv=0;t=0;dist=0;won=false;parts=[];clouds=Array.from({length:5},(_,k)=>({x:k*260+Math.random()*120,y:40+Math.random()*180,s:.7+Math.random()*.7}));
     for(let k=0;k<A.n;k++)gates.push({x:W+260+k*340,c:VH*.5+(Math.random()-.5)*Math.min(VH-420,520),nut:true,hit:false,done:false,ph:k*1.7});hud()};
   const hud=()=>{$('#flyHearts').textContent='❤️'.repeat(hearts)+'🤍'.repeat(3-hearts);$('#flyNuts').textContent='🌰 '+nuts};
   const flap=()=>{if(!F.run)return;vy=-400;tone([520],.05,'triangle',.08)};
-  function menu(title,text,resume){msg.innerHTML=`<h3>${title}</h3><p>${text}</p><div class="row">${resume?'<button class="bigbtn" id="flyGo">▶ Weiter</button>':`<button class="bigbtn" id="flyTap">👆 Mit Tippen</button>${vgUsable()?'<button class="bigbtn sun" id="flyVoice">🎤 Mit „Schhh“</button>':''}`}<button class="bigbtn light" id="flyEnd">Fertig</button></div>${resume?'':`<p style="font-size:13px">Eine Runde kostet ${ARC_COST} ⭐ · du hast ${freeStars()} ⭐ frei</p>`}`;
+  function menu(title,text,resume){msg.innerHTML=`<h3>${title}</h3><p>${text}</p><div class="row">${resume?'<button class="bigbtn" id="flyGo">▶ Weiter</button>':`<button class="bigbtn" id="flyTap">👆 Mit Tippen</button>${vgUsable()?'<button class="bigbtn sun" id="flyVoice">🎤 Mit „Schhh“</button>':''}`}<button class="bigbtn light" id="flyEnd">Fertig</button></div>${resume?'':arcInfo('fly')}`;
     $('#flyEnd').onclick=close;
     if(resume){$('#flyGo').onclick=()=>{msg.innerHTML='';last=performance.now();F.run=true};return}
-    const go=async voice=>{if(freeStars()<ARC_COST){hush();say('Sammle erst noch Sterne beim Üben!');msg.querySelector('p').textContent='Du brauchst '+ARC_COST+' Sterne. Sammle sie beim Üben!';return}
+    const go=async voice=>{if(arcTimeUp()||freeStars()<arcCost()){msg.querySelector('p').textContent=arcPay();return}
       if(voice&&!F.an){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')await ac.resume();
           MED.f=await (aSess('play-and-record'),navigator.mediaDevices).getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
           F.src=ac.createMediaStreamSource(MED.f);F.an=ac.createAnalyser();F.an.fftSize=1024;F.src.connect(F.an);F.td=new Float32Array(F.an.fftSize)}
         catch(e){msg.querySelector('p').textContent='Das Mikrofon geht hier nicht. Spiel mit Tippen!';return}}
-      S.spent=(S.spent||0)+ARC_COST;save();hush();F.voice=voice;F.floor=0;F.calN=0;F.calT=performance.now();reset();msg.innerHTML='';
+      {const er=arcPay();if(er){msg.querySelector('p').textContent=er;return}}hush();F.voice=voice;F.floor=0;F.calN=0;F.calT=performance.now();reset();msg.innerHTML='';
       await Promise.race([say(voice?'Mach Sch, dann fliegt Nuki hoch.':'Tippe, dann fliegt Nuki hoch.'),wait(3200)]);if(FLY!==F)return;F.calT=performance.now();last=performance.now();F.run=true};
     $('#flyTap').onclick=()=>go(false);if($('#flyVoice'))$('#flyVoice').onclick=()=>go(true)}
   function close(){hush();flyStop();ov.hidden=true;msg.innerHTML='';openArcade()}
@@ -1414,7 +1435,7 @@ function openFly(){
     const im=won?IM.j:inv>0?IM.t:IM.n,nx=W*.28;if(im.complete&&(inv<=0||Math.floor(t*12)%2===0)){cx.save();cx.translate(nx,y);cx.rotate(Math.max(-.4,Math.min(.5,vy/900)));cx.drawImage(im,-52,-56,104,110);cx.restore()}}
   let dist2=0;
   function frame(now){F.raf=requestAnimationFrame(frame);if(!F.run){draw();return}
-    const dt=Math.min(.035,(now-last)/1000);last=now;t+=dt;const nx=W*.28;
+    const dt=Math.min(.035,(now-last)/1000);last=now;t+=dt;arcTick(dt);const nx=W*.28;
     if(F.voice){const on=loud();F.hold=on?.12:Math.max(0,(F.hold||0)-dt);vy+=(F.hold>0?-1750:800)*dt;vy=Math.max(-340,Math.min(340,vy))}else vy+=1250*dt;
     y+=vy*dt;if(y<50){y=50;vy=0}if(y>VH-90){y=VH-90;vy=F.voice?0:-260}
     const dx=A.sp*dt;dist+=dx;clouds.forEach(c=>{c.x-=dx*.25;if(c.x<-120){c.x=W+120;c.y=40+Math.random()*180}});
@@ -1425,7 +1446,7 @@ function openFly(){
       if(inv<=0&&Math.abs(G.x-nx)<39+34&&(y-38<G.c-A.gap/2||y+40>G.c+A.gap/2)){inv=1.4;hearts--;hud();tone([220,165],.12,'sawtooth',.1);y=G.c;vy=0;
         if(hearts<=0){F.run=false;setTimeout(()=>{say('Ups! Nochmal versuchen?');menu('Ups!',`Du hast ${nuts} ${nuts===1?'Nuss':'Nüsse'} gesammelt. Nochmal?`)},500);return}}}
     if(passed>=A.n&&!won){won=true;dist2=0;confetti(50);tone([523,659,784,1047],.12,'triangle');say('Super geflogen!');
-      setTimeout(()=>{F.run=false;menu('Geschafft!',`Du hast ${nuts} von ${A.n} Nüssen gesammelt. Nochmal?`)},1800)}
+      {const n0=A.n,x=arcWin('fly',nuts);setTimeout(()=>{F.run=false;menu('Geschafft!',`Du hast ${nuts} von ${n0} Nüssen gesammelt.${x}`)},1800)}}
     if(won)dist2+=dx;
     draw()}
   F.peek=()=>{const nx=W*.28,g=gates.find(G=>G.x>nx-70);return {y,c:g?g.c:VH*.5,won,hearts,nuts}};
@@ -1434,7 +1455,7 @@ function openFly(){
 /* --- Laut-Rennen --- */
 function openRace(){
   flyStop();try{$('#toast').hidden=true}catch(e){}const ov=$('#flyOv'),cv=$('#flyCv'),cx=cv.getContext('2d'),msg=$('#flyMsg');ov.hidden=false;
-  const A={klein:{sp:230,n:6,gap:1.5},mittel:{sp:300,n:8,gap:1.25},gross:{sp:370,n:10,gap:1.05}}[S.age]||{sp:300,n:8,gap:1.25};
+  let A;const mkA=()=>{const b={klein:{sp:230,n:6,gap:1.5},mittel:{sp:300,n:8,gap:1.25},gross:{sp:370,n:10,gap:1.05}}[S.age]||{sp:300,n:8,gap:1.25},l=arcLv('race')-1;A={sp:b.sp*(1+.07*l),n:b.n+l,gap:b.gap*(1-.05*l)}};mkA();
   const F=FLY={cv,raf:0,src:null,an:null,td:null,floor:0,calT:0,voice:false,run:false};
   let VW=420,VH=800,sc=1,dpr=1;
   F.fit=()=>{dpr=Math.min(2,devicePixelRatio||1);const w=ov.clientWidth,h=ov.clientHeight;cv.width=w*dpr;cv.height=h*dpr;sc=Math.min(w/420,h/620);VW=w/sc;VH=h/sc};F.fit();addEventListener('resize',F.fit);
@@ -1447,7 +1468,7 @@ function openRace(){
   const nukiImg=m=>{const i=new Image();i.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(mascotSVG(m).replace('<svg','<svg xmlns="http://www.w3.org/2000/svg"'));return i};
   const NI={n:nukiImg('happy'),j:nukiImg('jubel'),t:nukiImg('staunen')};
   let lane,cxp,items,got,hearts,inv,t,last,dist,next,won,parts,turbo,lastGood,flash;
-  const reset=()=>{lane=1;cxp=LX(1);items=[];got=0;hearts=3;inv=0;t=0;dist=0;next=.8;won=false;parts=[];turbo=0;lastGood=0;flash=null;hud()};
+  const reset=()=>{mkA();lane=1;cxp=LX(1);items=[];got=0;hearts=3;inv=0;t=0;dist=0;next=.8;won=false;parts=[];turbo=0;lastGood=0;flash=null;hud()};
   const hud=()=>{$('#flyHearts').textContent='❤️'.repeat(hearts)+'🤍'.repeat(3-hearts);$('#flyNuts').textContent=`${ZIEL[z].name}: ${got}/${A.n}`};
   const steer=d=>{if(!F.run)return;const n=Math.max(0,Math.min(2,lane+d));if(n!==lane){lane=n;tone([440],.04,'triangle',.06)}};
   let px0=null;
@@ -1455,15 +1476,15 @@ function openRace(){
   cv.onpointerup=e=>{if(px0===null)return;const dx=e.clientX-px0;px0=null;if(Math.abs(dx)>24){steer(dx>0?1:-1);return}
     const r=cv.getBoundingClientRect(),x=(e.clientX-r.left)/sc,cur=LX(lane);if(Math.abs(x-cur)<RW()/6){return}steer(x>cur?1:-1)};
   F.key=e=>{if(e.key==='ArrowLeft')steer(-1);if(e.key==='ArrowRight')steer(1)};addEventListener('keydown',F.key);
-  function menu(title,text,resume){msg.innerHTML=`<h3>${title}</h3><p>${text}</p><div class="row">${resume?'<button class="bigbtn" id="flyGo">▶ Weiter</button>':`<button class="bigbtn" id="flyTap">🚗 Los!</button>${vgUsable()?'<button class="bigbtn sun" id="flyVoice">🎤 Mit Brumm-Turbo</button>':''}`}<button class="bigbtn light" id="flyEnd">Fertig</button></div>${resume?'':`<p style="font-size:13px">Eine Runde kostet ${ARC_COST} ⭐ · du hast ${freeStars()} ⭐ frei</p>`}`;
+  function menu(title,text,resume){msg.innerHTML=`<h3>${title}</h3><p>${text}</p><div class="row">${resume?'<button class="bigbtn" id="flyGo">▶ Weiter</button>':`<button class="bigbtn" id="flyTap">🚗 Los!</button>${vgUsable()?'<button class="bigbtn sun" id="flyVoice">🎤 Mit Brumm-Turbo</button>':''}`}<button class="bigbtn light" id="flyEnd">Fertig</button></div>${resume?'':arcInfo('race')}`;
     $('#flyEnd').onclick=close;
     if(resume){$('#flyGo').onclick=()=>{msg.innerHTML='';last=performance.now();F.run=true};return}
-    const go=async voice=>{if(freeStars()<ARC_COST){hush();say('Sammle erst noch Sterne beim Üben!');msg.querySelector('p').textContent='Du brauchst '+ARC_COST+' Sterne. Sammle sie beim Üben!';return}
+    const go=async voice=>{if(arcTimeUp()||freeStars()<arcCost()){msg.querySelector('p').textContent=arcPay();return}
       if(voice&&!F.an){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')await ac.resume();
           MED.f=await (aSess('play-and-record'),navigator.mediaDevices).getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
           F.src=ac.createMediaStreamSource(MED.f);F.an=ac.createAnalyser();F.an.fftSize=1024;F.src.connect(F.an);F.td=new Float32Array(F.an.fftSize)}
         catch(e){msg.querySelector('p').textContent='Das Mikrofon geht hier nicht. Spiel ohne Turbo!';return}}
-      S.spent=(S.spent||0)+ARC_COST;save();hush();F.voice=voice;F.floor=0;pickZ();reset();msg.innerHTML=`<h3>${ZIEL[z].name}</h3><p>Sammle alle Bilder mit ${ZIEL[z].name}!</p>`;
+      {const er=arcPay();if(er){msg.querySelector('p').textContent=er;return}}hush();F.voice=voice;F.floor=0;pickZ();reset();msg.innerHTML=`<h3>${ZIEL[z].name}</h3><p>Sammle alle Bilder mit ${ZIEL[z].name}!</p>`;
       await Promise.race([say(`Sammle alle Bilder mit ${ZIEL[z].name}!`).then(()=>voice?say('Mach Brumm, dann gibt es Turbo!'):0),wait(4500)]);if(FLY!==F)return;msg.innerHTML='';F.calT=performance.now();last=performance.now();F.run=true};
     $('#flyTap').onclick=()=>go(false);if($('#flyVoice'))$('#flyVoice').onclick=()=>go(true)}
   function close(){hush();removeEventListener('keydown',F.key);flyStop();ov.hidden=true;msg.innerHTML='';openArcade()}
@@ -1490,7 +1511,7 @@ function openRace(){
       cx.restore()}
     if(flash&&flash.l>0){cx.globalAlpha=Math.min(1,flash.l*2);cx.font='800 34px "Baloo 2",sans-serif';cx.textAlign='center';cx.lineWidth=7;cx.strokeStyle='#fff';cx.fillStyle=flash.ok?'#2f9e56':'#e2553f';cx.strokeText(flash.t,VW/2,VH-270);cx.fillText(flash.t,VW/2,VH-270);cx.globalAlpha=1}}
   function frame(now){F.raf=requestAnimationFrame(frame);if(!F.run){draw();return}
-    const dt=Math.min(.035,(now-last)/1000);last=now;t+=dt;inv-=dt;if(flash)flash.l-=dt;
+    const dt=Math.min(.035,(now-last)/1000);last=now;t+=dt;arcTick(dt);inv-=dt;if(flash)flash.l-=dt;
     if(F.voice&&loud())turbo=.5;else turbo=Math.max(0,turbo-dt);
     const sp=A.sp*(turbo>0?1.5:1),dy=sp*dt;dist+=dy;cxp+=(LX(lane)-cxp)*Math.min(1,dt*14);
     next-=dt*(turbo>0?1.5:1);if(next<=0&&!won){spawn();next=A.gap*(.8+Math.random()*.5)}
@@ -1501,7 +1522,7 @@ function openRace(){
         else if(inv<=0){hearts--;inv=1.2;hud();tone([220,165],.12,'sawtooth',.1);flash={t:'Kein '+ZIEL[z].name+'!',ok:false,l:1.1};
           if(hearts<=0){F.run=false;setTimeout(()=>{say('Ups! Nochmal versuchen?');menu('Ups!',`Du hast ${got} von ${A.n} Bildern gesammelt. Nochmal?`)},500);return}}}}
     items=items.filter(i=>!i.hit&&i.y<VH+80);
-    if(got>=A.n&&!won){won=true;items=[];confetti(50);tone([523,659,784,1047],.12,'triangle');setTimeout(()=>say('Super gefahren!'),700);setTimeout(()=>{F.run=false;menu('Geschafft!',`Alle ${A.n} Bilder mit ${ZIEL[z].name} gesammelt. Nochmal?`)},2200)}
+    if(got>=A.n&&!won){won=true;items=[];confetti(50);tone([523,659,784,1047],.12,'triangle');setTimeout(()=>say('Super gefahren!'),700);{const n0=A.n,sec=Math.round(t),x=arcWin('race',sec,true);setTimeout(()=>{F.run=false;menu('Geschafft!',`Alle ${n0} Bilder mit ${ZIEL[z].name} in ${sec} Sekunden gesammelt.${x}`)},2200)}}
     draw()}
   F.peek=()=>({lane,items:items.map(i=>({l:i.l,y:i.y,ok:i.ok})),won,hearts,got,cy:VH-150});F.steer=steer;
   pickZ();reset();menu('Laut-Rennen','Wische nach links und rechts. Sammle nur die Bilder mit deinem Laut!');say('Laut-Rennen!');F.raf=requestAnimationFrame(frame)}
@@ -1509,7 +1530,7 @@ function openRace(){
 /* --- Nuss-Schleuder --- */
 function openSling(){
   flyStop();try{$('#toast').hidden=true}catch(e){}const ov=$('#flyOv'),cv=$('#flyCv'),cx=cv.getContext('2d'),msg=$('#flyMsg'),wc=$('#slWord');ov.hidden=false;wc.hidden=true;
-  const A={klein:{cols:[2,3,2],nuts:8},mittel:{cols:[3,4,3],nuts:8},gross:{cols:[3,4,4,3],nuts:9}}[S.age]||{cols:[3,4,3],nuts:8};
+  let A;const mkA=()=>{const b={klein:{cols:[2,3,2],nuts:8},mittel:{cols:[3,4,3],nuts:8},gross:{cols:[3,4,4,3],nuts:9}}[S.age]||{cols:[3,4,3],nuts:8},l=arcLv('sling')-1,c=b.cols.slice();for(let k=0;k<l;k++)c[(k*2+1)%c.length]++;if(l>=3)c.push(2);A={cols:c,nuts:b.nuts+Math.floor(l/2)}};mkA();
   const F=FLY={cv,raf:0,run:false};
   let VW=760,VH=440,sc=1,dpr=1;const B=52,GR=()=>VH-46,AX=()=>Math.min(130,VW*.17),AY=()=>GR()-120;
   F.fit=()=>{dpr=Math.min(2,devicePixelRatio||1);const w=ov.clientWidth,h=ov.clientHeight;cv.width=w*dpr;cv.height=h*dpr;sc=Math.min(w/(h>w?500:700),h/400);VW=w/sc;VH=h/sc;if(boxes)layout()};
@@ -1518,7 +1539,7 @@ function openSling(){
   const NI={n:nukiImg('happy'),j:nukiImg('jubel')};
   let boxes=null,nut,pull,drag,nuts,st,t,last,parts,words,wi,settle,hits,z;
   const layout=()=>{const n=A.cols.length,x1=VW-40-B/2,x0=Math.max(VW*.52,x1-(n-1)*(B+26));boxes.forEach(b=>{b.x=n>1?x0+(x1-x0)*b.c/(n-1):x1})};
-  const reset=()=>{boxes=[];A.cols.forEach((h,c)=>{for(let k=0;k<h;k++)boxes.push({c,x:0,y:GR()-B*(k+1),vy:0,ko:false,col:['#e2c99c','#f0b46a','#d9a05b'][(c+k)%3]})});layout();
+  const reset=()=>{mkA();boxes=[];A.cols.forEach((h,c)=>{for(let k=0;k<h;k++)boxes.push({c,x:0,y:GR()-B*(k+1),vy:0,ko:false,col:['#e2c99c','#f0b46a','#d9a05b'][(c+k)%3]})});layout();
     nut=null;pull=null;drag=false;nuts=A.nuts;parts=[];t=0;hits=0;
     z=S.ziel!=='ALLE'&&ZIEL[S.ziel]?S.ziel:rnd(Object.keys(ZIEL));words=shuffle(zielAll(z).map(w=>WX[w]).filter(Boolean));if(words.length<3)words=shuffle(W.filter(w=>w.l!=='X'));wi=0;hud()};
   const left=()=>boxes.filter(b=>!b.ko).length;
@@ -1528,10 +1549,10 @@ function openSling(){
     try{emojiPics&&emojiPics(wc)}catch(e){}
     $('#slHear').onclick=()=>{hush();say(w.w)};$('#slSaid').onclick=()=>{hush();wc.hidden=true;tone([660,880],.06,'triangle',.1);st='aim';pull={x:0,y:0}};
     hush();say(w.w)}
-  function menu(title,text){wc.hidden=true;msg.innerHTML=`<h3>${title}</h3><p>${text}</p><div class="row"><button class="bigbtn" id="flyTap">🌰 Los!</button><button class="bigbtn light" id="flyEnd">Fertig</button></div><p style="font-size:13px">Eine Runde kostet ${ARC_COST} ⭐ · du hast ${freeStars()} ⭐ frei</p>`;
+  function menu(title,text){wc.hidden=true;msg.innerHTML=`<h3>${title}</h3><p>${text}</p><div class="row"><button class="bigbtn" id="flyTap">🌰 Los!</button><button class="bigbtn light" id="flyEnd">Fertig</button></div>${arcInfo('sling')}`;
     $('#flyEnd').onclick=close;
-    $('#flyTap').onclick=async()=>{if(freeStars()<ARC_COST){hush();say('Sammle erst noch Sterne beim Üben!');msg.querySelector('p').textContent='Du brauchst '+ARC_COST+' Sterne. Sammle sie beim Üben!';return}
-      S.spent=(S.spent||0)+ARC_COST;save();hush();reset();msg.innerHTML='';st='intro';last=performance.now();F.run=true;
+    $('#flyTap').onclick=async()=>{if(arcTimeUp()||freeStars()<arcCost()){msg.querySelector('p').textContent=arcPay();return}
+      {const er=arcPay();if(er){msg.querySelector('p').textContent=er;return}}hush();reset();msg.innerHTML='';st='intro';last=performance.now();F.run=true;
       await Promise.race([say('Sag das Wort, dann gibt es eine neue Nuss!'),wait(3500)]);if(FLY!==F)return;askWord()}}
   function close(){hush();flyStop();wc.hidden=true;ov.hidden=true;msg.innerHTML='';openArcade()}
   $('#flyX').onclick=close;
@@ -1560,7 +1581,7 @@ function openSling(){
     if(nut)nutAt(nut.x,nut.y,nut.life*8);
     parts.forEach(p=>{cx.globalAlpha=Math.max(0,p.l);cx.fillStyle=p.c;cx.beginPath();cx.arc(p.x,p.y,p.r,0,7);cx.fill()});cx.globalAlpha=1}
   function frame(now){F.raf=requestAnimationFrame(frame);if(!F.run){if(boxes)draw();return}
-    const dt=Math.min(.03,(now-last)/1000);last=now;t+=dt;const gr=GR();
+    const dt=Math.min(.03,(now-last)/1000);last=now;t+=dt;arcTick(dt);const gr=GR();
     const byCol={};boxes.filter(b=>!b.ko).forEach(b=>(byCol[b.c]=byCol[b.c]||[]).push(b));
     Object.values(byCol).forEach(col=>{col.sort((a,b)=>b.y-a.y);col.forEach((b,k)=>{const ty=gr-B*(k+1);if(b.y<ty){b.vy+=1400*dt;b.y+=b.vy*dt;if(b.y>=ty){b.y=ty;b.vy=0;tone([140],.04,'sine',.06)}}})});
     boxes.forEach(b=>{if(b.ko){b.vy+=1200*dt;b.x+=b.vx*dt;b.y+=b.vy*dt;b.r+=b.vr*dt;b.l-=dt*.9}});
@@ -1573,7 +1594,7 @@ function openSling(){
       if(nut&&(nut.x>VW+60||nut.x<-60||nut.life>6))nut=null;
       if(!nut){st='settle';settle=.9}}
     if(st==='settle'){settle-=dt;if(settle<=0){
-      if(left()===0){st='end';confetti(50);tone([523,659,784,1047],.12,'triangle');say('Super getroffen!');setTimeout(()=>{if(FLY===F){F.run=false;menu('Geschafft!',`Alle Kisten sind umgefallen, und du hast noch ${nuts} ${nuts===1?'Nuss':'Nüsse'}. Nochmal?`)}},1800)}
+      if(left()===0){st='end';confetti(50);tone([523,659,784,1047],.12,'triangle');say('Super getroffen!');{const x=arcWin('sling',nuts);setTimeout(()=>{if(FLY===F){F.run=false;menu('Geschafft!',`Alle Kisten sind umgefallen, und du hast noch ${nuts} ${nuts===1?'Nuss':'Nüsse'}.${x}`)}},1800)}}
       else if(nuts<=0){st='end';setTimeout(()=>{if(FLY===F){F.run=false;say('Ups! Nochmal versuchen?');menu('Ups!',`${left()} ${left()===1?'Kiste steht':'Kisten stehen'} noch. Nochmal?`)}},400)}
       else askWord()}}
     draw()}
@@ -1591,6 +1612,8 @@ $('#pgR').onclick=()=>scene.scrollBy({left:scene.clientWidth*.7,behavior:'smooth
 let toastT=0;
 function toast(t,speak=true){$('#toastText').textContent=t;setMood($('#toastNuki'),'happy');$('#toast').hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>$('#toast').hidden=true,3200);if(speak)say(t)}
 function boing(el){el.classList.remove('boing');void el.getBoundingClientRect();el.classList.add('boing')}
+/* Im Park führen die Spielgeräte zu den Belohnungs-Spielen, nicht mehr zu den Übungen vom Spielpfad */
+const PARK_ARC={silben:'fly',reime:'fly',mund:'fly',leiter:'fly',hoeren:'race',anlaut:'race',versteht:'race',wo:'race',paare:'sling',sprechen:'sling',koffer:'sling',quatsch:'sling',geschichte:'race'};
 let opening=false;
 async function activate(id,bounce){
     if(opening)return; bounce&&bounce(); hush();
@@ -1600,7 +1623,8 @@ async function activate(id,bounce){
     if(id==='treasure'){tone([523,659,784],.1,'triangle');openTreasure();return}
     if(id==='paare')tone([392,494,587,784],.13,'triangle',.1);
     opening=true;tone([523,784],.08,'triangle');
-    toast(NAMES[id],false);await say(NAMES[id]);await wait(150);opening=false;$('#toast').hidden=true;startGame(id);
+    const ag=PARK_ARC[id]||'fly',an=ARC.find(a=>a.id===ag).name;
+    toast(an,false);await Promise.race([say(an+'!'),wait(2500)]);await wait(150);opening=false;$('#toast').hidden=true;({fly:openFly,race:openRace,sling:openSling})[ag]();
 }
 svgEl.querySelectorAll('.hot').forEach(g=>{
   g.setAttribute('role','button');g.setAttribute('tabindex','0');
@@ -1618,8 +1642,8 @@ $('#btnMute').onclick=()=>{S.mute=!S.mute;save();paintMute();if(S.mute)hush();el
 
 /* Menü */
 function openMenu(){
-  $('#menuList').innerHTML=GAMES.map(g=>`<button class="mitem" style="--c:${g.c}" data-g="${g.id}"><span class="mi">${GICON[g.id]||g.pic}</span><span class="mt"><b>${g.name}</b><small>${g.desc}</small></span><span class="ms">⭐ ${S.perGame[g.id]||0}</span></button>`).join('');
-  $('#menuList').querySelectorAll('.mitem').forEach(b=>b.onclick=()=>{$('#menuOv').hidden=true;startGame(b.dataset.g)});
+  $('#menuList').innerHTML=ARC.filter(a=>a.id!=='park').map(a=>`<button class="mitem" style="--c:var(--grape)" data-g="${a.id}"><span class="mi">${a.svg}</span><span class="mt"><b>${a.name}</b><small>${a.desc}</small></span><span class="ms">Stufe ${arcLv(a.id)}</span></button>`).join('');
+  $('#menuList').querySelectorAll('.mitem').forEach(b=>b.onclick=()=>{$('#menuOv').hidden=true;hush();({fly:openFly,race:openRace,sling:openSling})[b.dataset.g]()});
   $('#menuOv').hidden=false;
 }
 $('#btnMenu').onclick=openMenu;
@@ -2674,6 +2698,9 @@ function renderParents(){
   seg($('#segRate'),[[0.65,'Langsam'],[0.85,'Normal'],[1,'Zügig']],S.rate,v=>{S.rate=+v;say('So spricht Nuki jetzt.')});
   seg($('#segLock'),[[true,'An'],[false,'Aus']],lockOn(),v=>{S.lock=v==='true';save()});
   seg($('#segCap'),[[false,'Aus'],[true,'An']],S.cap,v=>S.cap=v==='true');
+  seg($('#segArcCost'),[[0,'Frei'],[1,'1 ⭐'],[2,'2 ⭐'],[3,'3 ⭐'],[5,'5 ⭐']],arcCost(),v=>{S.arcCost=+v});
+  seg($('#segArcMin'),[[0,'Ohne Grenze'],[5,'5 Min.'],[10,'10 Min.'],[15,'15 Min.'],[20,'20 Min.']],S.arcMin||0,v=>{S.arcMin=+v});
+  {const e=$('#arcToday');if(e)e.textContent=Math.round(arcUsed()/60)}
   seg($('#segVg'),[['leicht','Leicht'],['normal','Normal'],['streng','Streng']],S.vg||'normal',v=>{S.vg=v});
   seg($('#segMic'),[[false,'Aus'],[true,'An']],S.mic,v=>{S.mic=v==='true';micBroken=false});
   seg($('#segSound'),[[true,'An'],[false,'Aus']],S.sound,v=>S.sound=v==='true');
