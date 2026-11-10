@@ -506,6 +506,10 @@ button#pathNuki{display:block;width:100%;padding:0;border:0;background:none;poin
 .flyhud{display:flex;gap:10px;padding:8px 14px;border-radius:18px;background:rgba(255,255,255,.9);font-weight:800;font-size:18px;font-family:var(--f-display)}
 .flymsg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(88vw,420px);padding:20px;border-radius:26px;background:#fff;box-shadow:var(--shadow);text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center}
 .flymsg:empty{display:none}.flymsg h3{margin:0;font-family:var(--f-display);font-size:26px}.flymsg p{margin:0;font-weight:800;color:var(--ink-soft)}.flymsg .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.slword{position:absolute;left:50%;top:calc(74px + env(safe-area-inset-top,0px));transform:translateX(-50%);display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:22px;background:#fff;box-shadow:var(--shadow);max-width:94vw}
+.slword[hidden]{display:none}.slword .pic{font-size:64px;line-height:1;flex:none}.slword b{font-family:var(--f-display);font-size:24px;display:block}.slword small{font-weight:800;color:var(--ink-soft);font-size:13px}
+.slword .col{display:flex;flex-direction:column;gap:6px;align-items:flex-start}.slword .bigbtn{padding:8px 14px;font-size:16px;min-height:44px}
+@media (max-height:480px){.slword{top:8px;left:auto;right:150px;transform:none}.slword .pic{font-size:44px}}
 .quatsch{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;max-width:560px;margin:0 auto}
 .qstrip{display:flex;align-items:center;justify-content:center;gap:10px;width:100%}
 .qslot{width:108px;height:108px;border-radius:24px;background:rgba(255,255,255,.7);border:4px dashed #cfd6e8;display:grid;place-items:center;transition:transform .2s}
@@ -1072,6 +1076,7 @@ button#pathNuki{display:block;width:100%;padding:0;border:0;background:none;poin
 </div></div>
 <div id="flyOv" hidden><canvas id="flyCv"></canvas>
   <div class="flytop"><button class="round" id="flyX" aria-label="Zurück"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="flyhud"><span id="flyHearts"></span><span id="flyNuts"></span></div></div>
+  <div class="slword" id="slWord" hidden></div>
   <div class="flymsg" id="flyMsg"></div>
 </div>
 <div class="overlay" id="whoOv" hidden><div class="panel who"><h2>Wer spielt heute?</h2><div class="whoList" id="whoList"></div></div></div>
@@ -1349,15 +1354,15 @@ const freeStars=()=>Math.max(0,S.stars-(S.spent||0));
 const ARC=[
  {id:'fly',name:'Nuki fliegt',desc:'Tippen oder „Schhh“ machen',ok:true,svg:'<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="18" fill="#bfe7fb"/><rect x="50" y="0" width="16" height="26" rx="5" fill="#6cc04a" stroke="#26303a" stroke-width="2.5"/><rect x="50" y="56" width="16" height="24" rx="5" fill="#6cc04a" stroke="#26303a" stroke-width="2.5"/><circle cx="26" cy="40" r="13" fill="#f2913d" stroke="#26303a" stroke-width="2.5"/><path d="M14 40q-10-8-6-18q8 4 10 12" fill="#e8823a" stroke="#26303a" stroke-width="2.5" stroke-linejoin="round"/><circle cx="30" cy="37" r="2.4" fill="#26303a"/><path d="M27 45q4 3 8 0" fill="none" stroke="#26303a" stroke-width="2" stroke-linecap="round"/></svg>'},
  {id:'race',name:'Laut-Rennen',desc:'Sammle Bilder mit deinem Laut',ok:true,svg:'<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="18" fill="#dfe9d2"/><path d="M28 80L34 0h12l6 80z" fill="#8a93a3"/><path d="M40 6v12M40 30v12M40 54v12" stroke="#fff" stroke-width="3" stroke-dasharray="1 0"/><rect x="30" y="40" width="20" height="28" rx="7" fill="#ff7a59" stroke="#26303a" stroke-width="2.5"/><rect x="33" y="46" width="14" height="8" rx="3" fill="#cfeefb"/></svg>'},
- {id:'sling',name:'Nuss-Schleuder',desc:'Bald!',ok:false,svg:'<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="18" fill="#ffeecb"/><path d="M22 70V46l-8-14M22 46l8-14" fill="none" stroke="#8a5a33" stroke-width="5" stroke-linecap="round"/><path d="M14 32q8 10 16 0" fill="none" stroke="#26303a" stroke-width="2"/><circle cx="22" cy="38" r="5" fill="#a0612e"/><rect x="50" y="52" width="12" height="18" fill="#e2c99c" stroke="#26303a" stroke-width="2.5"/><rect x="62" y="52" width="12" height="18" fill="#e2c99c" stroke="#26303a" stroke-width="2.5"/><rect x="56" y="34" width="12" height="18" fill="#e2c99c" stroke="#26303a" stroke-width="2.5"/></svg>'},
+ {id:'sling',name:'Nuss-Schleuder',desc:'Wort sagen, Nuss schießen',ok:true,svg:'<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="18" fill="#ffeecb"/><path d="M22 70V46l-8-14M22 46l8-14" fill="none" stroke="#8a5a33" stroke-width="5" stroke-linecap="round"/><path d="M14 32q8 10 16 0" fill="none" stroke="#26303a" stroke-width="2"/><circle cx="22" cy="38" r="5" fill="#a0612e"/><rect x="50" y="52" width="12" height="18" fill="#e2c99c" stroke="#26303a" stroke-width="2.5"/><rect x="62" y="52" width="12" height="18" fill="#e2c99c" stroke="#26303a" stroke-width="2.5"/><rect x="56" y="34" width="12" height="18" fill="#e2c99c" stroke="#26303a" stroke-width="2.5"/></svg>'},
  {id:'park',name:'Nukis Park',desc:'Durch den Park spazieren',ok:true,free:true,svg:'<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="18" fill="#cfeefb"/><path d="M0 54q40-16 80 0v26H0z" fill="#8fd16a"/><path d="M22 60V40" stroke="#8a5a33" stroke-width="5" stroke-linecap="round"/><circle cx="22" cy="32" r="13" fill="#5fae4c"/><path d="M48 62V38M66 62V38M46 38h22" stroke="#c98d55" stroke-width="4" stroke-linecap="round"/><path d="M54 38v14M60 38v14M52 52h10" stroke="#26303a" stroke-width="2"/></svg>'}];
 function openArcade(){hush();$('#arcStars').textContent=freeStars();
   $('#arcGrid').innerHTML=ARC.map(a=>`<button class="arct ${a.ok?'':'soon'}" data-a="${a.id}">${a.svg}<span class="cost">${a.ok?(a.free?'frei':ARC_COST+' ⭐'):'bald'}</span><b>${a.name}</b><small>${a.desc}</small></button>`).join('');
   $('#arcGrid').querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const id=b.dataset.a;hush();
     if(id==='park'){$('#arcOv').hidden=true;renderHome();show('home');return}
-    if(id!=='fly'&&id!=='race'){tone([330,262],.1,'triangle');say('Das kommt bald!');return}
+
     if(freeStars()<ARC_COST){tone([330,262],.1,'triangle');b.classList.remove('wob');void b.offsetWidth;b.classList.add('wob');say('Sammle erst noch Sterne beim Üben!');return}
-    $('#arcOv').hidden=true;(id==='race'?openRace:openFly)()});
+    $('#arcOv').hidden=true;(id==='race'?openRace:id==='sling'?openSling:openFly)()});
   $('#arcOv').hidden=false;say('Willkommen auf dem Spielplatz!')}
 $('#arcX').onclick=()=>{hush();$('#arcOv').hidden=true};
 
@@ -1500,6 +1505,80 @@ function openRace(){
     draw()}
   F.peek=()=>({lane,items:items.map(i=>({l:i.l,y:i.y,ok:i.ok})),won,hearts,got,cy:VH-150});F.steer=steer;
   pickZ();reset();menu('Laut-Rennen','Wische nach links und rechts. Sammle nur die Bilder mit deinem Laut!');say('Laut-Rennen!');F.raf=requestAnimationFrame(frame)}
+
+/* --- Nuss-Schleuder --- */
+function openSling(){
+  flyStop();try{$('#toast').hidden=true}catch(e){}const ov=$('#flyOv'),cv=$('#flyCv'),cx=cv.getContext('2d'),msg=$('#flyMsg'),wc=$('#slWord');ov.hidden=false;wc.hidden=true;
+  const A={klein:{cols:[2,3,2],nuts:8},mittel:{cols:[3,4,3],nuts:8},gross:{cols:[3,4,4,3],nuts:9}}[S.age]||{cols:[3,4,3],nuts:8};
+  const F=FLY={cv,raf:0,run:false};
+  let VW=760,VH=440,sc=1,dpr=1;const B=52,GR=()=>VH-46,AX=()=>Math.min(130,VW*.17),AY=()=>GR()-120;
+  F.fit=()=>{dpr=Math.min(2,devicePixelRatio||1);const w=ov.clientWidth,h=ov.clientHeight;cv.width=w*dpr;cv.height=h*dpr;sc=Math.min(w/(h>w?500:700),h/400);VW=w/sc;VH=h/sc;if(boxes)layout()};
+  F.vis=()=>{};document.addEventListener('visibilitychange',F.vis);
+  const nukiImg=m=>{const i=new Image();i.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(mascotSVG(m).replace('<svg','<svg xmlns="http://www.w3.org/2000/svg"'));return i};
+  const NI={n:nukiImg('happy'),j:nukiImg('jubel')};
+  let boxes=null,nut,pull,drag,nuts,st,t,last,parts,words,wi,settle,hits,z;
+  const layout=()=>{const n=A.cols.length,x1=VW-40-B/2,x0=Math.max(VW*.52,x1-(n-1)*(B+26));boxes.forEach(b=>{b.x=n>1?x0+(x1-x0)*b.c/(n-1):x1})};
+  const reset=()=>{boxes=[];A.cols.forEach((h,c)=>{for(let k=0;k<h;k++)boxes.push({c,x:0,y:GR()-B*(k+1),vy:0,ko:false,col:['#e2c99c','#f0b46a','#d9a05b'][(c+k)%3]})});layout();
+    nut=null;pull=null;drag=false;nuts=A.nuts;parts=[];t=0;hits=0;
+    z=S.ziel!=='ALLE'&&ZIEL[S.ziel]?S.ziel:rnd(Object.keys(ZIEL));words=shuffle(zielAll(z).map(w=>WX[w]).filter(Boolean));if(words.length<3)words=shuffle(W.filter(w=>w.l!=='X'));wi=0;hud()};
+  const left=()=>boxes.filter(b=>!b.ko).length;
+  const hud=()=>{$('#flyHearts').textContent='🌰 '+nuts;$('#flyNuts').textContent='📦 '+left()};
+  function askWord(){st='word';const w=words[wi++%words.length];wc.hidden=false;
+    wc.innerHTML=`<span class="pic">${w.e}</span><div class="col"><div><small>Sag das Wort:</small><b>${w.w}</b></div><div style="display:flex;gap:8px"><button class="bigbtn light" id="slHear">🔊</button><button class="bigbtn green" id="slSaid">🌰 Gesagt!</button></div></div>`;
+    try{emojiPics&&emojiPics(wc)}catch(e){}
+    $('#slHear').onclick=()=>{hush();say(w.w)};$('#slSaid').onclick=()=>{hush();wc.hidden=true;tone([660,880],.06,'triangle',.1);st='aim';pull={x:0,y:0}};
+    hush();say(w.w)}
+  function menu(title,text){wc.hidden=true;msg.innerHTML=`<h3>${title}</h3><p>${text}</p><div class="row"><button class="bigbtn" id="flyTap">🌰 Los!</button><button class="bigbtn light" id="flyEnd">Fertig</button></div><p style="font-size:13px">Eine Runde kostet ${ARC_COST} ⭐ · du hast ${freeStars()} ⭐ frei</p>`;
+    $('#flyEnd').onclick=close;
+    $('#flyTap').onclick=async()=>{if(freeStars()<ARC_COST){hush();say('Sammle erst noch Sterne beim Üben!');msg.querySelector('p').textContent='Du brauchst '+ARC_COST+' Sterne. Sammle sie beim Üben!';return}
+      S.spent=(S.spent||0)+ARC_COST;save();hush();reset();msg.innerHTML='';st='intro';last=performance.now();F.run=true;
+      await Promise.race([say('Sag das Wort, dann gibt es eine neue Nuss!'),wait(3500)]);if(FLY!==F)return;askWord()}}
+  function close(){hush();flyStop();wc.hidden=true;ov.hidden=true;msg.innerHTML='';openArcade()}
+  $('#flyX').onclick=close;
+  const pt=e=>{const r=cv.getBoundingClientRect();return {x:(e.clientX-r.left)/sc,y:(e.clientY-r.top)/sc}};
+  const setPull=e=>{const p=pt(e);let dx=p.x-AX(),dy=p.y-AY();const l=Math.hypot(dx,dy),m=115;if(l>m){dx*=m/l;dy*=m/l}pull={x:Math.min(40,dx),y:dy}};
+  cv.onpointerdown=e=>{e.preventDefault();if(st!=='aim')return;const p=pt(e);if(p.x>VW*.6)return;drag=true;try{cv.setPointerCapture(e.pointerId)}catch(_){}setPull(e)};
+  cv.onpointermove=e=>{if(drag)setPull(e)};
+  cv.onpointerup=e=>{if(!drag)return;drag=false;const l=Math.hypot(pull.x,pull.y);if(l<18){pull={x:0,y:0};return}
+    nut={x:AX()+pull.x,y:AY()+pull.y,vx:-pull.x*8,vy:-pull.y*8,h:0,b:0,life:0};pull=null;nuts--;hud();st='fly';tone([300,600],.08,'triangle',.12)};
+  F.shoot=(px,py)=>{if(st!=='aim')return false;pull={x:px,y:py};drag=true;cv.onpointerup({});return true};
+  const K='#26303a';
+  function draw(){const w=cv.width,h=cv.height;cx.setTransform(1,0,0,1,0,0);const g=cx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#8fd3f7');g.addColorStop(1,'#e6f7ff');cx.fillStyle=g;cx.fillRect(0,0,w,h);cx.setTransform(sc*dpr,0,0,sc*dpr,0,0);
+    const gr=GR(),ax=AX(),ay=AY();
+    cx.fillStyle='#a9dc84';cx.beginPath();cx.moveTo(-10,gr);cx.quadraticCurveTo(VW*.3,gr-150,VW*.62,gr);cx.quadraticCurveTo(VW*.85,gr-110,VW+10,gr);cx.fill();
+    cx.fillStyle='#74bd55';cx.strokeStyle=K;cx.lineWidth=5;cx.fillRect(-10,gr,VW+20,80);cx.beginPath();cx.moveTo(-10,gr);cx.lineTo(VW+10,gr);cx.stroke();
+    const im=left()===0?NI.j:NI.n;if(im.complete)cx.drawImage(im,ax-112,gr-98,88,92);
+    cx.lineCap='round';cx.strokeStyle=K;cx.lineWidth=17;cx.beginPath();cx.moveTo(ax,gr);cx.lineTo(ax,ay+46);cx.lineTo(ax-24,ay-4);cx.moveTo(ax,ay+46);cx.lineTo(ax+24,ay-4);cx.stroke();
+    cx.strokeStyle='#8a5a33';cx.lineWidth=10;cx.beginPath();cx.moveTo(ax,gr);cx.lineTo(ax,ay+46);cx.lineTo(ax-24,ay-4);cx.moveTo(ax,ay+46);cx.lineTo(ax+24,ay-4);cx.stroke();
+    const nutAt=(x,y,r=0)=>{cx.save();cx.translate(x,y);cx.rotate(r);cx.fillStyle='#a0612e';cx.strokeStyle=K;cx.lineWidth=3.5;cx.beginPath();cx.ellipse(0,3,14,16,0,0,7);cx.fill();cx.stroke();cx.fillStyle='#6b3f1c';cx.beginPath();cx.ellipse(0,-8,16,8,0,Math.PI,0);cx.fill();cx.stroke();cx.restore()};
+    if(pull){const nx=ax+pull.x,ny=ay+pull.y;cx.strokeStyle='#5b3a1e';cx.lineWidth=5;cx.beginPath();cx.moveTo(ax-24,ay-4);cx.lineTo(nx,ny);cx.lineTo(ax+24,ay-4);cx.stroke();
+      if(Math.hypot(pull.x,pull.y)>=18){let x=nx,y=ny,vx=-pull.x*8,vy=-pull.y*8;cx.fillStyle='rgba(255,255,255,.85)';for(let k=0;k<14;k++){for(let q=0;q<4;q++){vy+=900*.016;x+=vx*.016;y+=vy*.016}if(y>gr)break;cx.beginPath();cx.arc(x,y,5-k*.2,0,7);cx.fill()}}
+      else if(st==='aim'&&!drag){cx.fillStyle='rgba(255,255,255,.9)';cx.font='800 22px "Baloo 2",sans-serif';cx.textAlign='left';cx.fillText('← ziehen',ax+34,ay+6+Math.sin(t*4)*3)}
+      nutAt(nx,ny)}
+    boxes.forEach(b=>{cx.save();cx.translate(b.x,b.y+B/2);if(b.ko){cx.rotate(b.r);cx.globalAlpha=Math.max(0,b.l)}cx.fillStyle=b.col;cx.strokeStyle=K;cx.lineWidth=4;cx.beginPath();cx.roundRect(-B/2,-B/2,B,B,7);cx.fill();cx.stroke();
+      cx.strokeStyle='rgba(38,48,58,.35)';cx.lineWidth=3;cx.beginPath();cx.moveTo(-B/2+8,-B/2+8);cx.lineTo(B/2-8,B/2-8);cx.moveTo(B/2-8,-B/2+8);cx.lineTo(-B/2+8,B/2-8);cx.stroke();cx.restore()});
+    if(nut)nutAt(nut.x,nut.y,nut.life*8);
+    parts.forEach(p=>{cx.globalAlpha=Math.max(0,p.l);cx.fillStyle=p.c;cx.beginPath();cx.arc(p.x,p.y,p.r,0,7);cx.fill()});cx.globalAlpha=1}
+  function frame(now){F.raf=requestAnimationFrame(frame);if(!F.run){if(boxes)draw();return}
+    const dt=Math.min(.03,(now-last)/1000);last=now;t+=dt;const gr=GR();
+    const byCol={};boxes.filter(b=>!b.ko).forEach(b=>(byCol[b.c]=byCol[b.c]||[]).push(b));
+    Object.values(byCol).forEach(col=>{col.sort((a,b)=>b.y-a.y);col.forEach((b,k)=>{const ty=gr-B*(k+1);if(b.y<ty){b.vy+=1400*dt;b.y+=b.vy*dt;if(b.y>=ty){b.y=ty;b.vy=0;tone([140],.04,'sine',.06)}}})});
+    boxes.forEach(b=>{if(b.ko){b.vy+=1200*dt;b.x+=b.vx*dt;b.y+=b.vy*dt;b.r+=b.vr*dt;b.l-=dt*.9}});
+    parts.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=600*dt;p.l-=dt*1.8});parts=parts.filter(p=>p.l>0);
+    if(nut){nut.life+=dt;nut.vy+=900*dt;nut.x+=nut.vx*dt;nut.y+=nut.vy*dt;
+      for(const b of boxes){if(b.ko)continue;const cxn=Math.max(b.x-B/2,Math.min(nut.x,b.x+B/2)),cyn=Math.max(b.y,Math.min(nut.y,b.y+B));
+        if(Math.hypot(nut.x-cxn,nut.y-cyn)<15){b.ko=true;b.l=1;b.vx=nut.vx*.45+60;b.vy=-260+nut.vy*.2;b.vr=(Math.random()-.3)*9;b.r=0;nut.vx*=.6;nut.vy*=.6;nut.h++;hits++;hud();tone([196,147],.09,'square',.08);
+          for(let k=0;k<8;k++)parts.push({x:b.x,y:b.y+B/2,vx:(Math.random()-.5)*320,vy:-Math.random()*300,r:4,l:1,c:'#f6e3b8'});if(nut.h>=3){nut=null;break}}}
+      if(nut&&nut.y>gr-14){nut.y=gr-14;nut.vy*=-.42;nut.vx*=.6;nut.b++;if(nut.b>=3||Math.abs(nut.vx)<30)nut=null}
+      if(nut&&(nut.x>VW+60||nut.x<-60||nut.life>6))nut=null;
+      if(!nut){st='settle';settle=.9}}
+    if(st==='settle'){settle-=dt;if(settle<=0){
+      if(left()===0){st='end';confetti(50);tone([523,659,784,1047],.12,'triangle');say('Super getroffen!');setTimeout(()=>{if(FLY===F){F.run=false;menu('Geschafft!',`Alle Kisten sind umgefallen, und du hast noch ${nuts} ${nuts===1?'Nuss':'Nüsse'}. Nochmal?`)}},1800)}
+      else if(nuts<=0){st='end';setTimeout(()=>{if(FLY===F){F.run=false;say('Ups! Nochmal versuchen?');menu('Ups!',`${left()} ${left()===1?'Kiste steht':'Kisten stehen'} noch. Nochmal?`)}},400)}
+      else askWord()}}
+    draw()}
+  F.peek=()=>({st,nuts,left:left(),boxes:boxes.filter(b=>!b.ko).map(b=>({x:b.x,y:b.y})),ax:AX(),ay:AY(),gr:GR()});
+  reset();F.fit();addEventListener('resize',F.fit);menu('Nuss-Schleuder','Sag ein Wort, dann bekommst du eine Nuss. Zieh sie nach hinten und lass los!');say('Nuss-Schleuder!');F.raf=requestAnimationFrame(frame)}
 /* ================= HOME (Szene) ================= */
 const NAMES={versteht:'Nuki versteht dich',leiter:'Laut-Leiter',nuki:'Nuki',mund:'Grimassen-Spiegel',hoeren:'Wort-Detektiv',anlaut:'Laut-Buddeln',silben:'Silben-Schaukel',reime:'Reim-Wippe',paare:'Hör-Rohre',sprechen:'Sprich mit Nuki',treasure:'Schatzkiste',mila:'Mila',ben:'Ben',bird:'Vogel'};
 const scene=$('#scene'),svgEl=$('#sceneSvg');
