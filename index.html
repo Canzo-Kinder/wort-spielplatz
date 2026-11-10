@@ -546,6 +546,14 @@ body{background:#e8f7ff}
 .sec.legal h4{margin:14px 0 4px;font-size:16px;font-family:var(--f-display)}
 .sec.legal p,.sec.legal li{font-size:15px;line-height:1.5}.sec.legal ul{padding-left:20px;margin:6px 0}
 .plegal{text-align:center;font-size:14px;font-weight:700;margin:8px 0 0}.plegal a{color:var(--grape)}
+/* Nukis Gefühle */
+.mascot.jubel{animation:nkJubel 1s ease}
+.mascot.staunen{animation:nkWow .6s cubic-bezier(.2,1.6,.4,1)}
+.mascot.trost{animation:nkTrost 1.8s ease-in-out}
+@keyframes nkJubel{0%{transform:none}15%{transform:translateY(4px) scale(1.06,.9)}45%{transform:translateY(-26px) rotate(-7deg) scale(.96,1.06)}65%{transform:translateY(-10px) rotate(6deg)}85%{transform:translateY(2px) scale(1.04,.96)}100%{transform:none}}
+@keyframes nkWow{0%{transform:scale(.9)}50%{transform:scale(1.14) translateY(-6px)}100%{transform:none}}
+@keyframes nkTrost{0%,100%{transform:none}25%{transform:rotate(-5deg)}50%{transform:rotate(4deg)}75%{transform:rotate(-3deg)}}
+@media (prefers-reduced-motion:reduce){.mascot.jubel,.mascot.staunen,.mascot.trost{animation:none}}
 /* Eltern-Bereich im neuen Look */
 #parents{background:#f4f7fb}
 .phead{display:flex;align-items:center;gap:12px;padding:calc(14px + env(safe-area-inset-top,0px)) 0 10px}
@@ -1157,26 +1165,53 @@ const fxDrum=()=>tone([140],.09,'square',.12);
 
 /* ================= MASCOT ================= */
 function mascotSVG(mood){
-  /* Nuki im Bilderbuch-Stil: weiche Flächen, keine schwarzen Umrisse */
-  const D='#2b2f4a';
-  const mouth=mood==='happy'?`<path d="M51 68 Q60 80 69 68Z" fill="#8f2d45"/><path d="M55 74 Q60 71 65 74 Q62 78 60 78 Q58 78 55 74Z" fill="#ff8fa3"/>`:mood==='think'?`<ellipse cx="60" cy="71" rx="4.2" ry="4.6" fill="#8f2d45"/>`:`<path d="M52 68 Q60 75 68 68" fill="none" stroke="${D}" stroke-width="2.8" stroke-linecap="round"/><rect x="56.5" y="70" width="7" height="6" rx="1.6" fill="#fff"/>`;
+  /* Nuki im Bilderbuch-Stil: weiche Flächen, keine schwarzen Umrisse. Stimmungen: normal, happy, think, jubel, staunen, trost */
+  const D='#2b2f4a',F='#f2913d';
+  const MOUTH={happy:`<path d="M51 68 Q60 80 69 68Z" fill="#8f2d45"/><path d="M55 74 Q60 71 65 74 Q62 78 60 78 Q58 78 55 74Z" fill="#ff8fa3"/>`,
+    think:`<ellipse cx="60" cy="71" rx="4.2" ry="4.6" fill="#8f2d45"/>`,
+    jubel:`<path d="M47 66 Q60 88 73 66Z" fill="#8f2d45"/><path d="M53 77 Q60 72 67 77 Q63 82 60 82 Q57 82 53 77Z" fill="#ff8fa3"/><rect x="56.5" y="66" width="7" height="4.5" rx="1.2" fill="#fff"/>`,
+    staunen:`<ellipse cx="60" cy="72" rx="4.8" ry="6.2" fill="#8f2d45"/><ellipse cx="60" cy="75" rx="3" ry="2.2" fill="#ff8fa3"/>`,
+    trost:`<path d="M53 69 Q60 75 67 69" fill="none" stroke="${D}" stroke-width="2.8" stroke-linecap="round"/>`};
+  const mouth=MOUTH[mood]||`<path d="M52 68 Q60 75 68 68" fill="none" stroke="${D}" stroke-width="2.8" stroke-linecap="round"/><rect x="56.5" y="70" width="7" height="6" rx="1.6" fill="#fff"/>`;
+  const eyes=mood==='jubel'?`<path d="M42 51 Q48 43 54 51 M66 51 Q72 43 78 51" fill="none" stroke="${D}" stroke-width="3.4" stroke-linecap="round"/>`
+    :mood==='staunen'?`<ellipse cx="48" cy="48" rx="7" ry="8.4" fill="${D}"/><ellipse cx="72" cy="48" rx="7" ry="8.4" fill="${D}"/><circle cx="50.5" cy="45" r="2.8" fill="#fff"/><circle cx="74.5" cy="45" r="2.8" fill="#fff"/><circle cx="46" cy="51" r="1.2" fill="#fff"/><circle cx="70" cy="51" r="1.2" fill="#fff"/>`
+    :mood==='trost'?`<ellipse cx="48" cy="50" rx="5" ry="5.6" fill="${D}"/><ellipse cx="72" cy="50" rx="5" ry="5.6" fill="${D}"/><circle cx="50" cy="48" r="1.8" fill="#fff"/><circle cx="74" cy="48" r="1.8" fill="#fff"/>`
+    :`<ellipse cx="48" cy="49" rx="5.5" ry="6.5" fill="${D}"/><ellipse cx="72" cy="49" rx="5.5" ry="6.5" fill="${D}"/><circle cx="50" cy="46.5" r="2" fill="#fff"/><circle cx="74" cy="46.5" r="2" fill="#fff"/>`;
+  const brows=mood==='staunen'?`<path d="M41 35 Q48 30 55 34 M65 34 Q72 30 79 35" fill="none" stroke="#a65a1e" stroke-width="2.8" stroke-linecap="round"/>`
+    :mood==='trost'?`<path d="M43 40 Q48 37 52 36 M68 36 Q72 37 77 40" fill="none" stroke="#a65a1e" stroke-width="2.4" stroke-linecap="round"/>`:'';
+  /* Pfoten: halten die Nuss (normal), jubeln mit erhobenen Armen, oder halten ein Herz (trösten) */
+  const belly=mood==='jubel'?`<ellipse cx="56" cy="98" rx="10" ry="12" fill="#b77a45"/><path d="M45 93 Q56 80 67 93Z" fill="#7a4c2a"/>
+      <path d="M33 84 Q14 74 8 54" fill="none" stroke="#e8823a" stroke-width="9" stroke-linecap="round"/><path d="M79 84 Q98 74 106 52" fill="none" stroke="#e8823a" stroke-width="9" stroke-linecap="round"/><circle cx="8" cy="51" r="6.5" fill="#ffd2a8"/><circle cx="106" cy="49" r="6.5" fill="#ffd2a8"/>`
+    :mood==='trost'?`<path d="M56 108 C40 98 40 86 49 86 C53 86 55 89 56 91 C57 89 59 86 63 86 C72 86 72 98 56 108Z" fill="#ff6b81"/><path d="M48 90 Q50 88 52 89" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".8"/>
+      <circle cx="43" cy="98" r="6" fill="${F}"/><circle cx="69" cy="98" r="6" fill="${F}"/>`
+    :`<ellipse cx="56" cy="98" rx="10" ry="12" fill="#b77a45"/><path d="M45 93 Q56 80 67 93Z" fill="#7a4c2a"/>
+  <circle cx="44" cy="100" r="6" fill="${F}"/><circle cx="68" cy="100" r="6" fill="${F}"/>`;
+  const extra=mood==='jubel'?`<g fill="#ffc542"><path d="M12 30 l2 4 l4.5 .6 l-3.3 3 l.8 4.4 l-4 -2.2 l-4 2.2 l.8 -4.4 l-3.3 -3 l4.5 -.6Z"/><path d="M104 22 l1.6 3.3 l3.6 .5 l-2.6 2.5 l.6 3.5 l-3.2 -1.7 l-3.2 1.7 l.6 -3.5 l-2.6 -2.5 l3.6 -.5Z"/></g><g fill="#7c6cf2"><circle cx="14" cy="80" r="2.6"/><circle cx="104" cy="74" r="2.2"/></g><g fill="#ff7a59"><rect x="98" y="44" width="5" height="9" rx="2" transform="rotate(25 100 48)"/><rect x="16" y="46" width="5" height="9" rx="2" transform="rotate(-25 18 50)"/></g>`
+    :mood==='staunen'?`<g fill="#ff7a59"><rect x="99" y="10" width="6" height="16" rx="3"/><circle cx="102" cy="32" r="3.4"/></g><path d="M22 26 l-6 -5 M18 40 l-8 -1 M98 44 l8 -2" stroke="#ffc542" stroke-width="3" stroke-linecap="round"/>`:'';
   return `<svg class="nukisvg" viewBox="0 0 120 125" aria-hidden="true">
   <path d="M80 108 C122 102 126 40 98 22 C84 13 68 24 76 40 C92 38 104 62 88 82 C84 90 80 98 80 108Z" fill="#e8823a"/>
   <path d="M92 40 C100 52 100 66 92 76" fill="none" stroke="#f6aa66" stroke-width="5" stroke-linecap="round"/>
-  <ellipse cx="56" cy="94" rx="28" ry="27" fill="#f2913d"/><ellipse cx="56" cy="100" rx="16" ry="18" fill="#ffe6c9"/>
+  <ellipse cx="56" cy="94" rx="28" ry="27" fill="${F}"/><ellipse cx="56" cy="100" rx="16" ry="18" fill="#ffe6c9"/>
   <ellipse cx="40" cy="119" rx="11" ry="5" fill="#e8823a"/><ellipse cx="72" cy="119" rx="11" ry="5" fill="#e8823a"/>
-  <path d="M34 34 L31 8 L50 26Z" fill="#f2913d"/><path d="M86 34 L89 8 L70 26Z" fill="#f2913d"/><path d="M36 28 L34 15 L44 24Z" fill="#ffc9a6"/><path d="M84 28 L86 15 L76 24Z" fill="#ffc9a6"/>
-  <circle cx="60" cy="52" r="30" fill="#f2913d"/><ellipse cx="60" cy="66" rx="17" ry="13" fill="#ffe6c9"/>
-  <g class="eyes"><ellipse cx="48" cy="49" rx="5.5" ry="6.5" fill="${D}"/><ellipse cx="72" cy="49" rx="5.5" ry="6.5" fill="${D}"/><circle cx="50" cy="46.5" r="2" fill="#fff"/><circle cx="74" cy="46.5" r="2" fill="#fff"/></g>
+  <path d="M34 34 L31 8 L50 26Z" fill="${F}"/><path d="M86 34 L89 8 L70 26Z" fill="${F}"/><path d="M36 28 L34 15 L44 24Z" fill="#ffc9a6"/><path d="M84 28 L86 15 L76 24Z" fill="#ffc9a6"/>
+  <circle cx="60" cy="52" r="30" fill="${F}"/><ellipse cx="60" cy="66" rx="17" ry="13" fill="#ffe6c9"/>
+  ${brows}<g class="eyes">${eyes}</g>
   <ellipse cx="60" cy="61" rx="4.5" ry="3.2" fill="${D}"/>
-  <circle cx="38" cy="62" r="5" fill="#ff8fa3" opacity=".5"/><circle cx="82" cy="62" r="5" fill="#ff8fa3" opacity=".5"/>
+  <circle cx="38" cy="62" r="5" fill="#ff8fa3" opacity="${mood==='jubel'||mood==='trost'?'.8':'.5'}"/><circle cx="82" cy="62" r="5" fill="#ff8fa3" opacity="${mood==='jubel'||mood==='trost'?'.8':'.5'}"/>
   <g class="mrest">${mouth}</g>
   <g class="mtalk"><path d="M50 67 Q60 65.5 70 67 Q69 80 60 81 Q51 80 50 67Z" fill="#8f2d45"/><path d="M54 77 Q60 72.5 66 77 Q62.5 80 60 80 Q57.5 80 54 77Z" fill="#ff8fa3"/><rect x="56.5" y="67" width="7" height="4.5" rx="1.2" fill="#fff"/></g>
-  <ellipse cx="56" cy="98" rx="10" ry="12" fill="#b77a45"/><path d="M45 93 Q56 80 67 93Z" fill="#7a4c2a"/>
-  <circle cx="44" cy="100" r="6" fill="#f2913d"/><circle cx="68" cy="100" r="6" fill="#f2913d"/>
+  ${belly}${extra}
   </svg>`;
 }
-function setMood(el,mood){el.innerHTML=mascotSVG(mood);if(mood==='happy'){el.classList.remove('jump');void el.offsetWidth;el.classList.add('jump')}}
+/* Stimmung setzen. Wer nacheinander richtig liegt, bringt Nuki zum Jubeln; wer zweimal danebenliegt, wird getröstet. */
+function setMood(el,mood){if(!el)return;
+  if(typeof G==='object'&&G&&el.id==='gameMascot'){
+    if(mood==='happy'){G.wrongRow=0;G.streak=(G.streak||0)+1;if(G.streak%3===0)mood='jubel'}
+    else if(mood==='think'){G.streak=0;G.wrongRow=(G.wrongRow||0)+1;if(G.wrongRow>=2)mood='trost'}
+    else if(mood==='trost'){G.streak=0}}
+  el.innerHTML=mascotSVG(mood);
+  el.classList.remove('jump','jubel','staunen','trost');
+  if(mood==='happy'||mood==='jubel'||mood==='staunen'||mood==='trost'){void el.offsetWidth;el.classList.add(mood==='happy'?'jump':mood)}}
 
 /* ================= HOME (Szene) ================= */
 const NAMES={versteht:'Nuki versteht dich',leiter:'Laut-Leiter',nuki:'Nuki',mund:'Grimassen-Spiegel',hoeren:'Wort-Detektiv',anlaut:'Laut-Buddeln',silben:'Silben-Schaukel',reime:'Reim-Wippe',paare:'Hör-Rohre',sprechen:'Sprich mit Nuki',treasure:'Schatzkiste',mila:'Mila',ben:'Ben',bird:'Vogel'};
@@ -1412,7 +1447,7 @@ function renderSprechen(){
   const done=async(good,msg)=>{
     if(G.busy)return;G.busy=true;hush();
     if(good&&!tries)G.first++;logTrial(zOf(T.target.w),good);recordWord(T.target.w,good);G.rec=true;const k=T.target.w;S.practice[k]=Math.max(0,(S.practice[k]||0)+(good?-1:1));if(!S.practice[k])delete S.practice[k];
-    addStar();fxRight();setMood($('#gameMascot'),'happy');
+    addStar();fxRight();setMood($('#gameMascot'),good?'happy':'trost');
     const t=msg||(good?rnd(['Wunderbar gesprochen!','Super, das klang toll!','Klasse!']):'Toll, dass du es probiert hast!');
     bubble(t);if(good)confetti(18);await say(t);await wait(250);G.i++;nextTask();
   };
@@ -1879,7 +1914,7 @@ function renderLeiter(){
     MED.lock=true;try{v.hidden=false;fitSoon();await mirrorOn(v);if(v.hidden||!document.body.contains(v))stopCam()}catch(e){v.hidden=true;toast('Die Kamera ist nicht erlaubt. Nimm einfach einen Spiegel!',false)}MED.lock=false};
   wireRecord('l');
   const done=async good=>{if(G.busy)return;G.busy=true;hush();logTrial(z,good);if(G.task&&G.task.word)recordWord(G.task.word.w,good);G.rec=true;if(good){G.first++;G.good++}
-    addStar();fxRight();setMood($('#gameMascot'),'happy');
+    addStar();fxRight();setMood($('#gameMascot'),good?'happy':'trost');
     const t=good?rnd(['Wunderbar gesprochen!','Super, das klang toll!','Klasse!']):'Toll, dass du es probiert hast!';
     bubble(t);if(good)confetti(14);await say(t);await wait(200);G.i++;nextTask()};
   $('#lGood').onclick=()=>done(true);$('#lAgain').onclick=()=>done(false);
@@ -1954,7 +1989,7 @@ function renderQuatsch(){
   $('#qSlow').onclick=async()=>{hush();await say(qSubjText(T.sub.w),.62);await say(qObjText(T.obj.w),.62)};
   wireRecord('q',null,4200);
   const done=async good=>{if(G.busy)return;G.busy=true;hush();logTrial(z,good);recordWord(T.obj.w,good);G.rec=true;if(good){G.first++}
-    addStar();fxRight();setMood($('#gameMascot'),'happy');const t=good?rnd(['Wunderbar gesprochen!','Super, das klang toll!','Klasse!']):'Toll, dass du es probiert hast!';
+    addStar();fxRight();setMood($('#gameMascot'),good?'happy':'trost');const t=good?rnd(['Wunderbar gesprochen!','Super, das klang toll!','Klasse!']):'Toll, dass du es probiert hast!';
     bubble(t);if(good)confetti(16);await Promise.race([say(t),wait(1600)]);G.i++;nextTask()};
   $('#qGood').onclick=()=>done(true);$('#qAgain').onclick=()=>done(false);
   fitSoon();
@@ -2049,7 +2084,7 @@ function finish(){
   if(opened&&lockOn()){S.justOpened=opened;save()}
   if(opened&&lockOn())parts.push(`Auf deinem Pfad ist jetzt offen: ${PNAME(opened)}!`);
   $('#doneText').textContent=parts.join(' ');
-  $('#donePrize').innerHTML=newSticker?`<div class="stk big neu" aria-label="Neuer Sticker: ${newSticker}">${stickerSVG(newSticker)}</div>`:'<div class="mascot" id="doneMascot"></div>';if(!newSticker)setMood($('#doneMascot'),'happy');$('#doneOv').hidden=false;confetti(up?70:40);fxRight();if(up)setTimeout(()=>tone([523,659,784,1047],.12,'triangle'),400);
+  $('#donePrize').innerHTML=newSticker?`<div class="stk big neu" aria-label="Neuer Sticker: ${newSticker}">${stickerSVG(newSticker)}</div>`:'<div class="mascot" id="doneMascot"></div>';if(!newSticker)setMood($('#doneMascot'),(up||G.first>=Math.ceil((G.R||ROUND)*.7))?'jubel':'happy');$('#doneOv').hidden=false;confetti(up?70:40);fxRight();if(up)setTimeout(()=>tone([523,659,784,1047],.12,'triangle'),400);
   say(up?'Juhu! Du hast eine neue Stufe geschafft!':(newSticker?'Super gemacht! Du hast einen neuen Sticker!':(G.won>8?'Super gemacht! Wunderbar gesprochen!':'Super gemacht! Du hast '+(G.won===1?'einen Stern':G.won+' Sterne')+' gesammelt.')));
 }
 $('#btnAgain').onclick=()=>{$('#doneOv').hidden=true;startGame(G.id)};
@@ -2483,7 +2518,7 @@ function renderPath(){
   const msg=d.length?rnd(['Weiter geht\'s!','Noch eine Runde?','Du bist super!']):'Komm, wir spielen!';
   $('#pMap').style.height=H+'px';
   $('#pMap').innerHTML=`<svg class="pway" viewBox="0 0 100 ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${dd}" fill="none" stroke="#f6e3b8" stroke-width="36" stroke-linecap="round" vector-effect="non-scaling-stroke"/><path d="${dd}" fill="none" stroke="#efd49c" stroke-width="3" stroke-dasharray="2 14" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>${deco}${st}<div class="pnuki" style="left:${nkx}%;top:${np.y+24}px"><div class="bub">${msg}</div><div class="mascot" id="pathNuki"></div></div>`;
-  setMood($('#pathNuki'),'normal');
+  setMood($('#pathNuki'),S.justOpened?'staunen':'normal');
   {const pn=$('#pMap .pnuki');if(pn){const fit=()=>{const r=pn.getBoundingClientRect(),W=$('#pMap').getBoundingClientRect(),bub=pn.querySelector('.bub'),bw=bub.offsetWidth,cx=r.left+r.width/2-W.left;let dx=0;if(cx-bw/2<8)dx=8-(cx-bw/2);if(cx+bw/2>W.width-8)dx=(W.width-8)-(cx+bw/2);bub.style.left=`calc(50% + ${dx}px)`};requestAnimationFrame(fit)}}
   if(S.justOpened){const jb=$('#pMap').querySelector(`.pst[data-g="${S.justOpened}"]`);S.justOpened=null;save();if(jb){jb.classList.add('opened');setTimeout(()=>{confetti(30);tone([523,784],.12,'triangle')},500)}}
   $('#pMap').querySelectorAll('.pst').forEach(b=>b.onclick=()=>{hush();const id=b.dataset.g;if(isLocked(id)){b.classList.remove('wob');void b.offsetWidth;b.classList.add('wob');tone([330,262],.1,'triangle');const nb=$('#pMap').querySelector(`.pst[data-g="${PATH_ORDER[S.unl]}"]`);if(nb){const sc=$('#pScroll');sc.scrollTo({top:Math.max(0,nb.offsetTop-sc.clientHeight*.45),behavior:'smooth'});setTimeout(()=>{nb.classList.remove('hop');void nb.offsetWidth;nb.classList.add('hop')},450)}say('Komm, wir spielen zusammen!');return}if(id==='park'){renderHome();show('home')}else startGame(id)});
