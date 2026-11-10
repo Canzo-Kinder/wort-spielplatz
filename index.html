@@ -554,6 +554,10 @@ body{background:#e8f7ff}
 @keyframes nkWow{0%{transform:scale(.9)}50%{transform:scale(1.14) translateY(-6px)}100%{transform:none}}
 @keyframes nkTrost{0%,100%{transform:none}25%{transform:rotate(-5deg)}50%{transform:rotate(4deg)}75%{transform:rotate(-3deg)}}
 @media (prefers-reduced-motion:reduce){.mascot.jubel,.mascot.staunen,.mascot.trost{animation:none}}
+.kname{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:14px;color:#4b5a7a;margin:12px 0 10px}
+.kname input{font:inherit;font-size:17px;font-weight:700;color:var(--ink);padding:12px 14px;border-radius:14px;border:2px solid var(--line);background:#fff}
+.kname input:focus{outline:0;border-color:var(--grape)}
+#btnShare{width:100%;margin-bottom:10px}
 /* Eltern-Bereich im neuen Look */
 #parents{background:#f4f7fb}
 .phead{display:flex;align-items:center;gap:12px;padding:calc(14px + env(safe-area-inset-top,0px)) 0 10px}
@@ -864,6 +868,8 @@ body{background:#e8f7ff}
       <div class="sec">
         <h3>Übungsbericht</h3>
         <div id="bericht"></div>
+        <label class="kname">Name des Kindes für den Bericht (freiwillig, bleibt auf diesem Gerät)<input id="kindName" type="text" maxlength="40" autocomplete="off" placeholder="z. B. Lena"></label>
+        <button class="bigbtn" id="btnShare"><svg class="bi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg> Bericht als PDF teilen</button>
         <button class="bigbtn light" id="btnPrint"><svg class="bi" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 9V3h10v6M7 17H4v-7a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v7h-3M7 14h10v7H7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Bericht für die Logopädin drucken</button>
       </div>
       <div class="sec">
@@ -948,7 +954,7 @@ body{background:#e8f7ff}
       <h3>Datenschutz</h3>
       <p><b>Kurz gesagt:</b> Der Wort-Spielplatz braucht kein Konto, zeigt keine Werbung und verfolgt niemanden. Was Ihr Kind spielt, bleibt auf diesem Gerät.</p>
       <h4>Was wird gespeichert?</h4>
-      <p>Fortschritt, Sterne, Sticker, Einstellungen und die Übe-Liste speichert die App nur im Speicher dieses Browsers auf diesem Gerät. Nichts davon wird an uns oder an andere geschickt. Den Fortschritt löschen Sie unter <b>Einstellungen → Sterne &amp; Fortschritt löschen</b>. Alles, auch die Einstellungen, verschwindet, wenn Sie in den Browser-Einstellungen die Website-Daten löschen. Damit die App auch ohne Internet funktioniert, legt der Browser außerdem eine Kopie der App (Bilder, Töne, Programm) auf dem Gerät ab.</p>
+      <p>Fortschritt, Sterne, Sticker, Einstellungen, die Übe-Liste und, falls eingetragen, den Vornamen für den Bericht speichert die App nur im Speicher dieses Browsers auf diesem Gerät. Nichts davon wird an uns oder an andere geschickt. Den Übungsbericht als PDF erzeugt die App ebenfalls nur auf dem Gerät; verschickt wird er nur, wenn Sie ihn selbst über das Teilen-Menü weitergeben. Den Fortschritt löschen Sie unter <b>Einstellungen → Sterne &amp; Fortschritt löschen</b>. Alles, auch die Einstellungen, verschwindet, wenn Sie in den Browser-Einstellungen die Website-Daten löschen. Damit die App auch ohne Internet funktioniert, legt der Browser außerdem eine Kopie der App (Bilder, Töne, Programm) auf dem Gerät ab.</p>
       <h4>Mikrofon</h4>
       <p>Das Mikrofon wird nur benutzt, wenn Ihr Kind auf einen Mikrofon-Knopf tippt.</p>
       <ul><li><b>„Mich hören“ und die Stimm-Spiele</b> (zum Beispiel Schlange oder Lok) laufen nur auf dem Gerät. Die Aufnahme wird kurz abgespielt und dann verworfen, nicht gespeichert und nicht gesendet.</li>
@@ -966,7 +972,7 @@ body{background:#e8f7ff}
       <p>Offenlegung nach § 25 Mediengesetz und Angaben nach § 5 E-Commerce-Gesetz:</p>
       <p><b>Medieninhaber und Herausgeber:</b> Hamdi Canbaz<br>Oberaumühlweg 3<br>5400 Hallein, Österreich<br>E-Mail: <a href="mailto:1905hamdi@gmail.com">1905hamdi@gmail.com</a></p>
       <p><b>Inhalt und Zweck:</b> Kostenlose Lern-App zur spielerischen Sprach- und Ausspracheförderung für Kinder. Die App ersetzt keine logopädische Diagnostik oder Therapie.</p>
-      <p><b>Bilder und Figuren:</b> eigene Gestaltung. <b>Stimme von Nuki:</b> KI-Stimme (ElevenLabs). <b>Verwendete freie Software und Schriften:</b> three.js (MIT-Lizenz), Baloo 2 und Nunito (SIL Open Font License).</p>
+      <p><b>Bilder und Figuren:</b> eigene Gestaltung. <b>Stimme von Nuki:</b> KI-Stimme (ElevenLabs). <b>Verwendete freie Software und Schriften:</b> three.js und jsPDF (MIT-Lizenz), Baloo 2 und Nunito (SIL Open Font License).</p>
     </div>
     </div>
     <p class="plegal"><a href="#datenschutz" data-legal="datenschutz">Datenschutz</a> · <a href="#impressum" data-legal="impressum">Impressum</a></p>
@@ -2063,6 +2069,72 @@ function renderParents2(){
   const z=S.ziel!=='ALLE'?ZIEL[S.ziel]:null;
   $('#zielInfo').innerHTML=z?`<b>${z.titel}</b> · Mund-Tipp: ${z.tipp} ${z.pos[S.pos]&&!z.pos[S.pos].length?'<br><i>Für diesen Laut gibt es an dieser Stelle im Wort keine Übungswörter, die App nimmt dann Wörter mit dem Laut am Anfang.</i>':''}`:'Alle Laute gemischt. Tipp: Stellen Sie den Laut ein, an dem Ihr Kind gerade in der Logopädie arbeitet.';
 }
+/* --- Bericht als PDF: wird nur auf dem Gerät erzeugt (jsPDF liegt in der App), dann über das Teilen-Menü (WhatsApp, Mail, AirDrop …) verschickt --- */
+function loadJsPDF(){return window.jspdf?Promise.resolve():new Promise((ok,no)=>{const sc=document.createElement('script');sc.src='lib/jspdf.umd.min.js';sc.onload=ok;sc.onerror=no;document.head.appendChild(sc)})}
+function imgData(src){return fetch(src).then(r=>r.blob()).then(b=>new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(b)})).catch(()=>null)}
+async function berichtPDF(){
+  await loadJsPDF();const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:'mm',format:'a4'});
+  const INK=[43,47,74],GR=[124,108,242],LEAF=[63,174,106],MUT=[110,118,140],W=210;let y=0;
+  const t=(x,yy,str,size=11,st='normal',col=INK,opt={})=>{doc.setFont('helvetica',st);doc.setFontSize(size);doc.setTextColor(...col);doc.text(String(str),x,yy,opt)};
+  const head=(str)=>{y+=4;if(y>262){doc.addPage();y=20}t(16,y,str,13,'bold',GR);y+=2;doc.setDrawColor(223,229,240);doc.setLineWidth(.4);doc.line(16,y,W-16,y);y+=6};
+  // Kopf
+  doc.setFillColor(223,242,255);doc.rect(0,0,W,38,'F');
+  const ic=await imgData('icon-192-v2.png');if(ic)doc.addImage(ic,'PNG',W-42,6,26,26);
+  t(16,17,'Wort-Spielplatz',20,'bold');t(16,25,'Übungsbericht',13,'normal',MUT);
+  const nm=(S.kindName||'').trim();t(16,32,(nm?nm+' · ':'')+'erstellt am '+new Date().toLocaleDateString('de-DE'),10,'normal',MUT);
+  y=48;
+  // Einstellungen
+  head('Einstellungen');
+  const pos={alle:'überall',an:'am Anfang',mitte:'in der Mitte',ende:'am Ende'}[S.pos];
+  const rows=[['Übe-Laut',S.ziel==='ALLE'?'alle Laute':ZIEL[S.ziel].titel],['Stelle im Wort',pos],['Altersstufe',(AGES[S.age]||AGES.mittel).label],['Tagesziel',S.goal+' Übungen']];
+  rows.forEach(([a,b])=>{t(16,y,a,11,'normal',MUT);t(62,y,b,11,'bold');y+=6});
+  // Überblick 14 Tage
+  head('Letzte 14 Tage');
+  const days=[];for(let k=13;k>=0;k--){const d=new Date();d.setDate(d.getDate()-k);const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');days.push([d,S.log[key]||{n:0,g:0}])}
+  const sumN=days.reduce((a,d)=>a+d[1].n,0),sumG=days.reduce((a,d)=>a+d[1].g,0),act=days.filter(d=>d[1].n).length;
+  const tiles=[[sumN,'Übungen'],[act+' von 14','Tage geübt'],[sumN?Math.round(sumG/sumN*100)+' %':'–','gut gesagt'],[streak(),'Tage in Folge'],[Object.values(S.wm||{}).filter(m=>m.b>=3).length,'Wörter sicher']];
+  const tw=(W-32-4*4)/5;tiles.forEach(([v,l],k)=>{const x=16+k*(tw+4);doc.setFillColor(244,247,251);doc.roundedRect(x,y,tw,18,3,3,'F');t(x+tw/2,y+8,v,14,'bold',INK,{align:'center'});t(x+tw/2,y+14,l,8,'normal',MUT,{align:'center'})});
+  y+=26;
+  // Balken
+  const max=Math.max(S.goal,...days.map(d=>d[1].n),1),ch=34,bw=(W-32)/14;
+  doc.setDrawColor(223,229,240);doc.setLineDashPattern([1,1],0);const gy=y+ch-ch*S.goal/max;doc.line(16,gy,W-16,gy);doc.setLineDashPattern([],0);t(16,y-2,'Gestrichelt: Tagesziel ('+S.goal+')  ·  grün: Tagesziel geschafft',7,'normal',MUT);
+  days.forEach(([d,Lg],k)=>{const h=Lg.n/max*ch,x=16+k*bw+1.5;if(h>0){doc.setFillColor(...(Lg.n>=S.goal?LEAF:GR));doc.roundedRect(x,y+ch-h,bw-3,h,1.2,1.2,'F')}
+    t(x+(bw-3)/2,y+ch+4.5,d.getDate()+'.',7,'normal',MUT,{align:'center'});if(Lg.n)t(x+(bw-3)/2,y+ch-h-1.2,Lg.n,7,'bold',INK,{align:'center'})});
+  y+=ch+10;
+  // Laute
+  head('Laute');
+  const tot={};Object.values(S.log).forEach(L0=>Object.entries(L0.by||{}).forEach(([z,[n,g]])=>{tot[z]=tot[z]||[0,0];tot[z][0]+=n;tot[z][1]+=g}));
+  const zs=Object.keys(ZIEL).filter(z=>tot[z]||S.leiter[z]);
+  if(!zs.length){t(16,y,'Noch keine Übungen mit Ziel-Laut.',11,'normal',MUT);y+=7}
+  else{const cx=[16,52,92,124];['Laut','Übungen gesamt','davon „gut“','Laut-Leiter-Stufe'].forEach((h,k)=>t(cx[k],y,h,9,'bold',MUT));y+=5;
+    zs.forEach(z=>{if(y>275){doc.addPage();y=20}doc.setFillColor(248,250,253);doc.rect(16,y-4,W-32,6.5,'F');const T=tot[z];
+      [ZIEL[z].name,T?T[0]:0,T?Math.round(T[1]/T[0]*100)+' %':'–',S.leiter[z]?S.leiter[z]+' · '+STUFEN[S.leiter[z]-1]:'–'].forEach((v,k)=>t(cx[k],y,v,10,k?'normal':'bold'));y+=7})}
+  // Schwere Wörter
+  head('Diese Wörter waren zuletzt schwer');
+  const wk=weakWords();
+  if(!wk.length){t(16,y,'Keine. Prima!',11,'normal',MUT);y+=7}
+  else{const txt=wk.map(([w,m])=>w+(m.x>1?' ('+m.x+'×)':'')).join(', ');doc.setFont('helvetica','normal');doc.setFontSize(11);const ls=doc.splitTextToSize(txt,W-32);doc.setTextColor(...INK);doc.text(ls,16,y);y+=ls.length*5.2+2}
+  // Spiele
+  head('Gespielte Runden');
+  const gs=GAMES.filter(g=>S.perGame[g.id]);
+  if(!gs.length){t(16,y,'Noch keine.',11,'normal',MUT);y+=7}
+  else{gs.forEach((g,k)=>{const col=k%2,x=16+col*((W-32)/2);if(col===0&&k){y+=6}if(y>280){doc.addPage();y=20}t(x,y,g.name,10);t(x+(W-32)/2-6,y,S.perGame[g.id]+' Sterne',10,'bold',INK,{align:'right'})});y+=8}
+  // Fuß
+  const fy=284;doc.setDrawColor(223,229,240);doc.line(16,fy-5,W-16,fy-5);
+  t(16,fy,'„gut“ = von Erwachsenen oder dem Kind als gut gesprochen bewertet. Die App ersetzt keine logopädische Diagnostik oder Therapie.',7.5,'normal',MUT);
+  t(16,fy+4,'Erstellt mit dem Wort-Spielplatz · canzo-kinder.github.io/wort-spielplatz',7.5,'normal',MUT);
+  return doc.output('blob');
+}
+async function shareBericht(){
+  const b=$('#btnShare'),old=b.innerHTML;b.disabled=true;b.lastChild.textContent=' Bericht wird erstellt …';
+  try{const blob=await berichtPDF();const nm=(S.kindName||'').trim().replace(/[^A-Za-zÄÖÜäöüß0-9 -]/g,'').replace(/\s+/g,'-');
+    const fn=`Uebungsbericht${nm?'-'+nm:''}-${today()}.pdf`;const file=new File([blob],fn,{type:'application/pdf'});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:'Wort-Spielplatz Übungsbericht',text:'Übungsbericht aus dem Wort-Spielplatz'})}catch(e){if(e&&e.name!=='AbortError')throw e}}
+    else{const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=fn;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);toast('Der Bericht wurde gespeichert.',false)}}
+  catch(e){toast('Der Bericht konnte nicht erstellt werden. Bitte nochmal versuchen.',false)}
+  finally{b.disabled=false;b.innerHTML=old}}
+$('#btnShare').onclick=shareBericht;
+$('#kindName').value=S.kindName||'';$('#kindName').oninput=e=>{S.kindName=e.target.value.slice(0,40);save()};
 function printBericht(){const r=$('#reportPrint');r.innerHTML=`<h1>Wort-Spielplatz · Übungsbericht</h1><p>Erstellt am ${new Date().toLocaleDateString('de-DE')} · Übe-Laut: ${S.ziel==='ALLE'?'alle':ZIEL[S.ziel].name} · Stelle im Wort: ${{alle:'überall',an:'Anfang',mitte:'Mitte',ende:'Ende'}[S.pos]}</p>${berichtHTML()}${(()=>{const wk=weakWords();return wk.length?`<h2 style="font-size:16px;margin-top:16px">Wörter, die zuletzt schwer waren</h2><p>${wk.map(([w,m])=>w+(m.x>1?' ('+m.x+'×)':'')).join(', ')}</p>`:''})()}<p style="margin-top:18px;font-size:12px">„gut“ = von Erwachsenen oder dem Kind als gut gesprochen bewertet. Die App ersetzt keine logopädische Diagnostik oder Therapie.</p>`;window.print()}
 
 /* --- Rundenende --- */
