@@ -1348,26 +1348,26 @@ const ARC_COST=3;
 const freeStars=()=>Math.max(0,S.stars-(S.spent||0));
 const ARC=[
  {id:'fly',name:'Nuki fliegt',desc:'Tippen oder „Schhh“ machen',ok:true,svg:'<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="18" fill="#bfe7fb"/><rect x="50" y="0" width="16" height="26" rx="5" fill="#6cc04a" stroke="#26303a" stroke-width="2.5"/><rect x="50" y="56" width="16" height="24" rx="5" fill="#6cc04a" stroke="#26303a" stroke-width="2.5"/><circle cx="26" cy="40" r="13" fill="#f2913d" stroke="#26303a" stroke-width="2.5"/><path d="M14 40q-10-8-6-18q8 4 10 12" fill="#e8823a" stroke="#26303a" stroke-width="2.5" stroke-linejoin="round"/><circle cx="30" cy="37" r="2.4" fill="#26303a"/><path d="M27 45q4 3 8 0" fill="none" stroke="#26303a" stroke-width="2" stroke-linecap="round"/></svg>'},
- {id:'race',name:'Laut-Rennen',desc:'Bald!',ok:false,svg:'<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="18" fill="#dfe9d2"/><path d="M28 80L34 0h12l6 80z" fill="#8a93a3"/><path d="M40 6v12M40 30v12M40 54v12" stroke="#fff" stroke-width="3" stroke-dasharray="1 0"/><rect x="30" y="40" width="20" height="28" rx="7" fill="#ff7a59" stroke="#26303a" stroke-width="2.5"/><rect x="33" y="46" width="14" height="8" rx="3" fill="#cfeefb"/></svg>'},
+ {id:'race',name:'Laut-Rennen',desc:'Sammle Bilder mit deinem Laut',ok:true,svg:'<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="18" fill="#dfe9d2"/><path d="M28 80L34 0h12l6 80z" fill="#8a93a3"/><path d="M40 6v12M40 30v12M40 54v12" stroke="#fff" stroke-width="3" stroke-dasharray="1 0"/><rect x="30" y="40" width="20" height="28" rx="7" fill="#ff7a59" stroke="#26303a" stroke-width="2.5"/><rect x="33" y="46" width="14" height="8" rx="3" fill="#cfeefb"/></svg>'},
  {id:'sling',name:'Nuss-Schleuder',desc:'Bald!',ok:false,svg:'<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="18" fill="#ffeecb"/><path d="M22 70V46l-8-14M22 46l8-14" fill="none" stroke="#8a5a33" stroke-width="5" stroke-linecap="round"/><path d="M14 32q8 10 16 0" fill="none" stroke="#26303a" stroke-width="2"/><circle cx="22" cy="38" r="5" fill="#a0612e"/><rect x="50" y="52" width="12" height="18" fill="#e2c99c" stroke="#26303a" stroke-width="2.5"/><rect x="62" y="52" width="12" height="18" fill="#e2c99c" stroke="#26303a" stroke-width="2.5"/><rect x="56" y="34" width="12" height="18" fill="#e2c99c" stroke="#26303a" stroke-width="2.5"/></svg>'},
  {id:'park',name:'Nukis Park',desc:'Durch den Park spazieren',ok:true,free:true,svg:'<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="18" fill="#cfeefb"/><path d="M0 54q40-16 80 0v26H0z" fill="#8fd16a"/><path d="M22 60V40" stroke="#8a5a33" stroke-width="5" stroke-linecap="round"/><circle cx="22" cy="32" r="13" fill="#5fae4c"/><path d="M48 62V38M66 62V38M46 38h22" stroke="#c98d55" stroke-width="4" stroke-linecap="round"/><path d="M54 38v14M60 38v14M52 52h10" stroke="#26303a" stroke-width="2"/></svg>'}];
 function openArcade(){hush();$('#arcStars').textContent=freeStars();
   $('#arcGrid').innerHTML=ARC.map(a=>`<button class="arct ${a.ok?'':'soon'}" data-a="${a.id}">${a.svg}<span class="cost">${a.ok?(a.free?'frei':ARC_COST+' ⭐'):'bald'}</span><b>${a.name}</b><small>${a.desc}</small></button>`).join('');
   $('#arcGrid').querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const id=b.dataset.a;hush();
     if(id==='park'){$('#arcOv').hidden=true;renderHome();show('home');return}
-    if(id!=='fly'){tone([330,262],.1,'triangle');say('Das kommt bald!');return}
+    if(id!=='fly'&&id!=='race'){tone([330,262],.1,'triangle');say('Das kommt bald!');return}
     if(freeStars()<ARC_COST){tone([330,262],.1,'triangle');b.classList.remove('wob');void b.offsetWidth;b.classList.add('wob');say('Sammle erst noch Sterne beim Üben!');return}
-    $('#arcOv').hidden=true;openFly()});
+    $('#arcOv').hidden=true;(id==='race'?openRace:openFly)()});
   $('#arcOv').hidden=false;say('Willkommen auf dem Spielplatz!')}
 $('#arcX').onclick=()=>{hush();$('#arcOv').hidden=true};
 
 /* --- Nuki fliegt --- */
 let FLY=null;
-function flyStop(){if(!FLY)return;cancelAnimationFrame(FLY.raf);try{FLY.src&&FLY.src.disconnect()}catch(e){}if(MED.f){MED.f.getTracks().forEach(t=>t.stop());MED.f=null}removeEventListener('resize',FLY.fit);document.removeEventListener('visibilitychange',FLY.vis);FLY=null}
+function flyStop(){if(!FLY)return;cancelAnimationFrame(FLY.raf);try{FLY.cv.onpointerdown=FLY.cv.onpointermove=FLY.cv.onpointerup=null}catch(e){}try{FLY.src&&FLY.src.disconnect()}catch(e){}if(MED.f){MED.f.getTracks().forEach(t=>t.stop());MED.f=null}removeEventListener('resize',FLY.fit);document.removeEventListener('visibilitychange',FLY.vis);FLY=null}
 function openFly(){
   flyStop();try{$('#toast').hidden=true}catch(e){}const ov=$('#flyOv'),cv=$('#flyCv'),cx=cv.getContext('2d'),msg=$('#flyMsg');ov.hidden=false;
   const A={klein:{sp:120,gap:270,n:6},mittel:{sp:150,gap:235,n:8},gross:{sp:185,gap:205,n:10}}[S.age]||{sp:150,gap:235,n:8};
-  const F=FLY={raf:0,src:null,an:null,td:null,floor:0,calT:0,calN:0,voice:false,run:false};
+  const F=FLY={cv,raf:0,src:null,an:null,td:null,floor:0,calT:0,calN:0,voice:false,run:false};
   let VH=600,W=800,sc=1,dpr=1;
   F.fit=()=>{dpr=Math.min(2,devicePixelRatio||1);const w=ov.clientWidth,h=ov.clientHeight;cv.width=w*dpr;cv.height=h*dpr;sc=Math.min(h/600,w/520);VH=h/sc;W=w/sc};F.fit();addEventListener('resize',F.fit);
   F.vis=()=>{if(document.hidden&&F.run){F.run=false;menu('Pause','Weiter geht es, wenn du magst.',true)}};document.addEventListener('visibilitychange',F.vis);
@@ -1425,6 +1425,81 @@ function openFly(){
     draw()}
   F.peek=()=>{const nx=W*.28,g=gates.find(G=>G.x>nx-70);return {y,c:g?g.c:VH*.5,won,hearts,nuts}};
   reset();menu('Nuki fliegt','Flieg durch die Lücken und sammle Nüsse!');say('Nuki fliegt!');F.raf=requestAnimationFrame(frame)}
+
+/* --- Laut-Rennen --- */
+function openRace(){
+  flyStop();try{$('#toast').hidden=true}catch(e){}const ov=$('#flyOv'),cv=$('#flyCv'),cx=cv.getContext('2d'),msg=$('#flyMsg');ov.hidden=false;
+  const A={klein:{sp:230,n:6,gap:1.5},mittel:{sp:300,n:8,gap:1.25},gross:{sp:370,n:10,gap:1.05}}[S.age]||{sp:300,n:8,gap:1.25};
+  const F=FLY={cv,raf:0,src:null,an:null,td:null,floor:0,calT:0,voice:false,run:false};
+  let VW=420,VH=800,sc=1,dpr=1;
+  F.fit=()=>{dpr=Math.min(2,devicePixelRatio||1);const w=ov.clientWidth,h=ov.clientHeight;cv.width=w*dpr;cv.height=h*dpr;sc=Math.min(w/420,h/620);VW=w/sc;VH=h/sc};F.fit();addEventListener('resize',F.fit);
+  F.vis=()=>{if(document.hidden&&F.run){F.run=false;menu('Pause','Weiter geht es, wenn du magst.',true)}};document.addEventListener('visibilitychange',F.vis);
+  const RW=()=>Math.min(VW-30,400),LX=k=>VW/2+(k-1)*RW()/3;
+  const zs=(S.ziel!=='ALLE'&&ZIEL[S.ziel]?[S.ziel]:Object.keys(ZIEL)).filter(z=>z!=='CL'&&zielAll(z).length>=4);
+  let z,good,bad,rx;const pics={};
+  const pic=w=>{if(pics[w])return pics[w];const i=new Image();i.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="128" height="128">'+BILD[w]+'</svg>');return pics[w]=i};
+  const pickZ=()=>{z=rnd(zs.length?zs:['S']);rx=new RegExp(QRX[z].source,'i');good=zielAll(z).filter(w=>BILD[w]);const amb={S:/z|x|ß/i,K:/g$|x|chs|q/i,T:/d$|z|dt/i,P:/b$/i,NG:/nk/i,F:/w$/i,Z:/ts|x/i,CH:/g$/i}[z];bad=[...W,...W2].map(o=>o.w).filter(w=>BILD[w]&&!rx.test(w)&&!good.includes(w)&&!(amb&&amb.test(w)));[...good,...bad].forEach(pic)};
+  const nukiImg=m=>{const i=new Image();i.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(mascotSVG(m).replace('<svg','<svg xmlns="http://www.w3.org/2000/svg"'));return i};
+  const NI={n:nukiImg('happy'),j:nukiImg('jubel'),t:nukiImg('staunen')};
+  let lane,cxp,items,got,hearts,inv,t,last,dist,next,won,parts,turbo,lastGood,flash;
+  const reset=()=>{lane=1;cxp=LX(1);items=[];got=0;hearts=3;inv=0;t=0;dist=0;next=.8;won=false;parts=[];turbo=0;lastGood=0;flash=null;hud()};
+  const hud=()=>{$('#flyHearts').textContent='❤️'.repeat(hearts)+'🤍'.repeat(3-hearts);$('#flyNuts').textContent=`${ZIEL[z].name}: ${got}/${A.n}`};
+  const steer=d=>{if(!F.run)return;const n=Math.max(0,Math.min(2,lane+d));if(n!==lane){lane=n;tone([440],.04,'triangle',.06)}};
+  let px0=null;
+  cv.onpointerdown=e=>{e.preventDefault();px0=e.clientX};
+  cv.onpointerup=e=>{if(px0===null)return;const dx=e.clientX-px0;px0=null;if(Math.abs(dx)>24){steer(dx>0?1:-1);return}
+    const r=cv.getBoundingClientRect(),x=(e.clientX-r.left)/sc,cur=LX(lane);if(Math.abs(x-cur)<RW()/6){return}steer(x>cur?1:-1)};
+  F.key=e=>{if(e.key==='ArrowLeft')steer(-1);if(e.key==='ArrowRight')steer(1)};addEventListener('keydown',F.key);
+  function menu(title,text,resume){msg.innerHTML=`<h3>${title}</h3><p>${text}</p><div class="row">${resume?'<button class="bigbtn" id="flyGo">▶ Weiter</button>':`<button class="bigbtn" id="flyTap">🚗 Los!</button>${vgUsable()?'<button class="bigbtn sun" id="flyVoice">🎤 Mit Brumm-Turbo</button>':''}`}<button class="bigbtn light" id="flyEnd">Fertig</button></div>${resume?'':`<p style="font-size:13px">Eine Runde kostet ${ARC_COST} ⭐ · du hast ${freeStars()} ⭐ frei</p>`}`;
+    $('#flyEnd').onclick=close;
+    if(resume){$('#flyGo').onclick=()=>{msg.innerHTML='';last=performance.now();F.run=true};return}
+    const go=async voice=>{if(freeStars()<ARC_COST){hush();say('Sammle erst noch Sterne beim Üben!');msg.querySelector('p').textContent='Du brauchst '+ARC_COST+' Sterne. Sammle sie beim Üben!';return}
+      if(voice&&!F.an){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')await ac.resume();
+          MED.f=await (aSess('play-and-record'),navigator.mediaDevices).getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+          F.src=ac.createMediaStreamSource(MED.f);F.an=ac.createAnalyser();F.an.fftSize=1024;F.src.connect(F.an);F.td=new Float32Array(F.an.fftSize)}
+        catch(e){msg.querySelector('p').textContent='Das Mikrofon geht hier nicht. Spiel ohne Turbo!';return}}
+      S.spent=(S.spent||0)+ARC_COST;save();hush();F.voice=voice;F.floor=0;pickZ();reset();msg.innerHTML=`<h3>${ZIEL[z].name}</h3><p>Sammle alle Bilder mit ${ZIEL[z].name}!</p>`;
+      await Promise.race([say(`Sammle alle Bilder mit ${ZIEL[z].name}!`).then(()=>voice?say('Mach Brumm, dann gibt es Turbo!'):0),wait(4500)]);if(FLY!==F)return;msg.innerHTML='';F.calT=performance.now();last=performance.now();F.run=true};
+    $('#flyTap').onclick=()=>go(false);if($('#flyVoice'))$('#flyVoice').onclick=()=>go(true)}
+  function close(){hush();removeEventListener('keydown',F.key);flyStop();ov.hidden=true;msg.innerHTML='';openArcade()}
+  $('#flyX').onclick=close;
+  const loud=()=>{if(!F.an)return false;F.an.getFloatTimeDomainData(F.td);let r=0;for(const v of F.td)r+=v*v;r=Math.sqrt(r/F.td.length);const now=performance.now();
+    F.floor=F.floor?Math.min(F.floor*1.003,r):r;if(now-F.calT<400)return false;const f={leicht:.6,normal:1,streng:1.6}[S.vg||'normal']||1;return r>Math.max(F.floor*2.7*f,.008*f)};
+  const K='#26303a';
+  function spawn(){const want=Math.random()<.55||t-lastGood>4;const w=want?rnd(good):rnd(bad);if(want)lastGood=t;
+    const free=[0,1,2].filter(k=>!items.some(i=>i.l===k&&i.y<150));items.push({w,ok:want,l:rnd(free.length?free:[0,1,2]),y:-70})}
+  function draw(){const w=cv.width,h=cv.height;cx.setTransform(1,0,0,1,0,0);cx.fillStyle='#8fd16a';cx.fillRect(0,0,w,h);cx.setTransform(sc*dpr,0,0,sc*dpr,0,0);
+    const rw=RW(),x0=VW/2-rw/2;
+    cx.fillStyle='#7cc45c';for(let k=-1;k<VH/120+1;k++){const yy=k*120+(dist%120);cx.beginPath();cx.arc(x0-50-(k%2)*30,yy,22,0,7);cx.arc(x0+rw+50+(k%2)*30,yy+60,26,0,7);cx.fill()}
+    cx.fillStyle='#8a93a3';cx.strokeStyle=K;cx.lineWidth=5;cx.fillRect(x0,-10,rw,VH+20);cx.beginPath();cx.moveTo(x0,-10);cx.lineTo(x0,VH+10);cx.moveTo(x0+rw,-10);cx.lineTo(x0+rw,VH+10);cx.stroke();
+    cx.strokeStyle='#fff';cx.lineWidth=6;cx.setLineDash([34,34]);cx.lineDashOffset=-(dist%68);[1,2].forEach(k=>{cx.beginPath();cx.moveTo(x0+k*rw/3,-10);cx.lineTo(x0+k*rw/3,VH+10);cx.stroke()});cx.setLineDash([]);
+    if(turbo>0){cx.strokeStyle='rgba(255,255,255,.7)';cx.lineWidth=4;for(let k=0;k<8;k++){const xx=x0+((k*53+dist*.7)%rw),yy=(k*131+dist*2)%VH;cx.beginPath();cx.moveTo(xx,yy);cx.lineTo(xx,yy+50);cx.stroke()}}
+    items.forEach(i=>{const x=LX(i.l),r=44;cx.fillStyle='#fff';cx.strokeStyle=K;cx.lineWidth=4;cx.beginPath();cx.roundRect(x-r,i.y-r,r*2,r*2,18);cx.fill();cx.stroke();const im=pic(i.w);if(im.complete&&im.naturalWidth)cx.drawImage(im,x-36,i.y-36,72,72)});
+    parts.forEach(p=>{cx.globalAlpha=Math.max(0,p.l);cx.fillStyle=p.c;cx.beginPath();cx.arc(p.x,p.y,p.r,0,7);cx.fill()});cx.globalAlpha=1;
+    const cy=VH-150;if(inv<=0||Math.floor(t*12)%2===0){cx.save();cx.translate(cxp,cy);cx.rotate((LX(lane)-cxp)*.004);
+      cx.fillStyle=K;[[-40,-34],[28,-34],[-40,22],[28,22]].forEach(([a,b])=>{cx.beginPath();cx.roundRect(a,b,12,24,5);cx.fill()});
+      cx.fillStyle='#ff7a59';cx.strokeStyle=K;cx.lineWidth=4;cx.beginPath();cx.roundRect(-34,-58,68,116,22);cx.fill();cx.stroke();
+      cx.fillStyle='#ffd0c2';cx.beginPath();cx.roundRect(-24,-46,48,22,9);cx.fill();cx.stroke();
+      const im=won?NI.j:inv>0?NI.t:NI.n;if(im.complete)cx.drawImage(im,-30,-30,60,63);
+      if(turbo>0){cx.fillStyle='#ffc542';cx.beginPath();cx.moveTo(-14,58);cx.lineTo(0,58+30+Math.sin(t*40)*8);cx.lineTo(14,58);cx.fill()}
+      cx.restore()}
+    if(flash&&flash.l>0){cx.globalAlpha=Math.min(1,flash.l*2);cx.font='800 34px "Baloo 2",sans-serif';cx.textAlign='center';cx.lineWidth=7;cx.strokeStyle='#fff';cx.fillStyle=flash.ok?'#2f9e56':'#e2553f';cx.strokeText(flash.t,VW/2,VH-270);cx.fillText(flash.t,VW/2,VH-270);cx.globalAlpha=1}}
+  function frame(now){F.raf=requestAnimationFrame(frame);if(!F.run){draw();return}
+    const dt=Math.min(.035,(now-last)/1000);last=now;t+=dt;inv-=dt;if(flash)flash.l-=dt;
+    if(F.voice&&loud())turbo=.5;else turbo=Math.max(0,turbo-dt);
+    const sp=A.sp*(turbo>0?1.5:1),dy=sp*dt;dist+=dy;cxp+=(LX(lane)-cxp)*Math.min(1,dt*14);
+    next-=dt*(turbo>0?1.5:1);if(next<=0&&!won){spawn();next=A.gap*(.8+Math.random()*.5)}
+    parts.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.l-=dt*1.8});parts=parts.filter(p=>p.l>0);
+    const cy=VH-150;
+    for(const i of items){i.y+=dy;if(!i.hit&&i.l===lane&&Math.abs(i.y-cy)<78&&Math.abs(LX(i.l)-cxp)<50){i.hit=true;
+        if(i.ok){got+=turbo>0?2:1;got=Math.min(A.n,got);hud();tone([784,1047],.07,'triangle',.12);flash={t:i.w+'!',ok:true,l:1.1};hush();say(i.w);for(let k=0;k<10;k++)parts.push({x:LX(i.l),y:cy-40,vx:(Math.random()-.5)*300,vy:-Math.random()*300,r:5,l:1,c:'#ffc542'})}
+        else if(inv<=0){hearts--;inv=1.2;hud();tone([220,165],.12,'sawtooth',.1);flash={t:'Kein '+ZIEL[z].name+'!',ok:false,l:1.1};
+          if(hearts<=0){F.run=false;setTimeout(()=>{say('Ups! Nochmal versuchen?');menu('Ups!',`Du hast ${got} von ${A.n} Bildern gesammelt. Nochmal?`)},500);return}}}}
+    items=items.filter(i=>!i.hit&&i.y<VH+80);
+    if(got>=A.n&&!won){won=true;items=[];confetti(50);tone([523,659,784,1047],.12,'triangle');setTimeout(()=>say('Super gefahren!'),700);setTimeout(()=>{F.run=false;menu('Geschafft!',`Alle ${A.n} Bilder mit ${ZIEL[z].name} gesammelt. Nochmal?`)},2200)}
+    draw()}
+  F.peek=()=>({lane,items:items.map(i=>({l:i.l,y:i.y,ok:i.ok})),won,hearts,got,cy:VH-150});F.steer=steer;
+  pickZ();reset();menu('Laut-Rennen','Wische nach links und rechts. Sammle nur die Bilder mit deinem Laut!');say('Laut-Rennen!');F.raf=requestAnimationFrame(frame)}
 /* ================= HOME (Szene) ================= */
 const NAMES={versteht:'Nuki versteht dich',leiter:'Laut-Leiter',nuki:'Nuki',mund:'Grimassen-Spiegel',hoeren:'Wort-Detektiv',anlaut:'Laut-Buddeln',silben:'Silben-Schaukel',reime:'Reim-Wippe',paare:'Hör-Rohre',sprechen:'Sprich mit Nuki',treasure:'Schatzkiste',mila:'Mila',ben:'Ben',bird:'Vogel'};
 const scene=$('#scene'),svgEl=$('#sceneSvg');
