@@ -236,7 +236,15 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
 #stage .split .mctl{align-items:center}
 /* ---------- OVERLAYS ---------- */
 .hbtn.pulse{animation:hpulse 1.4s ease-in-out infinite}@keyframes hpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,198,58,.9)}50%{box-shadow:0 0 0 12px rgba(255,198,58,0)}}
-.vidpanel{width:min(560px,100%)}.vidpanel video{width:100%;aspect-ratio:1;border-radius:24px;background:#cfeeff;border:0;box-shadow:0 6px 0 var(--line)}
+/* Erklär-Video über den ganzen Bildschirm (Video ist quadratisch: oben Himmel, unten Wiese, darum Hintergrund passend) */
+#vidOv{padding:0!important;background:linear-gradient(#95d4f5 22%,#cfeefb 50%,#b7e199 76%)!important;place-items:stretch}
+#vidOv .vidpanel{width:100%!important;max-width:none!important;height:100%;max-height:none!important;margin:0;padding:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;display:flex;flex-direction:column;overflow:hidden}
+#vidOv .vidpanel h2{display:none}
+#vidOv .vidpanel video{flex:1;min-height:0;width:100%;height:100%;object-fit:contain;background:transparent;border:0;border-radius:0;box-shadow:none}
+#vidOv .vidpanel .row{position:absolute;left:0;right:0;bottom:calc(max(18px,env(safe-area-inset-bottom)) + 70px);justify-content:center;pointer-events:none;margin:0}
+#vidOv .vidpanel .row .bigbtn{pointer-events:auto}
+@media (orientation:landscape){#vidOv .vidpanel .row{left:auto;right:max(20px,env(safe-area-inset-right));bottom:calc(max(18px,env(safe-area-inset-bottom)) + 64px)}}
+#vidOv .vidx{position:absolute;top:max(14px,env(safe-area-inset-top));right:max(14px,env(safe-area-inset-right));z-index:2;width:52px;height:52px;border-radius:16px;background:#fff;color:var(--ink);font-size:26px;font-weight:800;box-shadow:0 4px 0 rgba(0,0,0,.12)}
 .overlay{position:fixed;inset:0;background:rgba(20,40,60,.55);display:grid;place-items:center;z-index:30;padding:20px max(16px,env(safe-area-inset-right,0px)) 20px max(16px,env(safe-area-inset-left,0px))}
 .panel{background:var(--paper);border-radius:30px;padding:24px 20px;width:min(440px,100%);text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center;box-shadow:0 10px 0 rgba(0,0,0,.15);max-height:100%;overflow:auto}
 .panel h2{font-family:var(--f-display);font-weight:800;font-size:30px;margin:0;line-height:1.1;text-wrap:balance}
@@ -1090,6 +1098,7 @@ button#pathNuki{display:block;width:100%;padding:0;border:0;background:none;poin
 <div class="overlay" id="vidOv" hidden>
   <div class="panel vidpanel">
     <h2>So geht der Spielplatz</h2>
+    <button class="vidx" id="vidX" aria-label="Schließen">✕</button>
     <video id="vidEl" playsinline controls preload="none" poster="v/erklaervideo.jpg"><source src="v/erklaervideo.mp4?v=6" type="video/mp4"></video>
     <div class="row"><button class="bigbtn" id="btnCloseVid">Los geht's!</button></div>
   </div>
@@ -1654,7 +1663,7 @@ function renderHome(){$('#starCount').textContent=S.stars;paintGoal();setMood($(
 function openVid(){hush();$('#toast').hidden=true;const o=$('#vidOv'),v=$('#vidEl');o.hidden=false;try{v.currentTime=0;const pr=v.play();if(pr)pr.catch(()=>{})}catch(e){}}
 function closeVid(){const v=$('#vidEl');try{v.pause()}catch(e){}$('#vidOv').hidden=true;$('#btnHelp').classList.remove('pulse');try{localStorage.setItem('ws-vid','1')}catch(e){}}
 try{if(!localStorage.getItem('ws-vid'))$('#btnHelp').classList.add('pulse')}catch(e){}
-$('#btnHelp').onclick=openVid;$('#btnCloseVid').onclick=closeVid;$('#vidOv').onclick=e=>{if(e.target.id==='vidOv')closeVid()};
+$('#btnHelp').onclick=openVid;$('#btnCloseVid').onclick=closeVid;$('#vidX').onclick=closeVid;$('#vidOv').onclick=e=>{if(e.target.id==='vidOv')closeVid()};
 $('#vidEl').addEventListener('error',()=>{closeVid();toast('Wisch zur Seite und tipp auf die Spielgeräte. Jedes Spielgerät ist ein Spiel!')},true);
 function paintMute(){$('#muteWaves').style.display=S.mute?'none':'';$('#muteX').style.display=S.mute?'':'none'}
 $('#btnMute').onclick=()=>{S.mute=!S.mute;save();paintMute();if(S.mute)hush();else toast('Ton ist an!')};
