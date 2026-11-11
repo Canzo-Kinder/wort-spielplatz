@@ -513,6 +513,8 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
  .gstory>#gsHint{grid-area:hint;margin:0;font-size:16px}.gstory>.speak{grid-area:spk}.gstory>.pbox{grid-area:ctl;align-self:center}.gstory>.raterow{grid-area:rate}.gstory>.raterow .stage-note{display:none}
  .gsl{font-size:24px;line-height:1.35}.gsl.old{font-size:16px}}
 .arc{position:relative;max-width:520px;width:100%;text-align:center}.arc h2{margin:0 0 2px}.arcsub{margin:0 0 12px;font-weight:800;color:var(--ink-soft)}.arcsub b{color:#1f2340;font-size:20px}
+.arcvid{display:block;width:100%;max-height:210px;aspect-ratio:16/9;object-fit:cover;border-radius:18px;margin:6px 0 10px;background:#cfeefb}
+@media (max-height:600px){.arcvid{display:none}}
 .arcgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .arct{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 8px 10px;border:0;border-radius:22px;background:#eef6ff;box-shadow:0 5px 0 #cfe0f3;font:inherit;cursor:pointer;color:inherit}
 .arct:active{transform:translateY(3px);box-shadow:0 2px 0 #cfe0f3}.arct svg{width:76px;height:76px}.arct b{font-family:var(--f-display);font-size:18px;line-height:1.1}
@@ -1097,6 +1099,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 <div class="overlay" id="partyOv" hidden></div>
 <div class="overlay" id="arcOv" hidden><div class="panel arc">
   <button class="lx" id="arcX" aria-label="Schließen"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <video class="arcvid" id="arcVid" src="v/nuki-spielplatz.mp4" poster="v/nuki-spielplatz.jpg" muted loop playsinline preload="metadata" aria-hidden="true"></video>
   <h2>Spielplatz</h2><p class="arcsub">Zum Spielen brauchst du Sterne: <b id="arcStars">0</b> ⭐ frei</p>
   <div class="arcgrid" id="arcGrid"></div>
   <p class="arcnote">Sterne bekommst du beim Üben auf dem Spielpfad. Deine Sticker bleiben dir immer.</p>
@@ -1415,15 +1418,15 @@ function openArcade(){hush();$('#arcStars').textContent=freeStars();{const p=$('
     if(id==='park'){if(b.dataset.held){delete b.dataset.held;return}b.classList.remove('wob');void b.offsetWidth;b.classList.add('wob');toast('Lange gedrückt halten!');return}
 
     if(arcTimeUp()||freeStars()<arcCost()){tone([330,262],.1,'triangle');b.classList.remove('wob');void b.offsetWidth;b.classList.add('wob');say(arcTimeUp()?'Für heute ist die Spielzeit vorbei. Morgen geht es weiter!':'Sammle erst noch Sterne beim Üben!');return}
-    $('#arcOv').hidden=true;(id==='race'?openRace:id==='sling'?openSling:openFly)()});
+    try{$('#arcVid').pause()}catch(e){}$('#arcOv').hidden=true;(id==='race'?openRace:id==='sling'?openSling:openFly)()});
   /* Nukis Park: öffnet sich durch langes Gedrückt-Halten (Rechen-Sperre parkGate ist vorerst abgeschaltet und kann später wieder eingesetzt werden) */
   {const b=$('#arcGrid').querySelector('[data-a="park"]');if(b){const bar=document.createElement('i');bar.className='holdfill';b.prepend(bar);let t0=0,raf=0;
     const end=()=>{cancelAnimationFrame(raf);raf=0;bar.style.transform='scaleX(0)'};
     const step=()=>{const p=Math.min(1,(performance.now()-t0)/1300);bar.style.transform=`scaleX(${p})`;if(p>=1){end();b.dataset.held='1';setTimeout(()=>{delete b.dataset.held},600);hush();tone([523,784],.08,'triangle');$('#arcOv').hidden=true;renderHome();show('home')}else raf=requestAnimationFrame(step)};
     b.addEventListener('pointerdown',()=>{delete b.dataset.held;t0=performance.now();cancelAnimationFrame(raf);raf=requestAnimationFrame(step)});
     ['pointerup','pointerleave','pointercancel'].forEach(ev=>b.addEventListener(ev,end));b.addEventListener('contextmenu',e=>e.preventDefault())}}
-  $('#arcOv').hidden=false;say('Willkommen auf dem Spielplatz!')}
-$('#arcX').onclick=()=>{hush();$('#arcOv').hidden=true};
+  $('#arcOv').hidden=false;try{const v=$('#arcVid');v.currentTime=0;const pr=v.play();if(pr)pr.catch(()=>{})}catch(e){}say('Willkommen auf dem Spielplatz!')}
+$('#arcX').onclick=()=>{hush();try{$('#arcVid').pause()}catch(e){}$('#arcOv').hidden=true};
 /* Eltern-Freigabe für Nukis Park: Rechenaufgabe, die kleine Kinder nicht lösen können */
 function parkGate(ok){const a=6+Math.floor(Math.random()*4),b=6+Math.floor(Math.random()*4),ov=$('#pgateOv'),inp=$('#pgIn'),msg=$('#pgMsg');let tries=0;
   $('#pgQ').textContent=`${a} × ${b} = ?`;inp.value='';msg.textContent='';ov.hidden=false;setTimeout(()=>{try{inp.focus()}catch(e){}},150);
