@@ -3165,7 +3165,14 @@ setTimeout(()=>{if(!$('#path').hidden)toast('Hallo! Ich bin Nuki. Willkommen auf
 
 /* Als App installierbar und ohne Internet spielbar (Service Worker) */
 if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){
-  navigator.serviceWorker.register('sw.js').catch(()=>{});
+  /* Neue Version automatisch laden: beim Zurückkehren in die App nachsehen und, sobald nicht gerade gespielt wird, neu laden */
+  let swReg=null,swPending=false;const hadCtl=!!navigator.serviceWorker.controller;
+  navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{swReg=r}).catch(()=>{});
+  const swCheck=()=>{try{swReg&&swReg.update()}catch(e){}};
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')swCheck()});setInterval(swCheck,30*60*1000);
+  const swIdle=()=>!$('#path').hidden&&![...document.querySelectorAll('.overlay')].some(o=>!o.hidden);
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!hadCtl||swPending)return;swPending=true;
+    const go=()=>{if(swIdle())location.reload();else setTimeout(go,2000)};go()});
   navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.t==='offline-bereit'){let seen=null;try{seen=localStorage.getItem('ws-offline')}catch(x){}
     if(!seen){try{localStorage.setItem('ws-offline','1')}catch(x){}toast('Fertig! Der Wort-Spielplatz geht jetzt auch ohne Internet.',false)}}});
 }
