@@ -1262,7 +1262,7 @@ const player=new Audio();player.preload='auto';
 let talkN=0;function talk(on){document.documentElement.classList.toggle('talk',on)}
 player.addEventListener('playing',()=>talk(true));['pause','ended','emptied','error'].forEach(ev=>player.addEventListener(ev,()=>talk(false)));
 let sayToken=0,unlocked=false;
-document.addEventListener('pointerdown',()=>{if(unlocked)return;unlocked=true;try{player.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';player.play().catch(()=>{})}catch(e){}},{capture:true});
+document.addEventListener('pointerdown',()=>{if(unlocked)return;unlocked=true;aSess('playback');try{player.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';player.play().catch(()=>{})}catch(e){}},{capture:true});
 function chunks(t){return (t.match(/[^.!?:]+[.!?:]?/g)||[]).map(x=>x.trim()).filter(Boolean)}
 function ckey(t){return t.toLowerCase().replace(/[^a-zäöüß0-9 ]/g,'').replace(/\s+/g,' ').trim()}
 function playFile(f,rate,tok){aSess('playback');return new Promise(res=>{
@@ -1844,7 +1844,8 @@ function listenOnce(onStart){
   return new Promise(res=>{
     let r;try{r=(aSess('play-and-record'),new SR())}catch(e){return res({error:'unsupported',alts:[]})}
     r.lang='de-DE';r.interimResults=false;r.maxAlternatives=5;r.continuous=false;
-    const alts=[];let err=null,done=false;const fin=()=>{if(!done){done=true;clearTimeout(t);res({error:err,alts})}};
+    /* Nach dem Zuhören den Ton sofort zurück auf normale Wiedergabe stellen und kurz warten, bis das iPhone umgeschaltet hat. So spricht Nuki danach genauso laut wie vorher. */
+    const alts=[];let err=null,done=false;const fin=()=>{if(!done){done=true;clearTimeout(t);try{r.abort()}catch(e){}aSess('playback');setTimeout(()=>res({error:err,alts}),400)}};
     r.onaudiostart=()=>onStart&&onStart();
     r.onresult=e=>{for(const res0 of e.results)for(const a of res0)alts.push(a.transcript)};
     r.onerror=e=>{err=e.error};r.onend=fin;
