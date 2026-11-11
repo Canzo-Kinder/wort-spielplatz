@@ -91,6 +91,7 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
 .mitem{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:18px;border:3px solid var(--c);background:color-mix(in srgb,var(--c) 10%,#fff);text-align:left;min-height:64px}
 .mi{font-size:30px;flex:none}.mt{display:flex;flex-direction:column;min-width:0;flex:1}.mt b{font-family:var(--f-display);font-size:16px;line-height:1.1}.mt small{font-size:12px;font-weight:700;color:var(--ink-soft)}.ms{font-size:12px;font-weight:800;flex:none}
 .hold{position:relative;overflow:hidden;background:var(--paper-2);color:var(--ink-soft);border:2px solid #dbe7ee;border-radius:999px;padding:10px 20px;font-weight:800;font-size:14px;min-height:46px}
+.pgq{font-size:30px;font-weight:800;color:var(--ink);text-align:center;margin:10px 0 6px}.pgin{display:block;margin:0 auto;width:140px;font-size:28px;font-weight:800;text-align:center;padding:10px;border:3px solid #dbe7ee;border-radius:18px;background:#fff;color:var(--ink)}.pgin:focus{outline:none;border-color:var(--grape)}.pgmsg{min-height:22px;text-align:center;color:#d9573a;font-weight:700;margin:8px 0}
 .hold i{position:absolute;inset:0;background:#d9cdf7;transform:scaleX(0);transform-origin:left}
 .hold span{position:relative}
 
@@ -1113,6 +1114,16 @@ button#pathNuki{display:block;width:100%;padding:0;border:0;background:none;poin
     </div>
   </div>
 </div>
+<div class="overlay" id="pgateOv" hidden>
+  <div class="panel">
+    <h2>Eltern-Freigabe</h2>
+    <p>Nukis Park ist ohne Sterne spielbar. Darum geben Erwachsene ihn frei.</p>
+    <p class="pgq" id="pgQ"></p>
+    <input class="pgin" id="pgIn" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="Ergebnis">
+    <p class="pgmsg" id="pgMsg"></p>
+    <div class="row"><button class="bigbtn" id="pgOk">Freigeben</button><button class="bigbtn light" id="pgX">Zurück</button></div>
+  </div>
+</div>
 <div class="overlay" id="gateOv" hidden>
   <div class="panel">
     <h2>Für Eltern &amp; Therapeuten</h2>
@@ -1378,14 +1389,19 @@ const ARC=[
  {id:'sling',name:'Nuss-Schleuder',desc:'Wort sagen, Nuss schießen',ok:true,svg:'<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="18" fill="#ffeecb"/><path d="M22 70V46l-8-14M22 46l8-14" fill="none" stroke="#8a5a33" stroke-width="5" stroke-linecap="round"/><path d="M14 32q8 10 16 0" fill="none" stroke="#26303a" stroke-width="2"/><circle cx="22" cy="38" r="5" fill="#a0612e"/><rect x="50" y="52" width="12" height="18" fill="#e2c99c" stroke="#26303a" stroke-width="2.5"/><rect x="62" y="52" width="12" height="18" fill="#e2c99c" stroke="#26303a" stroke-width="2.5"/><rect x="56" y="34" width="12" height="18" fill="#e2c99c" stroke="#26303a" stroke-width="2.5"/></svg>'},
  {id:'park',name:'Nukis Park',desc:'Durch den Park spazieren',ok:true,free:true,svg:'<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="18" fill="#cfeefb"/><path d="M0 54q40-16 80 0v26H0z" fill="#8fd16a"/><path d="M22 60V40" stroke="#8a5a33" stroke-width="5" stroke-linecap="round"/><circle cx="22" cy="32" r="13" fill="#5fae4c"/><path d="M48 62V38M66 62V38M46 38h22" stroke="#c98d55" stroke-width="4" stroke-linecap="round"/><path d="M54 38v14M60 38v14M52 52h10" stroke="#26303a" stroke-width="2"/></svg>'}];
 function openArcade(){hush();$('#arcStars').textContent=freeStars();{const p=$('.arcsub');if(p){let e=p.querySelector('.arcleft');if(!e){e=document.createElement('span');e.className='arcleft';p.appendChild(e)}e.textContent=arcLeft()!==null?` · noch ${arcLeft()} Min.`:''}}
-  $('#arcGrid').innerHTML=ARC.map(a=>`<button class="arct ${a.ok?'':'soon'}" data-a="${a.id}">${a.svg}<span class="cost">${a.ok?(a.free||!arcCost()?'frei':arcCost()+' ⭐'):'bald'}</span><b>${a.name}</b><small>${a.desc}</small></button>`).join('');
+  $('#arcGrid').innerHTML=ARC.map(a=>`<button class="arct ${a.ok?'':'soon'}" data-a="${a.id}">${a.svg}<span class="cost">${a.ok?(a.id==='park'?'🔒 Eltern':a.free||!arcCost()?'frei':arcCost()+' ⭐'):'bald'}</span><b>${a.name}</b><small>${a.desc}</small></button>`).join('');
   $('#arcGrid').querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const id=b.dataset.a;hush();
-    if(id==='park'){$('#arcOv').hidden=true;renderHome();show('home');return}
+    if(id==='park'){parkGate(()=>{$('#arcOv').hidden=true;renderHome();show('home')});return}
 
     if(arcTimeUp()||freeStars()<arcCost()){tone([330,262],.1,'triangle');b.classList.remove('wob');void b.offsetWidth;b.classList.add('wob');say(arcTimeUp()?'Für heute ist die Spielzeit vorbei. Morgen geht es weiter!':'Sammle erst noch Sterne beim Üben!');return}
     $('#arcOv').hidden=true;(id==='race'?openRace:id==='sling'?openSling:openFly)()});
   $('#arcOv').hidden=false;say('Willkommen auf dem Spielplatz!')}
 $('#arcX').onclick=()=>{hush();$('#arcOv').hidden=true};
+/* Eltern-Freigabe für Nukis Park: Rechenaufgabe, die kleine Kinder nicht lösen können */
+function parkGate(ok){const a=6+Math.floor(Math.random()*4),b=6+Math.floor(Math.random()*4),ov=$('#pgateOv'),inp=$('#pgIn'),msg=$('#pgMsg');let tries=0;
+  $('#pgQ').textContent=`${a} × ${b} = ?`;inp.value='';msg.textContent='';ov.hidden=false;setTimeout(()=>{try{inp.focus()}catch(e){}},150);
+  const check=()=>{if(parseInt(inp.value,10)===a*b){ov.hidden=true;ok()}else{tries++;inp.value='';msg.textContent=tries>=3?'Bitte einen Erwachsenen fragen.':'Das stimmt leider nicht.';if(tries>=3)setTimeout(()=>ov.hidden=true,1400)}};
+  $('#pgOk').onclick=check;inp.onkeydown=e=>{if(e.key==='Enter')check()};$('#pgX').onclick=()=>{ov.hidden=true}}
 
 /* --- Nuki fliegt --- */
 let FLY=null;
