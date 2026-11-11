@@ -1575,8 +1575,9 @@ function openSling(){
   function close(){hush();flyStop();wc.hidden=true;ov.hidden=true;msg.innerHTML='';openArcade()}
   $('#flyX').onclick=close;
   const pt=e=>{const r=cv.getBoundingClientRect();return {x:(e.clientX-r.left)/sc,y:(e.clientY-r.top)/sc}};
-  const setPull=e=>{const p=pt(e);let dx=p.x-AX(),dy=p.y-AY();const l=Math.hypot(dx,dy),m=115;if(l>m){dx*=m/l;dy*=m/l}pull={x:Math.min(40,dx),y:dy}};
-  cv.onpointerdown=e=>{e.preventDefault();if(st!=='aim')return;const p=pt(e);if(p.x>VW*.6)return;drag=true;try{cv.setPointerCapture(e.pointerId)}catch(_){}setPull(e)};
+  /* Ziehen wirkt relativ zum Startpunkt des Fingers (egal wo man antippt). Nach oben ziehen zielt nie in den Boden. */
+  let p0=null;const setPull=e=>{const p=pt(e);let dx=p.x-p0.x,dy=Math.max(0,p.y-p0.y);const l=Math.hypot(dx,dy),m=115;if(l>m){dx*=m/l;dy*=m/l}pull={x:Math.min(40,dx),y:dy}};
+  cv.onpointerdown=e=>{e.preventDefault();if(st!=='aim')return;const p=pt(e);if(p.x>VW*.6)return;p0=p;drag=true;try{cv.setPointerCapture(e.pointerId)}catch(_){}setPull(e)};
   cv.onpointermove=e=>{if(drag)setPull(e)};
   cv.onpointerup=e=>{if(!drag)return;drag=false;const l=Math.hypot(pull.x,pull.y);if(l<18){pull={x:0,y:0};return}
     nut={x:AX()+pull.x,y:AY()+pull.y,vx:-pull.x*8,vy:-pull.y*8,h:0,b:0,life:0};pull=null;nuts--;hud();st='fly';tone([300,600],.08,'triangle',.12)};
