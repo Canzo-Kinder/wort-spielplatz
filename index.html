@@ -695,7 +695,7 @@ button#pathNuki{display:block;width:100%;padding:0;border:0;background:none;poin
  <div class="pscroll" id="pScroll"><div class="pmap" id="pMap"></div></div>
  <nav class="pnav" aria-label="Hauptmenü">
   <button class="on" id="nPlay"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5L12 5l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5h-5v5H5a1 1 0 0 1-1-1z" fill="currentColor"/></svg>Spielen</button>
-  <button id="nLaute"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v18M17 3v18M7 7.5h10M7 12h10M7 16.5h10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>Laute</button>
+  <button id="nPark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 21L7 4h10l3.5 17" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 4v10M14 4v10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="8.3" y="13.2" width="7.4" height="2.8" rx="1.2" fill="currentColor"/></svg>Spielplatz</button>
   <button id="nSticker"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v11l-5 5H5z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M14 20v-5h5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></svg>Sticker</button>
   <button id="nEltern"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Eltern</button>
  </nav>
@@ -3112,7 +3112,7 @@ function renderPath(){
 $('#pHelp').onclick=()=>openVid();
 $('#pMute').onclick=()=>{S.mute=!S.mute;save();paintMute();renderPath();if(S.mute)hush();else toast('Ton ist an!')};
 $('#nPlay').onclick=()=>renderPath();
-$('#nLaute').onclick=()=>{hush();startGame('leiter')};
+$('#nPark').onclick=()=>{hush();openArcade()};
 $('#nSticker').onclick=()=>{hush();openTreasure()};
 $('#nEltern').onclick=()=>{hush();$('#gateOv').hidden=false};
 $('#btnGateX').onclick=()=>$('#gateOv').hidden=true;
