@@ -1003,7 +1003,7 @@ button#pathNuki{display:block;width:100%;padding:0;border:0;background:none;poin
       <div class="lbl">Stationen nacheinander freischalten</div>
       <div class="seg" id="segLock"></div>
       <p class="hint">Bei „An“ öffnet sich auf dem Spielpfad immer die nächste Station, wenn die vorige einmal geschafft ist. Bei „Aus“ sind alle Stationen offen. Ohne Einstellung gilt: für 7–8 Jahre an, für jüngere Kinder aus. Das Laut-Training unten in der Leiste ist immer offen.</p>
-      <div class="lbl">Mikrofon bei „Sprich mit Nuki“</div>
+      <div class="lbl">Mikrofon bei „Sprich mit Nuki“ und „Nuki versteht dich“</div>
       <div class="seg" id="segMic"></div>
       <p id="micInfo">Mit Mikrofon hört die App, ob Ihr Kind das Wort gesagt hat. Die Erkennung ist großzügig eingestellt, weil Spracherkennung für Erwachsenen-Stimmen gebaut ist und Kinder mit Aussprachestörungen oft nicht sicher erkennt. Die Knöpfe zum Selbst-Bewerten bleiben deshalb immer da. <b>Datenschutz:</b> In Chrome und Edge wird die Aufnahme zur Erkennung an den Browser-Anbieter (Google bzw. Microsoft) geschickt, in Safari teils an Apple. Gespeichert wird in der App nichts.</p>
       <div class="lbl">Stimm-Spiele in der Laut-Leiter (Schlange, Lok, Feder …)</div>
@@ -1205,7 +1205,7 @@ const MUND=[
  {id:'bonbon',lv:5,name:'Bonbon-Backe',e:'🍬',say:'Drück die Zunge von innen in die Backe, wie ein Bonbon!'}
 ];
 /* ================= STATE ================= */
-const DEF={mic:false,age:'mittel',lvl:{},mute:false,stars:0,perGame:{},laut:'ALLE',level:3,rate:0.85,cap:false,sound:true,practice:{}};
+const DEF={mic:true,micV2:true,age:'mittel',lvl:{},mute:false,stars:0,perGame:{},laut:'ALLE',level:3,rate:0.85,cap:false,sound:true,practice:{}};
 /* Mehrere Kinder: jedes Kind hat einen eigenen Speicher. Das erste Kind nutzt den alten Speicher weiter, damit nichts verloren geht. */
 const AVATARE=['Fuchs','Eule','Igel','Frosch','Biene','Marienkäfer','Schmetterling','Pilz'];
 function loadKids(){let K=null;try{K=JSON.parse(localStorage.getItem('ws-kinder')||'null')}catch(e){}
@@ -1215,7 +1215,7 @@ let KIDS=loadKids();
 function saveKids(){try{localStorage.setItem('ws-kinder',JSON.stringify(KIDS))}catch(e){}}
 const skey=id=>id==='k1'?'wortinsel-v1':'wortinsel-v1-'+id;
 const curKid=()=>KIDS.list.find(k=>k.id===KIDS.cur)||KIDS.list[0];
-function load(){try{return Object.assign({},DEF,JSON.parse(localStorage.getItem(skey(KIDS.cur))||'{}'))}catch(e){return {...DEF}}}
+function load(){try{const raw=JSON.parse(localStorage.getItem(skey(KIDS.cur))||'{}')||{};const o=Object.assign({},DEF,raw);if(!raw.micV2){o.mic=true;o.micV2=true}return o}catch(e){return {...DEF}}}
 function save(){try{localStorage.setItem(skey(KIDS.cur),JSON.stringify(S))}catch(e){}}
 async function greetKid(k){const n=(k&&k.name||'').trim();hush();await say('Hallo');if(n)await sayName(n);await say('Schön, dass du da bist.')}
 function sayName(n){const c=CLIPS&&CLIPS[ckey(n)];if(c)return say(n);return sayTTS(n)}
