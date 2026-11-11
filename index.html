@@ -506,6 +506,7 @@ button#pathNuki{display:block;width:100%;padding:0;border:0;background:none;poin
 .arct{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 8px 10px;border:0;border-radius:22px;background:#eef6ff;box-shadow:0 5px 0 #cfe0f3;font:inherit;cursor:pointer;color:inherit}
 .arct:active{transform:translateY(3px);box-shadow:0 2px 0 #cfe0f3}.arct svg{width:76px;height:76px}.arct b{font-family:var(--f-display);font-size:18px;line-height:1.1}
 .arct small{font-weight:800;font-size:13px;color:var(--ink-soft)}.arct .cost{position:absolute;top:8px;right:8px;padding:2px 8px;border-radius:999px;background:#ffc542;font-size:12px;font-weight:800;color:#5a3d00}
+.arct[data-a=park]{overflow:hidden;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:manipulation}.arct .holdfill{position:absolute;inset:0;background:#d9cdf7;transform:scaleX(0);transform-origin:left;pointer-events:none}.arct[data-a=park]>:not(.holdfill){position:relative}.arct[data-a=park] .cost{position:absolute}
 .arct.soon{opacity:.55;cursor:default}.arct.soon .cost{background:#dfe6f1;color:#5b6884}
 .arcnote{margin:12px 0 0;font-size:13px;color:#8a93ad}
 #flyOv{position:fixed;inset:0;z-index:40;background:#bfe7fb;touch-action:none;user-select:none;-webkit-user-select:none}#flyOv[hidden]{display:none}
@@ -1398,12 +1399,18 @@ const ARC=[
  {id:'sling',name:'Nuss-Schleuder',desc:'Wort sagen, Nuss schießen',ok:true,svg:'<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="18" fill="#ffeecb"/><path d="M22 70V46l-8-14M22 46l8-14" fill="none" stroke="#8a5a33" stroke-width="5" stroke-linecap="round"/><path d="M14 32q8 10 16 0" fill="none" stroke="#26303a" stroke-width="2"/><circle cx="22" cy="38" r="5" fill="#a0612e"/><rect x="50" y="52" width="12" height="18" fill="#e2c99c" stroke="#26303a" stroke-width="2.5"/><rect x="62" y="52" width="12" height="18" fill="#e2c99c" stroke="#26303a" stroke-width="2.5"/><rect x="56" y="34" width="12" height="18" fill="#e2c99c" stroke="#26303a" stroke-width="2.5"/></svg>'},
  {id:'park',name:'Nukis Park',desc:'Alle 13 Spiele im Park entdecken',ok:true,free:true,svg:'<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="18" fill="#cfeefb"/><path d="M0 54q40-16 80 0v26H0z" fill="#8fd16a"/><path d="M22 60V40" stroke="#8a5a33" stroke-width="5" stroke-linecap="round"/><circle cx="22" cy="32" r="13" fill="#5fae4c"/><path d="M48 62V38M66 62V38M46 38h22" stroke="#c98d55" stroke-width="4" stroke-linecap="round"/><path d="M54 38v14M60 38v14M52 52h10" stroke="#26303a" stroke-width="2"/></svg>'}];
 function openArcade(){hush();$('#arcStars').textContent=freeStars();{const p=$('.arcsub');if(p){let e=p.querySelector('.arcleft');if(!e){e=document.createElement('span');e.className='arcleft';p.appendChild(e)}e.textContent=arcLeft()!==null?` · noch ${arcLeft()} Min.`:''}}
-  $('#arcGrid').innerHTML=ARC.map(a=>`<button class="arct ${a.ok?'':'soon'}" data-a="${a.id}">${a.svg}<span class="cost">${a.ok?(a.id==='park'?'🔒 Eltern':a.free||!arcCost()?'frei':arcCost()+' ⭐'):'bald'}</span><b>${a.name}</b><small>${a.desc}</small></button>`).join('');
+  $('#arcGrid').innerHTML=ARC.map(a=>`<button class="arct ${a.ok?'':'soon'}" data-a="${a.id}">${a.svg}<span class="cost">${a.ok?(a.id==='park'?'✋ halten':a.free||!arcCost()?'frei':arcCost()+' ⭐'):'bald'}</span><b>${a.name}</b><small>${a.desc}</small></button>`).join('');
   $('#arcGrid').querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const id=b.dataset.a;hush();
-    if(id==='park'){parkGate(()=>{$('#arcOv').hidden=true;renderHome();show('home')});return}
+    if(id==='park'){if(b.dataset.held){delete b.dataset.held;return}b.classList.remove('wob');void b.offsetWidth;b.classList.add('wob');toast('Lange gedrückt halten!');return}
 
     if(arcTimeUp()||freeStars()<arcCost()){tone([330,262],.1,'triangle');b.classList.remove('wob');void b.offsetWidth;b.classList.add('wob');say(arcTimeUp()?'Für heute ist die Spielzeit vorbei. Morgen geht es weiter!':'Sammle erst noch Sterne beim Üben!');return}
     $('#arcOv').hidden=true;(id==='race'?openRace:id==='sling'?openSling:openFly)()});
+  /* Nukis Park: öffnet sich durch langes Gedrückt-Halten (Rechen-Sperre parkGate ist vorerst abgeschaltet und kann später wieder eingesetzt werden) */
+  {const b=$('#arcGrid').querySelector('[data-a="park"]');if(b){const bar=document.createElement('i');bar.className='holdfill';b.prepend(bar);let t0=0,raf=0;
+    const end=()=>{cancelAnimationFrame(raf);raf=0;bar.style.transform='scaleX(0)'};
+    const step=()=>{const p=Math.min(1,(performance.now()-t0)/1300);bar.style.transform=`scaleX(${p})`;if(p>=1){end();b.dataset.held='1';setTimeout(()=>{delete b.dataset.held},600);hush();tone([523,784],.08,'triangle');$('#arcOv').hidden=true;renderHome();show('home')}else raf=requestAnimationFrame(step)};
+    b.addEventListener('pointerdown',()=>{delete b.dataset.held;t0=performance.now();cancelAnimationFrame(raf);raf=requestAnimationFrame(step)});
+    ['pointerup','pointerleave','pointercancel'].forEach(ev=>b.addEventListener(ev,end));b.addEventListener('contextmenu',e=>e.preventDefault())}}
   $('#arcOv').hidden=false;say('Willkommen auf dem Spielplatz!')}
 $('#arcX').onclick=()=>{hush();$('#arcOv').hidden=true};
 /* Eltern-Freigabe für Nukis Park: Rechenaufgabe, die kleine Kinder nicht lösen können */
