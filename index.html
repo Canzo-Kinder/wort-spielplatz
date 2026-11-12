@@ -1499,7 +1499,7 @@ function openFly(){
   $('#flyX').onclick=close;
   cv.onpointerdown=e=>{e.preventDefault();if(!F.voice)flap()};
   const loud=()=>{if(!F.an)return false;F.an.getFloatTimeDomainData(F.td);let r=0;for(const v of F.td)r+=v*v;r=Math.sqrt(r/F.td.length);const now=performance.now();
-    F.floor=F.floor?Math.min(F.floor*1.003,r):r;if(now-F.calT<400)return false;const f={leicht:.6,normal:1,streng:1.6}[S.vg||'normal']||1;return r>Math.max(F.floor*2.7*f,.008*f)};
+    if(r>1e-6)F.floor=F.floor?Math.min(F.floor*1.003,r):r;if(now-F.calT<400||!F.floor)return false;const f={leicht:.6,normal:1,streng:1.6}[S.vg||'normal']||1;return r>Math.max(F.floor*2.7*f,DESK?Math.min(.008*f,F.floor*6):.008*f)};
   const K='#26303a';
   function pillar(x,y0,h){cx.fillStyle='#6cc04a';cx.strokeStyle=K;cx.lineWidth=5;const w=78;cx.beginPath();cx.roundRect(x-w/2,y0,w,h,16);cx.fill();cx.stroke();
     cx.fillStyle='#8ad868';cx.beginPath();cx.roundRect(x-w/2+10,y0+10,14,Math.max(0,h-20),7);cx.fill()}
@@ -1570,7 +1570,7 @@ function openRace(){
   function close(){hush();removeEventListener('keydown',F.key);flyStop();ov.hidden=true;msg.innerHTML='';openArcade()}
   $('#flyX').onclick=close;
   const loud=()=>{if(!F.an)return false;F.an.getFloatTimeDomainData(F.td);let r=0;for(const v of F.td)r+=v*v;r=Math.sqrt(r/F.td.length);const now=performance.now();
-    F.floor=F.floor?Math.min(F.floor*1.003,r):r;if(now-F.calT<400)return false;const f={leicht:.6,normal:1,streng:1.6}[S.vg||'normal']||1;return r>Math.max(F.floor*2.7*f,.008*f)};
+    if(r>1e-6)F.floor=F.floor?Math.min(F.floor*1.003,r):r;if(now-F.calT<400||!F.floor)return false;const f={leicht:.6,normal:1,streng:1.6}[S.vg||'normal']||1;return r>Math.max(F.floor*2.7*f,DESK?Math.min(.008*f,F.floor*6):.008*f)};
   const K='#26303a';
   function spawn(){const want=Math.random()<.55||t-lastGood>4;const w=want?rnd(good):rnd(bad);if(want)lastGood=t;
     const free=[0,1,2].filter(k=>!items.some(i=>i.l===k&&i.y<150));items.push({w,ok:want,l:rnd(free.length?free:[0,1,2]),y:-70})}
@@ -2268,6 +2268,7 @@ const VG={
  R:{t:'voice',vis:'grow',emo:'🦁',btn:'🦁 Löwen-Spiel',title:'Brumm wie der Löwe!',hint:'Mach „Rrrrr“. Je länger du brummst, desto größer wird der Löwe.',win:'Was für ein starker Löwe!'},
  L:{t:'voice',vis:'notes',emo:'🎵',btn:'🎵 Sing-Spiel',title:'Sing mit!',hint:'Sing „La – la – la“. Dann fliegen die Noten.',win:'Wunderschön gesungen!'},
  CL:{t:'voice',vis:'balloon',emo:'🎈',btn:'🎈 Ballon-Spiel',title:'Blas den Ballon auf!',hint:'Sag die Laute laut und deutlich. Mit deiner Stimme wird der Ballon groß.',win:'Peng! Der Ballon ist geplatzt!'}};
+const DESK=!!(window.matchMedia&&matchMedia('(hover:hover) and (pointer:fine)').matches); /* Computer: Mikrofon ohne Verstärkung ist viel leiser als am Handy */
 function vgUsable(){return !!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&(window.AudioContext||window.webkitAudioContext))}
 function vgStop(){if(MED.g){MED.g.getTracks().forEach(t=>t.stop());MED.g=null}}
 function openVoiceGame(z){
@@ -2299,18 +2300,18 @@ function openVoiceGame(z){
   function measure(now){
     an.getFloatFrequencyData(fl);an.getFloatTimeDomainData(td);let r=0;for(const v of td)r+=v*v;r=Math.sqrt(r/td.length);
     const lo=band(120,1000),hs=C.t==='hiss'?band(C.lo,C.hi):0;
-    if(now-cal<600){floor=floor?{lo:floor.lo+lo,hs:floor.hs+hs,r:floor.r+r}:{lo,hs,r};calN++;return null}
+    if(now-cal<600||calN<8){if(r>1e-6){floor=floor?{lo:floor.lo+lo,hs:floor.hs+hs,r:floor.r+r}:{lo,hs,r};calN++}else if(now-cal>4000){calN=Math.max(calN,8);floor=floor||{lo:1e-10,hs:1e-12,r:1e-5}}return null}
     if(calN&&!floor.n){floor={lo:floor.lo/calN,hs:floor.hs/calN,r:floor.r/calN,n:1};hint.textContent=C.hint}
     /* Grundrauschen folgt der Umgebung: sinkt sofort, steigt nur langsam (so stört ein lauter Moment beim Start nicht) */
-    floor.hs=Math.min(floor.hs*1.002,Math.max(hs,1e-12));floor.r=Math.min(floor.r*1.002,Math.max(r,1e-7));floor.lo=Math.min(floor.lo*1.002,Math.max(lo,1e-12));
+    if(r>1e-6){floor.hs=Math.min(floor.hs*1.002,Math.max(hs,1e-12));floor.r=Math.min(floor.r*1.002,Math.max(r,1e-7));floor.lo=Math.min(floor.lo*1.002,Math.max(lo,1e-12))}
     lvl=Math.max(0,Math.min(1,Math.log10(Math.max(r,1e-7)/floor.r)/1.3));
     still=r<1e-6?still+1:0;if(still>90&&neu<1){neu++;still=0;restart();return null}
     const f={leicht:.45,normal:1,streng:2}[S.vg||'normal']||1;
     if(C.t==='hiss'){const hiss=hs>Math.max(floor.hs*5*f,1e-9)&&hs>lo*C.r*(f<1?.6:f)&&r>floor.r*(f<1?1.3:1.6);
-      const blow=C.blow&&r>Math.max(floor.r*2.6*f,.004*f)&&hs>floor.hs*3*f; /* Pusten aufs Mikrofon: Windrauschen zählt bei der Feder auch */
+      const blow=C.blow&&r>Math.max(floor.r*2.6*f,DESK?Math.min(.004*f,floor.r*6):.004*f)&&hs>floor.hs*3*f; /* Pusten aufs Mikrofon: Windrauschen zählt bei der Feder auch */
       return hiss||blow}
-    if(C.t==='voice')return lo>Math.max(floor.lo*10*f,1e-6)&&r>floor.r*3*Math.sqrt(f);
-    const on=r>Math.max(floor.r*5*f,.02*f)&&r>prevR*(f<1?1.5:1.8)&&now-lastB>220;prevR=r*.6+prevR*.4;if(on)lastB=now;return on}
+    if(C.t==='voice')return lo>Math.max(floor.lo*10*f,DESK?Math.min(1e-6,floor.lo*40):1e-6)&&r>floor.r*3*Math.sqrt(f);
+    const on=r>Math.max(floor.r*5*f,DESK?Math.min(.02*f,floor.r*10):.02*f)&&r>prevR*(f<1?1.5:1.8)&&now-lastB>220;prevR=r*.6+prevR*.4;if(on)lastB=now;return on}
   function frame(now){
     const dt=Math.min(.1,(now-last)/1000);last=now;const t=(now-t0)/1000;
     if(live&&!won){const m=measure(now);if(m!==null){act=!!m;
