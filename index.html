@@ -1279,9 +1279,14 @@ const skey=id=>id==='k1'?'wortinsel-v1':'wortinsel-v1-'+id;
 const curKid=()=>KIDS.list.find(k=>k.id===KIDS.cur)||KIDS.list[0];
 function load(){try{const raw=JSON.parse(localStorage.getItem(skey(KIDS.cur))||'{}')||{};const o=Object.assign({},DEF,raw);if(!raw.micV2){o.mic=true;o.micV2=true}return o}catch(e){return {...DEF}}}
 function save(){try{localStorage.setItem(skey(KIDS.cur),JSON.stringify(S))}catch(e){}}
-async function greetKid(k){const n=(k&&k.name||'').trim();hush();await say('Hallo');if(n)await sayName(n);await say('Schön, dass du da bist.')}
+const HALLO_PAUSE=20*60*1000;
+function lastHallo(){try{return +localStorage.getItem('ws-hallo-t')||0}catch(e){return 0}}
+function markHallo(){try{localStorage.setItem('ws-hallo-t',String(Date.now()));sessionStorage.setItem('ws-gewaehlt','1')}catch(e){}}
+function halloFaellig(){return Date.now()-lastHallo()>=HALLO_PAUSE}
+async function greetKid(k){const n=(k&&k.name||'').trim();markHallo();hush();
+  try{const pn=$('#pathNuki'),bb=$('#pMap .bub');if(bb)bb.textContent=n?`Hallo ${n}!`:'Hallo!';if(pn){pn.innerHTML=mascotSVG('jubel');pn.classList.remove('hop');void pn.offsetWidth;pn.classList.add('hop');setTimeout(()=>{pn.classList.remove('hop');pn.innerHTML=mascotSVG('normal')},1800)}}catch(e){}await say('Hallo');if(n)await sayName(n);await say('Schön, dass du da bist.')}
 function sayName(n){const c=CLIPS&&CLIPS[ckey(n)];if(c)return say(n);return sayTTS(n)}
-async function switchKid(id){const k=KIDS.list.find(k=>k.id===id);if(!k)return;save();KIDS.cur=id;saveKids();try{sessionStorage.setItem('ws-gewaehlt','1')}catch(e){}
+async function switchKid(id){const k=KIDS.list.find(k=>k.id===id);if(!k)return;save();KIDS.cur=id;saveKids();markHallo();
   try{const o=$('#whoOv');if(o&&!o.hidden){const b=o.querySelector(`[data-who="${id}"]`);b&&b.classList.add('cur')}}catch(e){}
   await Promise.race([greetKid(k),wait(4500)]);location.reload()}
 let S=load();
@@ -2694,11 +2699,19 @@ $('#btnKidAdd').onclick=()=>{let n=2;while(KIDS.list.some(k=>k.id==='k'+n))n++;c
   KIDS.list.push({id:'k'+n,name:'',av:AVATARE.find(a=>!used.includes(a))||AVATARE[n%AVATARE.length]});saveKids();renderKids();
   const inp=$('#kidList').querySelector(`[data-n="k${n}"]`);if(inp)inp.focus()};
 function openWho(){if(KIDS.list.length<2)return;$('#whoList').innerHTML=KIDS.list.map(k=>`<button class="whoKid ${k.id===KIDS.cur?'cur':''}" data-who="${k.id}">${kidAv(k)}<b>${k.name||'Kind'}</b></button>`).join('');
-  $('#whoList').querySelectorAll('[data-who]').forEach(b=>b.onclick=()=>{try{sessionStorage.setItem('ws-gewaehlt','1')}catch(e){}if(b.dataset.who===KIDS.cur){$('#whoOv').hidden=true;renderPath();greetKid(curKid())}else switchKid(b.dataset.who)});
+  $('#whoList').querySelectorAll('[data-who]').forEach(b=>b.onclick=()=>{markHallo();if(b.dataset.who===KIDS.cur){$('#whoOv').hidden=true;renderPath();greetKid(curKid())}else switchKid(b.dataset.who)});
   $('#whoOv').hidden=false}
 $('#pHello').onclick=()=>{if(KIDS.list.length>1)openWho()};
 {let tm=0;$('#pScroll').addEventListener('scroll',()=>{const g=$('.pgoal');if(!g)return;g.classList.add('dim');clearTimeout(tm);tm=setTimeout(()=>g.classList.remove('dim'),1200)},{passive:true})}
-{let chosen=false;try{chosen=!!sessionStorage.getItem('ws-gewaehlt')}catch(e){}if(!chosen&&KIDS.list.length>1)setTimeout(openWho,400)}
+/* Begrüßung: nach einer Pause von 20 Minuten wieder. Mehrere Kinder: „Wer spielt heute?“. Ein Kind: Nuki grüßt beim ersten Tippen (Ton braucht eine Berührung). */
+let halloScharf=false;
+function halloStart(){if(!halloFaellig())return;if(KIDS.list.length>1){setTimeout(openWho,400)}else halloScharf=true}
+document.addEventListener('pointerup',e=>{if(!halloScharf)return;const pth=$('#path');if(!pth||pth.hidden||!$('#whoOv').hidden)return;
+  if(document.querySelector('.overlay:not([hidden])'))return;
+  if(e.target.closest&&e.target.closest('button,a,input,select,.pst,nav'))return; /* eigener Ton des Knopfs hat Vorrang */
+  halloScharf=false;if(halloFaellig())greetKid(curKid())},true);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)halloStart()});
+halloStart();
 /* Name für den Bericht = Name des Kindes */
 if(!S.kindName&&curKid().name)S.kindName=curKid().name;
 /* --- Sichern und Wiederherstellen --- */
