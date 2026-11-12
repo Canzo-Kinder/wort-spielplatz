@@ -1415,7 +1415,7 @@ const ARC=[
 function openArcade(){hush();$('#arcStars').textContent=freeStars();{const p=$('.arcsub');if(p){let e=p.querySelector('.arcleft');if(!e){e=document.createElement('span');e.className='arcleft';p.appendChild(e)}e.textContent=arcLeft()!==null?` · noch ${arcLeft()} Min.`:''}}
   $('#arcGrid').innerHTML=ARC.map(a=>`<button class="arct ${a.ok?'':'soon'}" data-a="${a.id}">${a.svg}<span class="cost">${a.ok?(a.id==='park'?'✋ halten':a.free||!arcCost()?'frei':arcCost()+' ⭐'):'bald'}</span><b>${a.name}</b><small>${a.desc}</small></button>`).join('');
   $('#arcGrid').querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const id=b.dataset.a;hush();
-    if(id==='park'){if(b.dataset.held){delete b.dataset.held;return}b.classList.remove('wob');void b.offsetWidth;b.classList.add('wob');toast('Lange gedrückt halten!');return}
+    if(id==='park'){if(b.dataset.held){delete b.dataset.held;return}b.classList.remove('wob');void b.offsetWidth;b.classList.add('wob');toastNuki('Lange gedrückt halten!');return}
 
     if(arcTimeUp()||freeStars()<arcCost()){tone([330,262],.1,'triangle');b.classList.remove('wob');void b.offsetWidth;b.classList.add('wob');say(arcTimeUp()?'Für heute ist die Spielzeit vorbei. Morgen geht es weiter!':'Sammle erst noch Sterne beim Üben!');return}
     try{$('#arcVid').pause()}catch(e){}$('#arcOv').hidden=true;(id==='race'?openRace:id==='sling'?openSling:openFly)()});
@@ -1659,6 +1659,9 @@ $('#pgL').onclick=()=>scene.scrollBy({left:-scene.clientWidth*.7,behavior:'smoot
 $('#pgR').onclick=()=>scene.scrollBy({left:scene.clientWidth*.7,behavior:'smooth'});
 (function dots(){let h='';for(let k=0;k<160;k++){const x=Math.random()*2400,y=450+Math.random()*130;h+=`<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${(1.5+Math.random()*2).toFixed(1)}"/>`}const sd=$('#sandDots');if(sd)sd.innerHTML=h})();
 let toastT=0;
+/* Satz nur sprechen, wenn alle Teile als Aufnahme mit Nukis Stimme vorliegen */
+function hasClip(t){return !!CLIPS&&chunks(t).every(c=>CLIPS[ckey(c)])}
+function toastNuki(t){toast(t,hasClip(t))}
 function toast(t,speak=true){$('#toastText').textContent=t;setMood($('#toastNuki'),'happy');$('#toast').hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>$('#toast').hidden=true,3200);if(speak)say(t)}
 function boing(el){el.classList.remove('boing');void el.getBoundingClientRect();el.classList.add('boing')}
 /* Im Park führen die Spielgeräte zu den Belohnungs-Spielen, nicht mehr zu den Übungen vom Spielpfad */
@@ -1672,9 +1675,9 @@ async function activate(id,bounce){
     if(id==='paare')tone([392,494,587,784],.13,'triangle',.1);
     /* Jede Station öffnet ihr eigenes Übungsspiel. Danach geht es zurück in den Park. */
     const gm=GAMES.find(x=>x.id===id);if(!gm)return;
-    if(isLocked(id)){tone([330,262],.1,'triangle');toast('Dieses Spiel machst du zuerst auf dem Spielpfad frei.');return}
+    if(isLocked(id)){tone([330,262],.1,'triangle');toastNuki('Dieses Spiel machst du zuerst auf dem Spielpfad frei.');return}
     opening=true;tone([523,784],.08,'triangle');
-    toast(gm.name,false);await Promise.race([say(gm.name+'!'),wait(2500)]);await wait(150);opening=false;$('#toast').hidden=true;fromPark=true;startGame(id);
+    toast(gm.name,false);await Promise.race([hasClip(gm.name)?say(gm.name+'!'):wait(700),wait(2500)]);await wait(150);opening=false;$('#toast').hidden=true;fromPark=true;startGame(id);
 }
 svgEl.querySelectorAll('.hot').forEach(g=>{
   g.setAttribute('role','button');g.setAttribute('tabindex','0');
