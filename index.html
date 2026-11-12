@@ -236,15 +236,35 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
 #stage .split .mctl{align-items:center}
 /* ---------- OVERLAYS ---------- */
 .hbtn.pulse{animation:hpulse 1.4s ease-in-out infinite}@keyframes hpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,198,58,.9)}50%{box-shadow:0 0 0 12px rgba(255,198,58,0)}}
-/* Erklär-Video über den ganzen Bildschirm (Video ist quadratisch: oben Himmel, unten Wiese, darum Hintergrund passend) */
-#vidOv{padding:0!important;background:linear-gradient(#95d4f5 22%,#cfeefb 50%,#b7e199 76%)!important;place-items:stretch}
-#vidOv .vidpanel{width:100%!important;max-width:none!important;height:100%;max-height:none!important;margin:0;padding:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;display:flex;flex-direction:column;overflow:hidden}
+/* Erklär-Video: quadratisch, Himmel/Wiese setzen das Bild nahtlos fort (Farben aus dem Videorand gemessen) */
+#vidOv{--vsky:#8dd1f3;--vsky2:#e2f2fb;--vgr1:#c2e39f;--vgr2:#b3db8a;padding:0!important;background:var(--vgr2)!important;place-items:stretch}
+#vidOv .vidpanel{position:relative;width:100%!important;max-width:none!important;height:100%;max-height:none!important;margin:0;padding:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;display:flex;flex-direction:column;align-items:stretch!important;gap:0;overflow:hidden}
 #vidOv .vidpanel h2{display:none}
-#vidOv .vidpanel video{flex:1;min-height:0;width:100%;height:100%;object-fit:contain;background:transparent;border:0;border-radius:0;box-shadow:none}
-#vidOv .vidpanel .row{position:absolute;left:0;right:0;bottom:calc(max(18px,env(safe-area-inset-bottom)) + 70px);justify-content:center;pointer-events:none;margin:0}
+#vidOv .vidtop{flex:1 1 0;min-height:calc(env(safe-area-inset-top,0px) + 80px);background:var(--vsky)}
+#vidOv .vidbot{flex:1 1 0;min-height:calc(env(safe-area-inset-bottom,0px) + 116px);background:var(--vgr2)}
+#vidOv .vidrow{flex:0 0 auto;display:flex;justify-content:center;background:linear-gradient(var(--vsky) 0%,var(--vsky2) 82.6%,var(--vgr1) 83%,var(--vgr1) 91.4%,var(--vgr2) 91.7%)}
+#vidOv .vidbox{position:relative;width:min(100vw,calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 196px));aspect-ratio:1/1;max-width:100%}
+#vidOv video{display:block;width:100%;height:100%;object-fit:contain;background:transparent;border:0;border-radius:0;box-shadow:none}
+#vidOv video::-webkit-media-controls{display:none!important}
+#vidOv video::-webkit-media-controls-start-playback-button{display:none!important;-webkit-appearance:none}
+#vidOv .vidplay{position:absolute;left:50%;top:50%;width:96px;height:96px;margin:-48px 0 0 -48px;border-radius:50%;background:var(--grape,#7c6cf2);box-shadow:0 6px 0 rgba(60,40,160,.35);display:grid;place-items:center;transition:opacity .2s,transform .2s}
+#vidOv .vidplay svg{width:52px;height:52px;fill:#fff;margin-left:6px}
+#vidOv .vidplay.replay svg{margin-left:0}
+#vidOv .vidbox.playing .vidplay{opacity:0;transform:scale(.8);pointer-events:none}
+#vidOv .vidspin{position:absolute;left:50%;top:50%;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;border:7px solid rgba(255,255,255,.7);border-top-color:var(--grape,#7c6cf2);animation:vspin .9s linear infinite;pointer-events:none}
+@keyframes vspin{to{transform:rotate(360deg)}}
+#vidOv .vidbar{position:absolute;left:14px;right:14px;bottom:10px;height:7px;border-radius:7px;background:rgba(255,255,255,.65);overflow:hidden;pointer-events:none}
+#vidOv .vidbar i{display:block;height:100%;width:0;background:var(--grape,#7c6cf2);border-radius:7px}
+#vidOv .vidpanel .row{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 28px);justify-content:center;pointer-events:none;margin:0}
 #vidOv .vidpanel .row .bigbtn{pointer-events:auto}
-@media (orientation:landscape){#vidOv .vidpanel .row{left:auto;right:max(20px,env(safe-area-inset-right));bottom:calc(max(18px,env(safe-area-inset-bottom)) + 64px)}}
-#vidOv .vidx{position:absolute;top:max(14px,env(safe-area-inset-top));right:max(14px,env(safe-area-inset-right));z-index:2;width:52px;height:52px;border-radius:16px;background:#fff;color:var(--ink);font-size:26px;font-weight:800;box-shadow:0 4px 0 rgba(0,0,0,.12)}
+#vidOv .vidx{position:absolute;top:calc(env(safe-area-inset-top,0px) + 14px);right:max(14px,env(safe-area-inset-right,0px));z-index:3;width:52px;height:52px;border-radius:16px;background:#fff;color:var(--ink);font-size:26px;font-weight:800;box-shadow:0 4px 0 rgba(0,0,0,.12)}
+@media (orientation:landscape){
+  #vidOv .vidtop{min-height:env(safe-area-inset-top,0px)}
+  #vidOv .vidbot{min-height:env(safe-area-inset-bottom,0px)}
+  #vidOv .vidrow{flex:0 0 auto}
+  #vidOv .vidbox{width:min(calc(100vw - 2*max(210px,env(safe-area-inset-right,0px) + 190px)),calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px)))}
+  #vidOv .vidpanel .row{left:auto;right:max(18px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 22px)}
+}
 .overlay{position:fixed;inset:0;background:rgba(20,40,60,.55);display:grid;place-items:center;z-index:30;padding:20px max(16px,env(safe-area-inset-right,0px)) 20px max(16px,env(safe-area-inset-left,0px))}
 .panel{background:var(--paper);border-radius:30px;padding:24px 20px;width:min(440px,100%);text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center;box-shadow:0 10px 0 rgba(0,0,0,.15);max-height:100%;overflow:auto}
 .panel h2{font-family:var(--f-display);font-weight:800;font-size:30px;margin:0;line-height:1.1;text-wrap:balance}
@@ -1114,7 +1134,14 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   <div class="panel vidpanel">
     <h2>So geht der Spielplatz</h2>
     <button class="vidx" id="vidX" aria-label="Schließen">✕</button>
-    <video id="vidEl" playsinline controls preload="none" poster="v/erklaervideo.jpg"><source src="v/erklaervideo.mp4?v=10" type="video/mp4"></video>
+    <div class="vidtop"></div>
+    <div class="vidrow"><div class="vidbox" id="vidBox">
+      <video id="vidEl" playsinline webkit-playsinline preload="metadata" poster="v/erklaervideo.jpg" disablepictureinpicture disableremoteplayback x-webkit-airplay="deny"><source src="v/erklaervideo.mp4?v=10" type="video/mp4"></video>
+      <button class="vidplay" id="vidPlay" aria-label="Abspielen"><svg viewBox="0 0 24 24"><path id="vidPlayIco" d="M8 5.5v13l11-6.5z"/></svg></button>
+      <div class="vidspin" id="vidSpin" hidden></div>
+      <div class="vidbar"><i id="vidProg"></i></div>
+    </div></div>
+    <div class="vidbot"></div>
     <div class="row"><button class="bigbtn" id="btnCloseVid">Los geht's!</button></div>
   </div>
 </div>
@@ -1685,8 +1712,20 @@ svgEl.querySelectorAll('.hot').forEach(g=>{
   g.addEventListener('click',act);g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();act()}});
 });
 function renderHome(){$('#starCount').textContent=S.stars;paintGoal();setMood($('#sceneNuki'),'normal');requestAnimationFrame(fitScene)}
-function openVid(){hush();$('#toast').hidden=true;const o=$('#vidOv'),v=$('#vidEl');o.hidden=false;try{v.currentTime=0;const pr=v.play();if(pr)pr.catch(()=>{})}catch(e){}}
-function closeVid(){const v=$('#vidEl');try{v.pause()}catch(e){}$('#vidOv').hidden=true;$('#btnHelp').classList.remove('pulse');try{localStorage.setItem('ws-vid','1')}catch(e){}}
+const vidTheme=document.querySelectorAll('meta[name="theme-color"]');let vidThemeOld=null;
+function vidState(){const v=$('#vidEl'),bx=$('#vidBox'),pl=$('#vidPlay');bx.classList.toggle('playing',!v.paused&&!v.ended);
+  pl.classList.toggle('replay',v.ended);$('#vidPlayIco').setAttribute('d',v.ended?'M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z':'M8 5.5v13l11-6.5z');pl.setAttribute('aria-label',v.ended?'Nochmal ansehen':'Abspielen')}
+function vidPlay(){const v=$('#vidEl');if(v.ended)v.currentTime=0;try{const pr=v.play();if(pr)pr.catch(()=>vidState())}catch(e){}vidState()}
+(function(){const v=$('#vidEl');
+  ['play','playing','pause','ended'].forEach(ev=>v.addEventListener(ev,vidState));
+  v.addEventListener('waiting',()=>{$('#vidSpin').hidden=false});['playing','canplay','pause'].forEach(ev=>v.addEventListener(ev,()=>{$('#vidSpin').hidden=true}));
+  v.addEventListener('timeupdate',()=>{$('#vidProg').style.width=(v.duration?v.currentTime/v.duration*100:0)+'%'});
+  $('#vidBox').addEventListener('click',e=>{e.stopPropagation();if(v.paused||v.ended)vidPlay();else{v.pause()}});
+})();
+function openVid(){hush();$('#toast').hidden=true;const o=$('#vidOv'),v=$('#vidEl');o.hidden=false;
+  try{vidThemeOld=vidTheme[0]&&vidTheme[0].content;vidTheme.forEach(m=>m.content='#8dd1f3')}catch(e){}
+  $('#vidProg').style.width='0%';try{v.currentTime=0}catch(e){}vidPlay()}
+function closeVid(){const v=$('#vidEl');try{v.pause()}catch(e){}$('#vidOv').hidden=true;$('#vidSpin').hidden=true;try{if(vidThemeOld)vidTheme.forEach(m=>m.content=vidThemeOld)}catch(e){}$('#btnHelp').classList.remove('pulse');try{localStorage.setItem('ws-vid','1')}catch(e){}}
 try{if(!localStorage.getItem('ws-vid'))$('#btnHelp').classList.add('pulse')}catch(e){}
 $('#btnHelp').onclick=openVid;$('#btnCloseVid').onclick=closeVid;$('#vidX').onclick=closeVid;$('#vidOv').onclick=e=>{if(e.target.id==='vidOv')closeVid()};
 $('#vidEl').addEventListener('error',()=>{closeVid();toast('Wisch zur Seite und tipp auf die Spielgeräte. Jedes Spielgerät ist ein Spiel!')},true);
