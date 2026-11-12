@@ -2120,7 +2120,7 @@ const NV=[ // Nuki versteht dich: Minimalpaare mit Alltags-Situation für jedes 
  {k:['CL','R','K'],a:'Kreis',b:'Reis',ca:'Welche Form ist ganz rund?',cb:'Was isst Ben mit Soße?'},
  {k:['R','L'],a:'Reiter',b:'Leiter',ca:'Wer sitzt auf dem Pferd?',cb:'Womit klettert man auf das Dach?'}
 ];
-S.ziel=S.ziel||'ALLE';S.pos=S.pos||'alle';S.goal=S.goal||30;S.leiter=S.leiter||{};S.log=S.log||{};S.ear=S.ear||'erwachsen';
+S.ziel=S.ziel||'ALLE';S.pos=S.pos||'alle';S.goal=S.goal||30;S.leiter=S.leiter||{};S.log=S.log||{};if(!S.earV2){S.ear='kind';S.earV2=true;try{save()}catch(e){}}S.ear=S.ear||'kind';
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 /* Kluges Wiederholen: Wörter in 5 Kästchen. Falsch -> zurück in Kästchen 0 (kommt gleich wieder), richtig -> eins weiter (kommt nach 1, 2, 4, 7 Tagen wieder) */
 const GAP=[0,1,2,4,7];
@@ -2261,7 +2261,7 @@ function rateRow(id){return `<div class="raterow"><p class="stage-note" style="m
 const VG={
  S:{t:'hiss',lo:4000,hi:11000,r:.5,vis:'snake',btn:'🐍 Schlangen-Spiel',title:'Zisch wie die Schlange!',hint:'Mach „Sssss“. Je länger du zischst, desto länger wird die Schlange.',win:'Super gezischt! Die Schlange ist ganz lang!'},
  SCH:{t:'hiss',lo:1600,hi:5200,r:.35,vis:'train',btn:'🚂 Lok-Spiel',title:'Sch macht die Lok!',hint:'Mach „Schhhh“ mit einem Kussmund. Dann fährt die Lok zum Bahnhof.',win:'Tschu-tschu! Die Lok ist angekommen!'},
- F:{t:'hiss',lo:1500,hi:9000,r:.22,vis:'feather',btn:'🪶 Feder-Spiel',title:'Puste die Feder weg!',hint:'Mach „Ffff“: obere Zähne auf die Unterlippe. Dann fliegt die Feder.',win:'Die Feder ist weggeflogen! Toll gepustet!'},
+ F:{t:'hiss',lo:1500,hi:9000,r:0,blow:1,vis:'feather',btn:'🪶 Feder-Spiel',title:'Puste die Feder weg!',hint:'Mach „Ffff“: obere Zähne auf die Unterlippe. Dann fliegt die Feder.',win:'Die Feder ist weggeflogen! Toll gepustet!'},
  K:{t:'burst',n:6,vis:'slots',emo:'🐦',slot:'🪵',btn:'🐦 Specht-Spiel',title:'Klopf wie der Specht!',hint:'Sag „k – k – k“. Bei jedem K klopft der Specht.',win:'Klopf, klopf! Super gemacht!'},
  T:{t:'burst',n:8,vis:'slots',emo:'⏰',slot:'⭐',btn:'⏰ Uhr-Spiel',title:'Die Uhr tickt!',hint:'Sag „t – t – t“. Bei jedem T tickt die Uhr.',win:'Tick, tack! Die Uhr läuft!'},
  G:{t:'burst',n:5,vis:'slots',emo:'🐔',slot:'🥚',btn:'🐔 Hühner-Spiel',title:'Das Huhn gackert!',hint:'Sag „g – g – g“. Bei jedem G legt das Huhn ein Ei.',win:'Gack, gack! Fünf Eier im Nest!'},
@@ -2279,27 +2279,36 @@ function openVoiceGame(z){
     <p class="vgnote">Das Mikrofon hört nur zu, während das Spiel läuft. Nichts wird aufgenommen oder verschickt.</p></div></div>`;
   document.body.appendChild(ov);
   const cv=$('#vgCv'),cx=cv.getContext('2d'),W=cv.width,H=cv.height,bar=$('#vgBar'),hint=$('#vgHint'),go=$('#vgGo');
-  let raf=0,p=0,cnt=0,act=false,live=false,won=false,t0=performance.now(),last=t0,parts=[],an=null,src=null,fl=null,td=null,floor=null,cal=0,calN=0,lastB=0,prevR=0;
+  let raf=0,p=0,cnt=0,act=false,live=false,won=false,t0=performance.now(),last=t0,parts=[],an=null,src=null,fl=null,td=null,floor=null,cal=0,calN=0,lastB=0,prevR=0,lvl=0,still=0,neu=0,actT=0;
   const close=()=>{cancelAnimationFrame(raf);try{src&&src.disconnect()}catch(e){}vgStop();ov.remove();document.removeEventListener('visibilitychange',vis)};
   const vis=()=>{if(document.hidden)close()};document.addEventListener('visibilitychange',vis);
   $('#vgX').onclick=close;ov.addEventListener('click',e=>{if(e.target===ov)close()});
   const band=(lo,hi)=>{const hz=ac.sampleRate/an.fftSize;let s=0;for(let i=Math.max(1,Math.floor(lo/hz));i<=Math.min(fl.length-1,Math.ceil(hi/hz));i++)s+=Math.pow(10,fl[i]/10);return s};
   async function start(){
     if(live)return;go.disabled=true;hint.textContent='Einen Moment …';
-    try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')await ac.resume();
+    try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state!=='running'){try{await ac.resume()}catch(e){}}
+      if(ac.state!=='running'){try{ac.close()}catch(e){}ac=new (window.AudioContext||window.webkitAudioContext)();try{await ac.resume()}catch(e){}}
       MED.g=await (aSess('play-and-record'),navigator.mediaDevices).getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
       src=ac.createMediaStreamSource(MED.g);an=ac.createAnalyser();an.fftSize=2048;an.smoothingTimeConstant=.25;src.connect(an);fl=new Float32Array(an.frequencyBinCount);td=new Float32Array(an.fftSize)}
     catch(e){hint.textContent='Das Mikrofon ist hier nicht erlaubt. Frag einen Erwachsenen.';go.disabled=false;return}
-    live=true;p=0;cnt=0;won=false;floor=null;cal=performance.now();calN=0;hint.textContent='Psst … kurz ganz leise sein …';go.textContent='🎤 Ich höre zu';
+    live=true;p=0;cnt=0;won=false;floor=null;cal=performance.now();calN=0;still=0;neu=0;hint.textContent='Psst … kurz ganz leise sein …';go.textContent='🎤 Ich höre zu';
   }
   go.onclick=start;
+  async function restart(){live=false;try{src&&src.disconnect()}catch(e){}vgStop();try{ac&&ac.close()}catch(e){}ac=null;hint.textContent='Einen Moment …';
+    try{await start();if(!live)throw 0}catch(e){hint.textContent='Das Mikrofon hört gerade nichts. Tippe nochmal auf den Knopf.';go.disabled=false;go.textContent='🎤 Nochmal starten';neu=0}}
   function measure(now){
     an.getFloatFrequencyData(fl);an.getFloatTimeDomainData(td);let r=0;for(const v of td)r+=v*v;r=Math.sqrt(r/td.length);
     const lo=band(120,1000),hs=C.t==='hiss'?band(C.lo,C.hi):0;
     if(now-cal<600){floor=floor?{lo:floor.lo+lo,hs:floor.hs+hs,r:floor.r+r}:{lo,hs,r};calN++;return null}
     if(calN&&!floor.n){floor={lo:floor.lo/calN,hs:floor.hs/calN,r:floor.r/calN,n:1};hint.textContent=C.hint}
+    /* Grundrauschen folgt der Umgebung: sinkt sofort, steigt nur langsam (so stört ein lauter Moment beim Start nicht) */
+    floor.hs=Math.min(floor.hs*1.002,Math.max(hs,1e-12));floor.r=Math.min(floor.r*1.002,Math.max(r,1e-7));floor.lo=Math.min(floor.lo*1.002,Math.max(lo,1e-12));
+    lvl=Math.max(0,Math.min(1,Math.log10(Math.max(r,1e-7)/floor.r)/1.3));
+    still=r<1e-6?still+1:0;if(still>90&&neu<1){neu++;still=0;restart();return null}
     const f={leicht:.45,normal:1,streng:2}[S.vg||'normal']||1;
-    if(C.t==='hiss')return hs>Math.max(floor.hs*8*f,1e-7)&&hs>lo*C.r*(f<1?.6:f)&&r>floor.r*(f<1?1.5:2);
+    if(C.t==='hiss'){const hiss=hs>Math.max(floor.hs*5*f,1e-9)&&hs>lo*C.r*(f<1?.6:f)&&r>floor.r*(f<1?1.3:1.6);
+      const blow=C.blow&&r>Math.max(floor.r*2.6*f,.004*f)&&hs>floor.hs*3*f; /* Pusten aufs Mikrofon: Windrauschen zählt bei der Feder auch */
+      return hiss||blow}
     if(C.t==='voice')return lo>Math.max(floor.lo*10*f,1e-6)&&r>floor.r*3*Math.sqrt(f);
     const on=r>Math.max(floor.r*5*f,.02*f)&&r>prevR*(f<1?1.5:1.8)&&now-lastB>220;prevR=r*.6+prevR*.4;if(on)lastB=now;return on}
   function frame(now){
@@ -2307,7 +2316,10 @@ function openVoiceGame(z){
     if(live&&!won){const m=measure(now);if(m!==null){act=!!m;
       if(C.t==='burst'){if(m){cnt++;p=cnt/C.n;tone([660+cnt*40],.06,'triangle',.12)}}else if(act)p=Math.min(1,p+dt/((C.t==='hiss'?2.4:3)*({leicht:.7,normal:1,streng:1.3}[S.vg||'normal']||1)))}
       if(p>=1){won=true;act=false;live=false;vgStop();confetti(40);tone([523,659,784,1047],.12,'triangle');hint.textContent=C.win;say(C.win);go.disabled=false;go.textContent='🔁 Nochmal'}}
-    bar.style.width=Math.round(p*100)+'%';draw(t);raf=requestAnimationFrame(frame)}
+    bar.style.width=Math.round(p*100)+'%';draw(t);
+    if(live&&!won){const n=Math.round(lvl*5);cx.save();cx.translate(W-28,34);for(let k=0;k<5;k++){cx.fillStyle=k<n?(act?'#3fae6a':'#7c6cf2'):'rgba(38,48,58,.18)';const h=8+k*7;cx.beginPath();cx.roundRect?cx.roundRect(-(4-k)*14-10,-h+20,10,h,4):cx.rect(-(4-k)*14-10,-h+20,10,h);cx.fill()}cx.restore()}
+    if(live&&!won&&act){actT=now}if(live&&!won&&floor&&floor.n)hint.textContent=now-actT<500?'Super, ich höre dich! Weiter so …':C.hint;
+    raf=requestAnimationFrame(frame)}
   const emo=(e,x,y,s,rot=0)=>{cx.save();cx.translate(x,y);cx.rotate(rot);cx.font=`${s}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`;cx.textAlign='center';cx.textBaseline='middle';cx.fillText(e,0,0);cx.restore()};
   function bg(){const g=cx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#bfe7fb');g.addColorStop(1,'#eaf8ff');cx.fillStyle=g;cx.fillRect(0,0,W,H);
     cx.fillStyle='#8fd16a';cx.beginPath();cx.ellipse(W/2,H+120,W*.8,200,0,0,Math.PI*2);cx.fill();cx.strokeStyle='#26303a';cx.lineWidth=5;cx.stroke()}
