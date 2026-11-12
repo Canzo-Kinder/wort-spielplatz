@@ -1492,7 +1492,7 @@ function openFly(){
     const go=async voice=>{if(arcTimeUp()||freeStars()<arcCost()){msg.querySelector('p').textContent=arcPay();return}
       if(voice&&!F.an){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')await ac.resume();
           MED.f=await (aSess('play-and-record'),navigator.mediaDevices).getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
-          F.src=ac.createMediaStreamSource(MED.f);F.an=ac.createAnalyser();F.an.fftSize=1024;F.src.connect(F.an);F.td=new Float32Array(F.an.fftSize)}
+          F.src=ac.createMediaStreamSource(MED.f);F.an=ac.createAnalyser();F.an.fftSize=1024;F.src.connect(F.an);F.td=new Float32Array(F.an.fftSize);F.fd=new Float32Array(F.an.frequencyBinCount)}
         catch(e){msg.querySelector('p').textContent='Das Mikrofon geht hier nicht. Spiel mit Tippen!';return}}
       {const er=arcPay();if(er){msg.querySelector('p').textContent=er;return}}hush();F.voice=voice;F.floor=0;F.calN=0;F.calT=performance.now();reset();msg.innerHTML='';
       await Promise.race([say(voice?'Mach Sch, dann fliegt Nuki hoch.':'Tippe, dann fliegt Nuki hoch.'),wait(3200)]);if(FLY!==F)return;F.calT=performance.now();last=performance.now();F.run=true};
@@ -1500,8 +1500,15 @@ function openFly(){
   function close(){hush();flyStop();ov.hidden=true;msg.innerHTML='';openArcade()}
   $('#flyX').onclick=close;
   cv.onpointerdown=e=>{e.preventDefault();if(!F.voice)flap()};
+  /* Anteil des Zischens (1,8–8 kHz) am ganzen Ton: „Sch“ ist hoch, Sprechen und Raumgeräusche sind tief */
+  const hissShare=()=>{if(!F.fd)return 1;F.an.getFloatFrequencyData(F.fd);const hz=ac.sampleRate/F.an.fftSize;let hi=0,all=0;
+    for(let i=Math.floor(100/hz);i<Math.min(F.fd.length,Math.ceil(8000/hz));i++){const p=Math.pow(10,F.fd[i]/10);all+=p;if(i*hz>=1800)hi+=p}return all>0?hi/all:0};
   const loud=()=>{if(!F.an)return false;F.an.getFloatTimeDomainData(F.td);let r=0;for(const v of F.td)r+=v*v;r=Math.sqrt(r/F.td.length);const now=performance.now();
-    if(r>1e-6)F.floor=F.floor?Math.min(F.floor*1.003,r):r;if(now-F.calT<400||!F.floor)return false;const f={leicht:.6,normal:1,streng:1.6}[S.vg||'normal']||1;return r>Math.max(F.floor*2.7*f,DESK?Math.min(.008*f,F.floor*6):.008*f)};
+    if(r>1e-6)F.floor=F.floor?Math.min(F.floor*1.003,r):r;if(now-F.calT<400||!F.floor)return false;const f={leicht:.6,normal:1,streng:1.6}[S.vg||'normal']||1;
+    let on=r>Math.max(F.floor*2.7*f,DESK?Math.min(.008*f,F.floor*6):.008*f);
+    /* Android: Mikrofon ist dort viel lauter und ungefiltert. Darum lauter sein UND wirklich zischen, und zwei Messungen hintereinander */
+    if(ANDROID){on=on&&r>Math.max(F.floor*4*f,.018*f)&&hissShare()>.5;F.on2=on?(F.on2||0)+1:0;return F.on2>=2}
+    return on};
   const K='#26303a';
   function pillar(x,y0,h){cx.fillStyle='#6cc04a';cx.strokeStyle=K;cx.lineWidth=5;const w=78;cx.beginPath();cx.roundRect(x-w/2,y0,w,h,16);cx.fill();cx.stroke();
     cx.fillStyle='#8ad868';cx.beginPath();cx.roundRect(x-w/2+10,y0+10,14,Math.max(0,h-20),7);cx.fill()}
@@ -2270,6 +2277,7 @@ const VG={
  R:{t:'voice',vis:'grow',emo:'🦁',btn:'🦁 Löwen-Spiel',title:'Brumm wie der Löwe!',hint:'Mach „Rrrrr“. Je länger du brummst, desto größer wird der Löwe.',win:'Was für ein starker Löwe!'},
  L:{t:'voice',vis:'notes',emo:'🎵',btn:'🎵 Sing-Spiel',title:'Sing mit!',hint:'Sing „La – la – la“. Dann fliegen die Noten.',win:'Wunderschön gesungen!'},
  CL:{t:'voice',vis:'balloon',emo:'🎈',btn:'🎈 Ballon-Spiel',title:'Blas den Ballon auf!',hint:'Sag die Laute laut und deutlich. Mit deiner Stimme wird der Ballon groß.',win:'Peng! Der Ballon ist geplatzt!'}};
+const ANDROID=/Android/i.test(navigator.userAgent||''); /* Android-Handys: Mikrofon lauter und ohne Filter */
 const DESK=!!(window.matchMedia&&matchMedia('(hover:hover) and (pointer:fine)').matches); /* Computer: Mikrofon ohne Verstärkung ist viel leiser als am Handy */
 function vgUsable(){return !!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&(window.AudioContext||window.webkitAudioContext))}
 function vgStop(){if(MED.g){MED.g.getTracks().forEach(t=>t.stop());MED.g=null}}
