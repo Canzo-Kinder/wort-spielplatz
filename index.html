@@ -2414,7 +2414,7 @@ const LAUTBILD={S:[['🎈','Die Luft zischt aus dem Ballon.'],['🫖','Der Teeke
  L:[['🍭','Wir lecken am Lolli.'],['🎤','Wir singen la, la, la.'],['👶','Das Baby lallt.']]};
 function leiterItem(z,st,i){
   const Z=ZIEL[z];
-  if(st===1){const V=[[Z.bild,Z.bildText,BILDRUF[z]],...(LAUTBILD[z]||[])],v=V[(i+G.off)%V.length];
+  if(st===1){const V=[[Z.bild,Z.bildText,BILDRUF[z]||Z.ruf],...(LAUTBILD[z]||[])],v=V[(i+G.off)%V.length];
     return {kind:'laut',show:v[0],label:Z.name,say:v[1],text:v[1]+(v[2]?' Mach mit: '+v[2]:' Mach mit!'),model:async()=>{await say(v[1]);if(v[2]){await say(v[2])}else if(Z.noise)await lautNoise(Z.noise);else if(Z.ruf){await say(Z.ruf)}else{for(let k=0;k<3;k++){await say(Z.silben[0]);await wait(120)}}}}}
   if(st===2){const s=Z.silben[i%Z.silben.length];return {kind:'silbe',show:s.charAt(0).toUpperCase()+s.slice(1),label:'Silbe',say:s,text:'Sag mal: '+s+'!',model:()=>say(s)}}
   const ws=zielWords(z);const w=ws[(i+G.off)%ws.length];
