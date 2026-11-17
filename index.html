@@ -1356,6 +1356,12 @@ function tone(freqs,dur=.12,type='sine',vol=.18){
   freqs.forEach((f,i)=>{const o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.value=f;const t=ac.currentTime+i*dur;
   g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.02);g.gain.exponentialRampToValueAtTime(.001,t+dur*1.8);o.connect(g).connect(ac.destination);o.start(t);o.stop(t+dur*2)})}catch(e){}
 }
+/* Eigene Spiel-Soundeffekte (sfx/*.mp3, selbst erzeugt). Fallback: die alten Töne */
+const SFX={};let sfxOn=false;
+function sfxLoad(){if(sfxOn)return;sfxOn=true;try{ac=ac||new (window.AudioContext||window.webkitAudioContext)()}catch(e){return}
+  ['flap','nut','hit','win','swish','launch','crash','thud','miss'].forEach(n=>fetch('sfx/'+n+'.mp3').then(r=>{if(!r.ok)throw 0;return r.arrayBuffer()}).then(b=>new Promise((ok,no)=>ac.decodeAudioData(b,ok,no))).then(x=>{SFX[n]=x}).catch(()=>{}))}
+function sfx(n,vol=.8,fb){if(!S.sound||S.mute)return;const b=SFX[n];if(!b||!ac){if(fb)fb();return}
+  try{if(ac.state!=='running')ac.resume();const s=ac.createBufferSource(),g=ac.createGain();g.gain.value=vol;s.buffer=b;s.connect(g).connect(ac.destination);s.start()}catch(e){if(fb)fb()}}
 const fxRight=()=>tone([660,880,1175],.11,'triangle');
 const fxSoft=()=>tone([330,262],.14,'sine',.12);
 const fxDrum=()=>tone([140],.09,'square',.12);
@@ -1446,7 +1452,7 @@ const ARC=[
  {id:'race',name:'Laut-Rennen',desc:'Sammle Bilder mit deinem Laut',ok:true,svg:'<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="18" fill="#dfe9d2"/><path d="M28 80L34 0h12l6 80z" fill="#8a93a3"/><path d="M40 6v12M40 30v12M40 54v12" stroke="#fff" stroke-width="3" stroke-dasharray="1 0"/><rect x="30" y="40" width="20" height="28" rx="7" fill="#ff7a59" stroke="#26303a" stroke-width="2.5"/><rect x="33" y="46" width="14" height="8" rx="3" fill="#cfeefb"/></svg>'},
  {id:'sling',name:'Nuss-Schleuder',desc:'Wort sagen, Nuss schießen',ok:true,svg:'<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="18" fill="#ffeecb"/><path d="M22 70V46l-8-14M22 46l8-14" fill="none" stroke="#8a5a33" stroke-width="5" stroke-linecap="round"/><path d="M14 32q8 10 16 0" fill="none" stroke="#26303a" stroke-width="2"/><circle cx="22" cy="38" r="5" fill="#a0612e"/><rect x="50" y="52" width="12" height="18" fill="#e2c99c" stroke="#26303a" stroke-width="2.5"/><rect x="62" y="52" width="12" height="18" fill="#e2c99c" stroke="#26303a" stroke-width="2.5"/><rect x="56" y="34" width="12" height="18" fill="#e2c99c" stroke="#26303a" stroke-width="2.5"/></svg>'},
  {id:'park',name:'Nukis Park',desc:'Alle 13 Spiele im Park entdecken',ok:true,free:true,svg:'<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="18" fill="#cfeefb"/><path d="M0 54q40-16 80 0v26H0z" fill="#8fd16a"/><path d="M22 60V40" stroke="#8a5a33" stroke-width="5" stroke-linecap="round"/><circle cx="22" cy="32" r="13" fill="#5fae4c"/><path d="M48 62V38M66 62V38M46 38h22" stroke="#c98d55" stroke-width="4" stroke-linecap="round"/><path d="M54 38v14M60 38v14M52 52h10" stroke="#26303a" stroke-width="2"/></svg>'}];
-function openArcade(){hush();$('#arcStars').textContent=freeStars();{const p=$('.arcsub');if(p){let e=p.querySelector('.arcleft');if(!e){e=document.createElement('span');e.className='arcleft';p.appendChild(e)}e.textContent=arcLeft()!==null?` · noch ${arcLeft()} Min.`:''}}
+function openArcade(){hush();sfxLoad();$('#arcStars').textContent=freeStars();{const p=$('.arcsub');if(p){let e=p.querySelector('.arcleft');if(!e){e=document.createElement('span');e.className='arcleft';p.appendChild(e)}e.textContent=arcLeft()!==null?` · noch ${arcLeft()} Min.`:''}}
   $('#arcGrid').innerHTML=ARC.map(a=>`<button class="arct ${a.ok?'':'soon'}" data-a="${a.id}">${a.svg}<span class="cost">${a.ok?(a.id==='park'?'✋ halten':a.free||!arcCost()?'frei':arcCost()+' ⭐'):'bald'}</span><b>${a.name}</b><small>${a.desc}</small></button>`).join('');
   $('#arcGrid').querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const id=b.dataset.a;hush();
     if(id==='park'){if(b.dataset.held){delete b.dataset.held;return}b.classList.remove('wob');void b.offsetWidth;b.classList.add('wob');toastNuki('Lange gedrückt halten!');return}
@@ -1470,7 +1476,7 @@ function parkGate(ok){const a=6+Math.floor(Math.random()*4),b=6+Math.floor(Math.
 /* --- Nuki fliegt --- */
 let FLY=null;
 function flyStop(){if(!FLY)return;cancelAnimationFrame(FLY.raf);try{FLY.cv.onpointerdown=FLY.cv.onpointermove=FLY.cv.onpointerup=null}catch(e){}try{FLY.src&&FLY.src.disconnect()}catch(e){}if(MED.f){MED.f.getTracks().forEach(t=>t.stop());MED.f=null}removeEventListener('resize',FLY.fit);document.removeEventListener('visibilitychange',FLY.vis);FLY=null}
-function openFly(){
+function openFly(){sfxLoad();
   flyStop();try{$('#toast').hidden=true}catch(e){}const ov=$('#flyOv'),cv=$('#flyCv'),cx=cv.getContext('2d'),msg=$('#flyMsg');ov.hidden=false;
   let A;const mkA=()=>{const b={klein:{sp:120,gap:270,n:6},mittel:{sp:150,gap:235,n:8},gross:{sp:185,gap:205,n:10}}[S.age]||{sp:150,gap:235,n:8},l=arcLv('fly')-1;A={sp:b.sp*(1+.05*l),gap:b.gap-6*l,n:b.n+l}};mkA();
   const F=FLY={cv,raf:0,src:null,an:null,td:null,floor:0,calT:0,calN:0,voice:false,run:false};
@@ -1485,7 +1491,7 @@ function openFly(){
   const reset=()=>{mkA();y=VH*.45;vy=0;gates=[];nuts=0;hearts=3;passed=0;inv=0;t=0;dist=0;won=false;parts=[];clouds=Array.from({length:5},(_,k)=>({x:k*260+Math.random()*120,y:40+Math.random()*180,s:.7+Math.random()*.7}));
     for(let k=0;k<A.n;k++)gates.push({x:W+260+k*340,c:VH*.5+(Math.random()-.5)*Math.min(VH-420,520),nut:true,hit:false,done:false,ph:k*1.7});hud()};
   const hud=()=>{$('#flyHearts').textContent='❤️'.repeat(hearts)+'🤍'.repeat(3-hearts);$('#flyNuts').textContent='🌰 '+nuts};
-  const flap=()=>{if(!F.run)return;vy=-400;tone([520],.05,'triangle',.08)};
+  const flap=()=>{if(!F.run)return;vy=-400;sfx('flap',.55,()=>tone([520],.05,'triangle',.08))};
   function menu(title,text,resume){msg.innerHTML=`<h3>${title}</h3><p>${text}</p><div class="row">${resume?'<button class="bigbtn" id="flyGo">▶ Weiter</button>':`<button class="bigbtn" id="flyTap">👆 Mit Tippen</button>${vgUsable()?'<button class="bigbtn sun" id="flyVoice">🎤 Mit „Schhh“</button>':''}`}<button class="bigbtn light" id="flyEnd">Fertig</button></div>${resume?'':arcInfo('fly')}`;
     $('#flyEnd').onclick=close;
     if(resume){$('#flyGo').onclick=()=>{msg.innerHTML='';last=performance.now();F.run=true};return}
@@ -1530,11 +1536,11 @@ function openFly(){
     const dx=A.sp*dt;dist+=dx;clouds.forEach(c=>{c.x-=dx*.25;if(c.x<-120){c.x=W+120;c.y=40+Math.random()*180}});
     inv-=dt;parts.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=500*dt;p.l-=dt*1.6});parts=parts.filter(p=>p.l>0);
     for(const G of gates){G.x-=dx;
-      if(G.nut&&Math.abs(G.x-nx)<46&&Math.abs(G.c-y)<60){G.nut=false;nuts++;hud();tone([880,1175],.07,'triangle',.12);for(let k=0;k<8;k++)parts.push({x:G.x,y:G.c,vx:(Math.random()-.5)*260,vy:-Math.random()*260,r:5,l:1,c:'#ffc542'})}
+      if(G.nut&&Math.abs(G.x-nx)<46&&Math.abs(G.c-y)<60){G.nut=false;nuts++;hud();sfx('nut',.7,()=>tone([880,1175],.07,'triangle',.12));for(let k=0;k<8;k++)parts.push({x:G.x,y:G.c,vx:(Math.random()-.5)*260,vy:-Math.random()*260,r:5,l:1,c:'#ffc542'})}
       if(!G.done&&G.x<nx-60){G.done=true;passed++}
-      if(inv<=0&&Math.abs(G.x-nx)<39+34&&(y-38<G.c-A.gap/2||y+40>G.c+A.gap/2)){inv=1.4;hearts--;hud();tone([220,165],.12,'sawtooth',.1);y=G.c;vy=0;
-        if(hearts<=0){F.run=false;setTimeout(()=>{say('Ups! Nochmal versuchen?');menu('Ups!',`Du hast ${nuts} ${nuts===1?'Nuss':'Nüsse'} gesammelt. Nochmal?`)},500);return}}}
-    if(passed>=A.n&&!won){won=true;dist2=0;confetti(50);tone([523,659,784,1047],.12,'triangle');say('Super geflogen!');
+      if(inv<=0&&Math.abs(G.x-nx)<39+34&&(y-38<G.c-A.gap/2||y+40>G.c+A.gap/2)){inv=1.4;hearts--;hud();sfx('hit',.8,()=>tone([220,165],.12,'sawtooth',.1));y=G.c;vy=0;
+        if(hearts<=0){F.run=false;sfx('miss',.45);setTimeout(()=>{say('Ups! Nochmal versuchen?');menu('Ups!',`Du hast ${nuts} ${nuts===1?'Nuss':'Nüsse'} gesammelt. Nochmal?`)},500);return}}}
+    if(passed>=A.n&&!won){won=true;dist2=0;confetti(50);sfx('win',.8,()=>tone([523,659,784,1047],.12,'triangle'));say('Super geflogen!');
       {const n0=A.n,x=arcWin('fly',nuts);setTimeout(()=>{F.run=false;menu('Geschafft!',`Du hast ${nuts} von ${n0} Nüssen gesammelt.${x}`)},1800)}}
     if(won)dist2+=dx;
     draw()}
@@ -1542,7 +1548,7 @@ function openFly(){
   reset();menu('Nuki fliegt','Flieg durch die Lücken und sammle Nüsse!');say('Nuki fliegt!');F.raf=requestAnimationFrame(frame)}
 
 /* --- Laut-Rennen --- */
-function openRace(){
+function openRace(){sfxLoad();
   flyStop();try{$('#toast').hidden=true}catch(e){}const ov=$('#flyOv'),cv=$('#flyCv'),cx=cv.getContext('2d'),msg=$('#flyMsg');ov.hidden=false;
   let A;const mkA=()=>{const b={klein:{sp:230,n:6,gap:1.5},mittel:{sp:300,n:8,gap:1.25},gross:{sp:370,n:10,gap:1.05}}[S.age]||{sp:300,n:8,gap:1.25},l=arcLv('race')-1;A={sp:b.sp*(1+.07*l),n:b.n+l,gap:b.gap*(1-.05*l)}};mkA();
   const F=FLY={cv,raf:0,src:null,an:null,td:null,floor:0,calT:0,voice:false,run:false};
@@ -1559,7 +1565,7 @@ function openRace(){
   let lane,cxp,items,got,hearts,inv,t,last,dist,next,won,parts,turbo,lastGood,flash;
   const reset=()=>{mkA();lane=1;cxp=LX(1);items=[];got=0;hearts=3;inv=0;t=0;dist=0;next=.8;won=false;parts=[];turbo=0;lastGood=0;flash=null;hud()};
   const hud=()=>{$('#flyHearts').textContent='❤️'.repeat(hearts)+'🤍'.repeat(3-hearts);$('#flyNuts').textContent=`${ZIEL[z].name}: ${got}/${A.n}`};
-  const steer=d=>{if(!F.run)return;const n=Math.max(0,Math.min(2,lane+d));if(n!==lane){lane=n;tone([440],.04,'triangle',.06)}};
+  const steer=d=>{if(!F.run)return;const n=Math.max(0,Math.min(2,lane+d));if(n!==lane){lane=n;sfx('swish',.45,()=>tone([440],.04,'triangle',.06))}};
   let px0=null;
   cv.onpointerdown=e=>{e.preventDefault();px0=e.clientX};
   cv.onpointerup=e=>{if(px0===null)return;const dx=e.clientX-px0;px0=null;if(Math.abs(dx)>24){steer(dx>0?1:-1);return}
@@ -1607,17 +1613,17 @@ function openRace(){
     parts.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.l-=dt*1.8});parts=parts.filter(p=>p.l>0);
     const cy=VH-150;
     for(const i of items){i.y+=dy;if(!i.hit&&i.l===lane&&Math.abs(i.y-cy)<78&&Math.abs(LX(i.l)-cxp)<50){i.hit=true;
-        if(i.ok){got+=turbo>0?2:1;got=Math.min(A.n,got);hud();tone([784,1047],.07,'triangle',.12);flash={t:i.w+'!',ok:true,l:1.1};hush();say(i.w);for(let k=0;k<10;k++)parts.push({x:LX(i.l),y:cy-40,vx:(Math.random()-.5)*300,vy:-Math.random()*300,r:5,l:1,c:'#ffc542'})}
-        else if(inv<=0){hearts--;inv=1.2;hud();tone([220,165],.12,'sawtooth',.1);flash={t:'Kein '+ZIEL[z].name+'!',ok:false,l:1.1};
-          if(hearts<=0){F.run=false;setTimeout(()=>{say('Ups! Nochmal versuchen?');menu('Ups!',`Du hast ${got} von ${A.n} Bildern gesammelt. Nochmal?`)},500);return}}}}
+        if(i.ok){got+=turbo>0?2:1;got=Math.min(A.n,got);hud();sfx('nut',.7,()=>tone([784,1047],.07,'triangle',.12));flash={t:i.w+'!',ok:true,l:1.1};hush();say(i.w);for(let k=0;k<10;k++)parts.push({x:LX(i.l),y:cy-40,vx:(Math.random()-.5)*300,vy:-Math.random()*300,r:5,l:1,c:'#ffc542'})}
+        else if(inv<=0){hearts--;inv=1.2;hud();sfx('hit',.8,()=>tone([220,165],.12,'sawtooth',.1));flash={t:'Kein '+ZIEL[z].name+'!',ok:false,l:1.1};
+          if(hearts<=0){F.run=false;sfx('miss',.45);setTimeout(()=>{say('Ups! Nochmal versuchen?');menu('Ups!',`Du hast ${got} von ${A.n} Bildern gesammelt. Nochmal?`)},500);return}}}}
     items=items.filter(i=>!i.hit&&i.y<VH+80);
-    if(got>=A.n&&!won){won=true;items=[];confetti(50);tone([523,659,784,1047],.12,'triangle');setTimeout(()=>say('Super gefahren!'),700);{const n0=A.n,sec=Math.round(t),x=arcWin('race',sec,true);setTimeout(()=>{F.run=false;menu('Geschafft!',`Alle ${n0} Bilder mit ${ZIEL[z].name} in ${sec} Sekunden gesammelt.${x}`)},2200)}}
+    if(got>=A.n&&!won){won=true;items=[];confetti(50);sfx('win',.8,()=>tone([523,659,784,1047],.12,'triangle'));setTimeout(()=>say('Super gefahren!'),700);{const n0=A.n,sec=Math.round(t),x=arcWin('race',sec,true);setTimeout(()=>{F.run=false;menu('Geschafft!',`Alle ${n0} Bilder mit ${ZIEL[z].name} in ${sec} Sekunden gesammelt.${x}`)},2200)}}
     draw()}
   F.peek=()=>({lane,items:items.map(i=>({l:i.l,y:i.y,ok:i.ok})),won,hearts,got,cy:VH-150});F.steer=steer;
   pickZ();reset();menu('Laut-Rennen','Wische nach links und rechts. Sammle nur die Bilder mit deinem Laut!');say('Laut-Rennen!');F.raf=requestAnimationFrame(frame)}
 
 /* --- Nuss-Schleuder --- */
-function openSling(){
+function openSling(){sfxLoad();
   flyStop();try{$('#toast').hidden=true}catch(e){}const ov=$('#flyOv'),cv=$('#flyCv'),cx=cv.getContext('2d'),msg=$('#flyMsg'),wc=$('#slWord');ov.hidden=false;wc.hidden=true;
   let A;const mkA=()=>{const b={klein:{cols:[2,3,2],nuts:8},mittel:{cols:[3,4,3],nuts:8},gross:{cols:[3,4,4,3],nuts:9}}[S.age]||{cols:[3,4,3],nuts:8},l=arcLv('sling')-1,c=b.cols.slice();for(let k=0;k<l;k++)c[(k*2+1)%c.length]++;if(l>=3)c.push(2);A={cols:c,nuts:b.nuts+Math.floor(l/2)}};mkA();
   const F=FLY={cv,raf:0,run:false};
@@ -1651,7 +1657,7 @@ function openSling(){
   cv.onpointerdown=e=>{e.preventDefault();if(st!=='aim')return;const p=pt(e);if(p.x>VW*.6)return;p0=p;drag=true;try{cv.setPointerCapture(e.pointerId)}catch(_){}setPull(e)};
   cv.onpointermove=e=>{if(drag)setPull(e)};
   cv.onpointerup=e=>{if(!drag)return;drag=false;const l=Math.hypot(pull.x,pull.y);if(l<18){pull={x:0,y:0};return}
-    nut={x:AX()+pull.x,y:AY()+pull.y,vx:-pull.x*8,vy:-pull.y*8,h:0,b:0,life:0};pull=null;nuts--;hud();st='fly';tone([300,600],.08,'triangle',.12)};
+    nut={x:AX()+pull.x,y:AY()+pull.y,vx:-pull.x*8,vy:-pull.y*8,h:0,b:0,life:0};pull=null;nuts--;hud();st='fly';sfx('launch',.75,()=>tone([300,600],.08,'triangle',.12))};
   F.shoot=(px,py)=>{if(st!=='aim')return false;pull={x:px,y:py};drag=true;cv.onpointerup({});return true};
   const K='#26303a';
   function draw(){const w=cv.width,h=cv.height;cx.setTransform(1,0,0,1,0,0);const g=cx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#8fd3f7');g.addColorStop(1,'#e6f7ff');cx.fillStyle=g;cx.fillRect(0,0,w,h);cx.setTransform(sc*dpr,0,0,sc*dpr,0,0);
@@ -1673,19 +1679,19 @@ function openSling(){
   function frame(now){F.raf=requestAnimationFrame(frame);if(!F.run){if(boxes)draw();return}
     const dt=Math.min(.03,(now-last)/1000);last=now;t+=dt;arcTick(dt);const gr=GR();
     const byCol={};boxes.filter(b=>!b.ko).forEach(b=>(byCol[b.c]=byCol[b.c]||[]).push(b));
-    Object.values(byCol).forEach(col=>{col.sort((a,b)=>b.y-a.y);col.forEach((b,k)=>{const ty=gr-B*(k+1);if(b.y<ty){b.vy+=1400*dt;b.y+=b.vy*dt;if(b.y>=ty){b.y=ty;b.vy=0;tone([140],.04,'sine',.06)}}})});
+    Object.values(byCol).forEach(col=>{col.sort((a,b)=>b.y-a.y);col.forEach((b,k)=>{const ty=gr-B*(k+1);if(b.y<ty){b.vy+=1400*dt;b.y+=b.vy*dt;if(b.y>=ty){b.y=ty;b.vy=0;sfx('thud',.35,()=>tone([140],.04,'sine',.06))}}})});
     boxes.forEach(b=>{if(b.ko){b.vy+=1200*dt;b.x+=b.vx*dt;b.y+=b.vy*dt;b.r+=b.vr*dt;b.l-=dt*.9}});
     parts.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=600*dt;p.l-=dt*1.8});parts=parts.filter(p=>p.l>0);
     if(nut){nut.life+=dt;nut.vy+=900*dt;nut.x+=nut.vx*dt;nut.y+=nut.vy*dt;
       for(const b of boxes){if(b.ko)continue;const cxn=Math.max(b.x-B/2,Math.min(nut.x,b.x+B/2)),cyn=Math.max(b.y,Math.min(nut.y,b.y+B));
-        if(Math.hypot(nut.x-cxn,nut.y-cyn)<15){b.ko=true;b.l=1;b.vx=nut.vx*.45+60;b.vy=-260+nut.vy*.2;b.vr=(Math.random()-.3)*9;b.r=0;nut.vx*=.6;nut.vy*=.6;nut.h++;hits++;hud();tone([196,147],.09,'square',.08);
+        if(Math.hypot(nut.x-cxn,nut.y-cyn)<15){b.ko=true;b.l=1;b.vx=nut.vx*.45+60;b.vy=-260+nut.vy*.2;b.vr=(Math.random()-.3)*9;b.r=0;nut.vx*=.6;nut.vy*=.6;nut.h++;hits++;hud();sfx(nut.h>1?'thud':'crash',.7,()=>tone([196,147],.09,'square',.08));
           for(let k=0;k<8;k++)parts.push({x:b.x,y:b.y+B/2,vx:(Math.random()-.5)*320,vy:-Math.random()*300,r:4,l:1,c:'#f6e3b8'});if(nut.h>=3){nut=null;break}}}
       if(nut&&nut.y>gr-14){nut.y=gr-14;nut.vy*=-.42;nut.vx*=.6;nut.b++;if(nut.b>=3||Math.abs(nut.vx)<30)nut=null}
       if(nut&&(nut.x>VW+60||nut.x<-60||nut.life>6))nut=null;
       if(!nut){st='settle';settle=.9}}
     if(st==='settle'){settle-=dt;if(settle<=0){
-      if(left()===0){st='end';confetti(50);tone([523,659,784,1047],.12,'triangle');say('Super getroffen!');{const x=arcWin('sling',nuts);setTimeout(()=>{if(FLY===F){F.run=false;menu('Geschafft!',`Alle Kisten sind umgefallen, und du hast noch ${nuts} ${nuts===1?'Nuss':'Nüsse'}.${x}`)}},1800)}}
-      else if(nuts<=0){st='end';setTimeout(()=>{if(FLY===F){F.run=false;say('Ups! Nochmal versuchen?');menu('Ups!',`${left()} ${left()===1?'Kiste steht':'Kisten stehen'} noch. Nochmal?`)}},400)}
+      if(left()===0){st='end';confetti(50);sfx('win',.8,()=>tone([523,659,784,1047],.12,'triangle'));say('Super getroffen!');{const x=arcWin('sling',nuts);setTimeout(()=>{if(FLY===F){F.run=false;menu('Geschafft!',`Alle Kisten sind umgefallen, und du hast noch ${nuts} ${nuts===1?'Nuss':'Nüsse'}.${x}`)}},1800)}}
+      else if(nuts<=0){st='end';sfx('miss',.45);setTimeout(()=>{if(FLY===F){F.run=false;say('Ups! Nochmal versuchen?');menu('Ups!',`${left()} ${left()===1?'Kiste steht':'Kisten stehen'} noch. Nochmal?`)}},400)}
       else askWord()}}
     draw()}
   F.peek=()=>({st,nuts,left:left(),boxes:boxes.filter(b=>!b.ko).map(b=>({x:b.x,y:b.y})),ax:AX(),ay:AY(),gr:GR()});
