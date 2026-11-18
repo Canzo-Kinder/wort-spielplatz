@@ -429,9 +429,31 @@ button#pathNuki{display:block;width:100%;padding:0;border:0;background:none;poin
 @media (max-height:500px) and (orientation:landscape){.pgoal{display:none}.ptop{padding-top:8px}.pnav{height:58px;margin-bottom:6px}.pnav button{min-height:48px}}
 /* Landkarte mit Gebieten */
 .pbtn[hidden]{display:none}
-#path[data-reg=wald]{background:linear-gradient(#cdeeff 0,#e8f7ff 220px,#a6d98a 220px,#7fc070 100%);--pway:#ead6a6;--pdash:#cdb27a}
-#path[data-reg=insel]{background:linear-gradient(#cdeeff 0,#e8f7ff 220px,#8fd6f4 220px,#6cc4ec 100%);--pway:#f6dc9a;--pdash:#d9b46a}
-.pmap.karte{max-width:none;margin:4px auto 0;border-radius:26px;box-shadow:0 0 0 4px #fff,0 10px 28px rgba(43,47,74,.22);overflow:visible}
+#path>.ptop,#path>.pgoal,#path>.pscroll,#path>.pnav{position:relative;z-index:1}
+.panim{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.kcloud{position:absolute;left:0;opacity:.92;animation:kwolke 70s linear infinite}.kcloud svg{width:100%;display:block}
+.kcloud.c0{animation-duration:80s;animation-delay:-20s}.kcloud.c1{animation-duration:110s;animation-delay:-70s;opacity:.8}.kcloud.c2{animation-duration:95s;animation-delay:-45s;opacity:.7}
+@keyframes kwolke{from{transform:translateX(-30vw)}to{transform:translateX(110vw)}}
+.klamp{position:absolute;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,236,140,.95) 0,rgba(255,220,90,.55) 35%,rgba(255,220,90,0) 70%);animation:klicht 2.6s ease-in-out infinite}
+@keyframes klicht{0%,100%{opacity:.35;transform:translate(-50%,-50%) scale(.8)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.5)}}
+.kglitz{position:absolute;width:14px;height:14px;transform:translate(-50%,-50%);background:radial-gradient(circle,#fff 0 22%,transparent 24%),linear-gradient(#fff,#fff) center/2px 100% no-repeat,linear-gradient(90deg,#fff,#fff) center/100% 2px no-repeat;opacity:0;animation:kglitz 3.5s ease-in-out infinite}
+@keyframes kglitz{0%,70%,100%{opacity:0;transform:translate(-50%,-50%) scale(.3) rotate(0)}80%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(45deg)}}
+.kfly{position:absolute;transform:translate(-50%,-50%);animation:kflug 9s ease-in-out infinite}.kfly.f1{animation-duration:12s;animation-delay:-4s}
+.kfly svg{width:100%;display:block}.kfly .wl,.kfly .wr{transform-origin:20px 16px;animation:kflap .22s ease-in-out infinite alternate}.kfly .wr{animation-name:kflapr}
+@keyframes kflap{to{transform:scaleX(.35)}}@keyframes kflapr{to{transform:scaleX(.35)}}
+@keyframes kflug{0%,100%{translate:0 0}20%{translate:40px -30px}45%{translate:10px -60px}65%{translate:-45px -25px}85%{translate:-20px 15px}}
+.pnuki.ziehen{z-index:60;transition:none}.pnuki.ziehen .mascot{transform:scale(1.18) rotate(-8deg);filter:drop-shadow(0 10px 8px rgba(0,0,0,.25))}.pnuki.ziehen .bub{display:none}
+.pnuki.fliegt{transition:left .3s ease-out,top .3s ease-out}
+.kreg.ziel .kring{box-shadow:0 0 0 5px #fff,0 0 0 11px #ffc542,0 0 30px 12px rgba(255,197,66,.7)!important;transform:scale(1.08)}
+.pst.ziel .pc{transform:scale(1.14);box-shadow:0 0 0 6px #fff,0 0 0 12px #ffc542!important}
+#pathNuki{touch-action:none}
+#game{background:linear-gradient(rgba(255,255,255,.1),rgba(255,255,255,.1)),#9fd77a url(v/bg-spiel.webp) center top/cover no-repeat!important}
+@media (prefers-reduced-motion:reduce){.kcloud,.klamp,.kglitz,.kfly,.kfly .wl,.kfly .wr{animation:none!important}.kglitz{opacity:.6}}
+
+#path[data-reg=wiese]{background:linear-gradient(rgba(255,255,255,.16),rgba(255,255,255,.16)),#9fd77a url(v/bg-wiese.webp) center/cover}
+#path[data-reg=wald]{background:linear-gradient(rgba(255,255,255,.12),rgba(255,255,255,.12)),#7fc070 url(v/bg-wald.webp) center/cover;--pway:#f1dcaa;--pdash:#cdb27a}
+#path[data-reg=insel]{background:linear-gradient(rgba(255,255,255,.14),rgba(255,255,255,.14)),#7fcdec url(v/bg-insel.webp) center/cover;--pway:#f6dc9a;--pdash:#d9b46a}
+.pmap.karte{max-width:none;margin:0}#path[data-reg=karte] .pscroll{overflow:hidden}
 .kbild{position:absolute;inset:0;width:100%;height:100%;border-radius:26px;display:block;user-select:none;-webkit-user-drag:none;pointer-events:none}
 .kreg{position:absolute;transform:translate(-50%,calc(var(--rs) / -2));display:flex;flex-direction:column;align-items:center;gap:3px;padding:0;-webkit-tap-highlight-color:transparent}
 .kreg .kring{width:var(--rs);height:var(--rs);border-radius:50%;position:relative;transition:transform .15s,background .3s}
@@ -790,6 +812,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   <div class="pstar" aria-label="Sterne"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17l-5.9 3.3 1.3-6.5L2.5 9.3l6.6-.8z" fill="#ffc542"/></svg><span id="pStars">0</span></div>
  </div>
  <div class="pgoal"><svg viewBox="0 0 40 40" aria-hidden="true"><g fill="#ffcf4a"><ellipse cx="20" cy="9" rx="5" ry="8"/><ellipse cx="20" cy="31" rx="5" ry="8"/><ellipse cx="9" cy="20" rx="8" ry="5"/><ellipse cx="31" cy="20" rx="8" ry="5"/></g><circle cx="20" cy="20" r="7" fill="#a0612e"/></svg><div><span id="pGoalT">Tagesziel</span><div class="gb"><i id="pGoalB" style="width:0"></i></div></div></div>
+ <div class="panim" id="pAnim" aria-hidden="true"></div>
  <div class="pscroll" id="pScroll"><div class="pmap" id="pMap"></div></div>
  <nav class="pnav" aria-label="Hauptmenü">
   <button class="on" id="nPlay"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5L12 5l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5h-5v5H5a1 1 0 0 1-1-1z" fill="currentColor"/></svg>Spielen</button>
@@ -1085,7 +1108,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
       <div class="seg" id="segAge"></div>
       <p>Jedes Spiel hat 5 Stufen. Die Altersgruppe legt fest, bei welcher Stufe es losgeht und wie weit es steigen kann (3–4 J.: Stufe 1–3, 5–6 J.: 2–4, 7–8 J.: 3–5). Schafft Ihr Kind 5 von 6 Aufgaben im ersten Versuch, steigt die Stufe. Bei 2 oder weniger geht sie eine Stufe zurück, ohne dass das Kind davon etwas merkt.</p>
       <p><b>Was schwerer wird:</b> mehr Bilder zur Auswahl, ähnlich klingende Laute (S/Sch, K/T), längere Wörter, weniger Hilfen und längeres Halten beim Grimassen-Spiegel.</p>
-      <p><b>Die Landkarte:</b> Die Spiele sind auf drei Gebiete verteilt. Auf der <b>Laut-Wiese</b> geht es ums Hören und Aussprechen von Lauten, im <b>Silben-Wald</b> um Silben, Reime und Sätze, und auf der <b>Profi-Insel</b> hinter der Bach-Brücke liegen die schwierigeren Spiele. Tippen Sie auf ein Gebiet, um seine Stationen zu sehen; mit dem Pfeil oben links geht es zurück zur Karte. Die Stationen werden weiterhin der Reihe nach freigeschaltet, die Brücke öffnet sich, sobald das erste Profi-Spiel erreicht ist.</p>
+      <p><b>Die Landkarte:</b> Die Spiele sind auf drei Gebiete verteilt. Auf der <b>Laut-Wiese</b> geht es ums Hören und Aussprechen von Lauten, im <b>Silben-Wald</b> um Silben, Reime und Sätze, und auf der <b>Profi-Insel</b> hinter der Bach-Brücke liegen die schwierigeren Spiele. Tippen Sie auf ein Gebiet, um seine Stationen zu sehen; mit dem Pfeil oben links geht es zurück zur Karte. Ihr Kind kann Nuki auch mit dem Finger auf ein Gebiet oder eine Station ziehen – beim Loslassen öffnet es sich. Die Stationen werden weiterhin der Reihe nach freigeschaltet, die Brücke öffnet sich, sobald das erste Profi-Spiel erreicht ist.</p>
       <p><b>Für Fortgeschrittene (auf der Profi-Insel):</b> Im <b>Vokal-Zug</b> hört Ihr Kind, wo im Wort ein Selbstlaut steckt („Wo hörst du das O?“ – Oma, Hose, Auto). In den unteren Stufen gibt es nur Anfang und Ende, ab Stufe 3 auch die Mitte. Das End-E (wie in „Sonne“) ist bewusst nicht dabei, weil es ein unklarer Murmel-Laut ist. Bei <b>Der, die, das</b> ordnet Ihr Kind Bildern den richtigen Begleiter zu, mit der üblichen Farbhilfe: der = blau, die = rot, das = grün. Nuki spricht die richtige Form immer vor („Der Hund.“), so hört Ihr Kind sie oft.</p>
       <p><b>Noch fünf Spiele für Fortgeschrittene:</b> In der <b>Roboter-Sprache</b> spricht Nuki ein Wort zerhackt („Ba – na – ne“, später „M – aus“) und Ihr Kind findet das Bild – das trainiert das Zusammenziehen von Lauten, eine Vorstufe des Lesens. Beim <b>Laut-Zauberer</b> lässt Ihr Kind einen Wortteil weg („Sonnenblume ohne Sonnen“ → Blume, später „Kreis ohne K“ → Reis). <b>Einer – viele</b> übt die Mehrzahl (Blume – Blumen, Ball – Bälle, Auto – Autos). <b>Wo ist der Ball?</b> übt das Verstehen von auf, in, unter, neben, hinter und vor; Nuki sagt danach den ganzen Satz („Der Ball ist jetzt auf der Kiste.“). Im <b>Merk-Spiel</b> merkt sich Ihr Kind zwei bis vier Aufträge nacheinander („Tipp zuerst auf den Hund, dann auf die Sonne“). Bei den Sprech-Aufgaben bewerten Sie bzw. Ihr Kind selbst mit „Gut gesagt“ oder „Üben wir noch“.</p>
     </div>
@@ -1490,7 +1513,7 @@ function nukiTap(el,inGame){const now=Date.now();if(now-nukiTapT<900)return;nuki
   if(inGame){if(G&&!G.busy){hush();say('Hihi!')}}
   else{const b=el.parentElement&&el.parentElement.querySelector('.bub');if(b)b.textContent=r.t;hush();say(r.t)}
   setTimeout(()=>{el.classList.remove(r.c);el.innerHTML=mascotSVG('normal')},1600)}
-document.addEventListener('click',e=>{const m=e.target.closest&&e.target.closest('#pathNuki,#gameMascot');if(!m)return;nukiTap(m,m.id==='gameMascot')});
+document.addEventListener('click',e=>{const m=e.target.closest&&e.target.closest('#pathNuki,#gameMascot');if(!m)return;if(window.__nkDragT&&Date.now()-window.__nkDragT<500)return;nukiTap(m,m.id==='gameMascot')});
 
 /* ================= SPIELPLATZ: Belohnungs-Spiele ================= */
 const arcCost=()=>S.arcCost===undefined?3:S.arcCost;
@@ -3546,23 +3569,38 @@ function smooth(P){let d=`M${P[0][0]} ${P[0][1]}`;for(let i=0;i<P.length-1;i++){
 function regState(r){const d=doneToday(),lk=r.ids.filter(isLocked).length,dn=r.ids.filter(id=>d.includes(id)).length;return {all:lk===r.ids.length,dn,n:r.ids.length,lk}}
 function fitBub(){const pn=$('#pMap .pnuki');if(!pn)return;requestAnimationFrame(()=>{const r=pn.getBoundingClientRect(),W=$('#pScroll').getBoundingClientRect(),bub=pn.querySelector('.bub'),bw=bub.offsetWidth,cx=r.left+r.width/2;let dx=0;if(cx-bw/2<W.left+8)dx=W.left+8-(cx-bw/2);if(cx+bw/2>W.right-8)dx=W.right-8-(cx+bw/2);bub.style.left=`calc(50% + ${dx}px)`})}
 const KBILD={
- hoch:{src:'v/karte-hoch.webp',ar:688/1024,rs:.27,park:[51,17],wiese:[49,49],wald:[17,29],insel:[84,25],bridge:[84,45],NK:{wiese:[24,61],wald:[38,33],insel:[60,34]}},
- quer:{src:'v/karte-quer.webp',ar:1344/752,rs:.15,park:[50,20],wiese:[50,52],wald:[16,40],insel:[85,30],bridge:[77,57],NK:{wiese:[38,84],wald:[33,26],insel:[66,30]}}};
+ hoch:{src:'v/karte-voll.webp',iw:752,ih:1344,py:.5,rs:.22,park:[51,28],wiese:[49,49],wald:[20,35],insel:[80,31],bridge:[81,46],lamp:[79.6,24.8],
+   NK:{wiese:[29,58],wald:[37,41],insel:[64,39]},water:[[72,22],[69,33],[76,52],[85,60],[82,71]],fly:[[38,45],[62,55]],cloudY:[3,7,11]},
+ quer:{src:'v/karte-quer.webp',iw:1344,ih:752,py:0,rs:.12,park:[50,20],wiese:[50,52],wald:[16,40],insel:[85,30],bridge:[77,57],lamp:[85.6,16.5],
+   NK:{wiese:[33,52],wald:[33,26],insel:[66,30]},water:[[73,22],[69,37],[80,66],[73,82],[78,93]],fly:[[38,44],[61,50]],cloudY:[.5,2,3.5]}};
+const BFLY='<svg viewBox="0 0 40 32" aria-hidden="true"><g class="wl"><path d="M20 16C14 2 2 2 4 12c1 5 8 6 16 4z" fill="#ff9fb7"/><path d="M20 17C12 18 6 24 10 28c4 3 9-3 10-11z" fill="#ffc542"/></g><g class="wr"><path d="M20 16C26 2 38 2 36 12c-1 5-8 6-16 4z" fill="#ff9fb7"/><path d="M20 17c8 1 14 7 10 11-4 3-9-3-10-11z" fill="#ffc542"/></g><rect x="19" y="9" width="2.4" height="16" rx="1.2" fill="#5b3a29"/></svg>';
+const CLOUD='<svg viewBox="0 0 120 50" aria-hidden="true"><path d="M20 44h80a18 18 0 0 0 0-36 26 26 0 0 0-48-2A20 20 0 0 0 20 44z" fill="#fff"/></svg>';
 function renderKarte(){
-  const sc=$('#pScroll'),pm=$('#pMap');if(sc.clientHeight<60&&!renderKarte.w){renderKarte.w=1;requestAnimationFrame(()=>{renderKarte.w=0;if(!PREG)renderKarte()})}
-  $('#path').dataset.reg='karte';
-  const aw=sc.clientWidth-16,ah=sc.clientHeight-12,land=aw/ah>1.05,L=KBILD[land?'quer':'hoch'];
-  let w=Math.min(aw,ah*L.ar,land?1200:560),hh=w/L.ar;w=Math.round(w);hh=Math.round(hh);
-  pm.classList.add('karte');pm.classList.toggle('klein',w<600&&land);pm.style.width=w+'px';pm.style.height=hh+'px';pm.style.setProperty('--mw',w+'px');pm.style.setProperty('--rs',Math.round(w*L.rs)+'px');
-  const nx=nextStation(),nr=(regOf(nx)||REGIONS[0]).id,pc=([x,y])=>`left:${x}%;top:${y}%`,lk=r=>lockOn()&&regState(r).all;
-  const regBtn=r=>{const s=regState(r),cl=[lk(r)?'lock':'',r.id===nr?'next':''].join(' ');
-    return `<button class="kreg ${cl}" data-r="${r.id}" style="${pc(L[r.id])}" aria-label="${r.name}: ${s.dn} von ${s.n} heute gespielt"><span class="kring">${lk(r)?LOCKSVG:''}</span><span class="pl">${r.name}</span><span class="kprog">${'●'.repeat(s.dn)}<i>${'●'.repeat(s.n-s.dn)}</i></span></button>`};
-  pm.innerHTML=`<img class="kbild" src="${L.src}" alt="" draggable="false">`+
-    (lk(REGIONS[2])?`<span class="kbrlock" style="${pc(L.bridge)}">${LOCKSVG}</span>`:'')+
+  const sc=$('#pScroll'),pm=$('#pMap'),pa=$('#path');if(sc.clientHeight<60&&!renderKarte.w){renderKarte.w=1;requestAnimationFrame(()=>{renderKarte.w=0;if(!PREG)renderKarte()})}
+  pa.dataset.reg='karte';
+  const P=pa.getBoundingClientRect(),land=P.width/Math.max(1,P.height)>1.05,L=KBILD[land?'quer':'hoch'];
+  const s=Math.max(P.width/L.iw,P.height/L.ih),dw=L.iw*s,dh=L.ih*s,ox=(P.width-dw)/2;let oy=(P.height-dh)*L.py;
+  const SR=sc.getBoundingClientRect(),offX=SR.left-P.left,offY=SR.top-P.top;
+  const rs=Math.round(Math.min(dw*L.rs*(land&&P.height<500?.75:1),170));
+  {const need=offY+rs*.5-dh*L.park[1]/100;if(need>oy)oy=Math.min(need,P.height*.15)} /* Nukis Park nicht unter der Kopfleiste */
+  pa.style.background=`url(${L.src}) ${ox}px ${oy}px / ${dw}px ${dh}px no-repeat,linear-gradient(#bfe6fb 50%,#8fd16a 50%)`;
+  const A=([x,y])=>[ox+dw*x/100,oy+dh*y/100],pc=q=>{const [x,y]=A(q);return `left:${Math.round(x-offX)}px;top:${Math.round(y-offY)}px`},pa2=q=>{const [x,y]=A(q);return `left:${Math.round(x)}px;top:${Math.round(y)}px`};
+  
+  pm.classList.add('karte');pm.classList.toggle('klein',land&&P.height<500);pm.style.width=SR.width+'px';pm.style.height=SR.height+'px';pm.style.setProperty('--mw',Math.min(dw,P.width*1.1)+'px');pm.style.setProperty('--rs',rs+'px');
+  const nx=nextStation(),nr=(regOf(nx)||REGIONS[0]).id,lk=r=>lockOn()&&regState(r).all;
+  const regBtn=r=>{const st=regState(r),cl=[lk(r)?'lock':'',r.id===nr?'next':''].join(' ');
+    return `<button class="kreg ${cl}" data-r="${r.id}" style="${pc(L[r.id])}" aria-label="${r.name}: ${st.dn} von ${st.n} heute gespielt"><span class="kring">${lk(r)?LOCKSVG:''}</span><span class="pl">${r.name}</span><span class="kprog">${'●'.repeat(st.dn)}<i>${'●'.repeat(st.n-st.dn)}</i></span></button>`};
+  pm.innerHTML=(lk(REGIONS[2])?`<span class="kbrlock" style="${pc(L.bridge)}">${LOCKSVG}</span>`:'')+
     `<button class="kreg kpark" data-r="park" style="${pc(L.park)}" aria-label="Nukis Park"><span class="kring"></span><span class="pl">Nukis Park</span></button>`+
     REGIONS.map(regBtn).join('')+
-    `<div class="pnuki knuki" style="${pc(L.NK[nr])}"><div class="bub">${doneToday().length?'Weiter geht\'s!':'Komm, wir spielen!'}</div><button class="mascot" id="pathNuki" aria-label="Nuki antippen"></button></div>`;
-  setMood($('#pathNuki'),'normal');fitBub();
+    `<div class="pnuki knuki" style="${pc(L.NK[nr])}"><div class="bub">${doneToday().length?'Weiter geht\'s!':'Komm, wir spielen!'}</div><button class="mascot" id="pathNuki" aria-label="Nuki antippen oder auf ein Ziel ziehen"></button></div>`;
+  /* lebendige Karte: Wolken, Schmetterlinge, Leuchtturm-Licht, Glitzern im Bach */
+  $('#pAnim').innerHTML=L.cloudY.map((y,k)=>`<div class="kcloud c${k}" style="top:${Math.round(oy+dh*y/100)}px;width:${Math.round(Math.min(dw*(land?.08:.17),160)*(1+k*.18))}px">${CLOUD}</div>`).join('')+
+    `<div class="klamp" style="${pa2(L.lamp)};width:${Math.round(dw*.07)}px"></div>`+
+    L.water.map((q,k)=>`<i class="kglitz" style="${pa2(q)};animation-delay:${(k*.7).toFixed(1)}s"></i>`).join('')+
+    L.fly.map((q,k)=>`<div class="kfly f${k}" style="${pa2(q)};width:${Math.round(Math.max(26,dw*.055))}px">${BFLY}</div>`).join('');
+  setMood($('#pathNuki'),'normal');fitBub();nukiDrag();
+  requestAnimationFrame(()=>pm.querySelectorAll('.kreg .pl').forEach(l=>{const r=l.getBoundingClientRect(),W=innerWidth;let d=0;if(r.left<6)d=6-r.left;else if(r.right>W-6)d=W-6-r.right;if(d)l.style.translate=d+'px 0'}));
   if(S.justOpened){const r=regOf(S.justOpened);S.justOpened=null;save();const b=r&&pm.querySelector(`.kreg[data-r="${r.id}"]`);if(b){b.classList.add('opened');setTimeout(()=>{confetti(30);tone([523,784],.12,'triangle')},500)}}
   pm.querySelectorAll('.kreg').forEach(b=>b.onclick=()=>{hush();const id=b.dataset.r;if(id==='park'){openArcade();return}
     const r=REGIONS.find(x=>x.id===id);if(lk(r)){b.classList.remove('wob');void b.offsetWidth;b.classList.add('wob');tone([330,262],.1,'triangle');
@@ -3570,6 +3608,21 @@ function renderKarte(){
     tone([523,659,784],.07,'triangle',.1);PREG=id;renderPath();say(r.name+'!')});
   sc.scrollTop=0;
 }
+/* Nuki mit dem Finger auf ein Ziel (Gebiet oder Station) ziehen – loslassen öffnet es */
+function nukiDrag(){const nb=$('#pathNuki');if(!nb)return;const pn=nb.closest('.pnuki');nb.style.touchAction='none';
+  nb.onpointerdown=e=>{if(e.button>0)return;const sx=e.clientX,sy=e.clientY,L0=pn.style.left,T0=pn.style.top;let drag=false,hov=null;
+    const tgt=()=>[...document.querySelectorAll('#pMap .kreg,#pMap .pst')].map(b=>{const c=(b.querySelector('.kring')||b.querySelector('.pc')).getBoundingClientRect();return {b,x:c.left+c.width/2,y:c.top+c.height/2,r:Math.max(46,c.width/2+14)}});
+    let T=null;try{nb.setPointerCapture(e.pointerId)}catch(_){}
+    const mv=ev=>{const dx=ev.clientX-sx,dy=ev.clientY-sy;if(!drag){if(Math.hypot(dx,dy)<10)return;drag=true;T=tgt();pn.classList.add('ziehen');hush();tone([660],.05,'triangle',.08)}
+      const pr=pn.offsetParent.getBoundingClientRect();pn.style.left=(ev.clientX-pr.left)+'px';pn.style.top=(ev.clientY-pr.top-28)+'px';
+      let best=null,bd=1e9;for(const t of T){const d=Math.hypot(ev.clientX-t.x,ev.clientY-t.y-0);if(d<t.r&&d<bd){bd=d;best=t}}
+      const nh=best&&best.b;if(nh!==hov){hov&&hov.classList.remove('ziel');hov=nh;if(hov){hov.classList.add('ziel');tone([880],.04,'triangle',.07)}}};
+    const up=ev=>{nb.removeEventListener('pointermove',mv);nb.removeEventListener('pointerup',up);nb.removeEventListener('pointercancel',up);if(!drag)return;
+      window.__nkDragT=Date.now();pn.classList.remove('ziehen');
+      if(hov&&ev.type==='pointerup'){const t=T.find(x=>x.b===hov),pr=pn.offsetParent.getBoundingClientRect(),b=hov;b.classList.remove('ziel');
+        pn.classList.add('fliegt');pn.style.left=(t.x-pr.left)+'px';pn.style.top=(t.y-pr.top-10)+'px';setTimeout(()=>{pn.classList.remove('fliegt');b.click()},320)}
+      else{hov&&hov.classList.remove('ziel');pn.classList.add('fliegt');pn.style.left=L0;pn.style.top=T0;setTimeout(()=>pn.classList.remove('fliegt'),360)}};
+    nb.addEventListener('pointermove',mv);nb.addEventListener('pointerup',up);nb.addEventListener('pointercancel',up)}}
 function renderPath(){
   {const k=curKid(),h=$('#pHello');if(h){h.textContent=k.name?`Hallo ${k.name}!`:'Hallo!';h.classList.toggle('pick',KIDS.list.length>1)}}
   $('#pStars').textContent=S.stars;
@@ -3578,7 +3631,7 @@ function renderPath(){
   if(S.justOpened&&PREG&&regOf(S.justOpened)&&regOf(S.justOpened).id!==PREG)PREG=null; /* neue Station in anderem Gebiet: auf der Karte zeigen */
   const R=PREG&&REGIONS.find(r=>r.id===PREG);
   $('#pTitle').textContent=R?R.name:'Deine Wortwelt';$('#pHelp').hidden=!!R;$('#pBack').hidden=!R;
-  const pm=$('#pMap');pm.classList.remove('karte');pm.style.width='';pm.style.removeProperty('--u');
+  const pm=$('#pMap');pm.classList.remove('karte','klein');pm.style.width='';pm.style.removeProperty('--u');$('#path').style.background='';$('#pAnim').innerHTML='';
   if(!R)return renderKarte();
   $('#path').dataset.reg=R.id;
   const d=doneToday(),gnx=nextStation(),ids=R.ids,rnx=ids.includes(gnx)?gnx:(ids.find(id=>!d.includes(id)&&!isLocked(id))||ids.find(id=>!isLocked(id))||ids[0]);
@@ -3588,14 +3641,14 @@ function renderPath(){
   const decoW={wiese:k=>`<svg class="pdeco" style="left:calc(${k%2?92:8}% - 22px);top:${top+k*RH*.62}px" width="44" height="26" viewBox="0 0 44 26" aria-hidden="true"><ellipse cx="22" cy="18" rx="20" ry="8" fill="#8fd16a"/><circle cx="12" cy="12" r="4" fill="#ff9fb7"/><circle cx="24" cy="9" r="4" fill="#ffd166"/><circle cx="34" cy="13" r="3.5" fill="#ff9fb7"/></svg>`,
     wald:k=>k%3===2?`<svg class="pdeco" style="left:calc(${k%2?90:10}% - 14px);top:${top+k*RH*.62+30}px" width="28" height="26" viewBox="0 0 28 26" aria-hidden="true"><path d="M2 16q0-12 12-12t12 12z" fill="#ef5b5b"/><rect x="10" y="15" width="8" height="10" rx="3" fill="#fff2df"/><circle cx="9" cy="10" r="2" fill="#fff"/><circle cx="18" cy="9" r="2" fill="#fff"/></svg>`:`<svg class="pdeco" style="left:calc(${k%2?92:8}% - 26px);top:${top+k*RH*.62-10}px" width="52" height="72" viewBox="0 0 52 72" aria-hidden="true"><rect x="22" y="50" width="8" height="20" rx="3" fill="#9a6236"/><path d="M26 2L4 54h44z" fill="${k%2?'#3f9a5a':'#2f8a4c'}"/><path d="M26 14L10 44h32z" fill="#56b46c"/></svg>`,
     insel:k=>k%2?`<svg class="pdeco" style="left:calc(${k%4===1?92:8}% - 18px);top:${top+k*RH*.62+20}px" width="36" height="20" viewBox="0 0 36 20" aria-hidden="true"><path d="M2 12q4-6 8 0t8 0 8 0 8 0" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></svg>`:`<svg class="pdeco" style="left:calc(${k%4===0?8:92}% - 26px);top:${top+k*RH*.62-6}px" width="52" height="70" viewBox="0 0 52 70" aria-hidden="true"><path d="M27 68q-2-30 4-50" fill="none" stroke="#9a6236" stroke-width="5" stroke-linecap="round"/><path d="M31 18q-14-10-26-2q12-2 26 2zM31 18q12-12 22-4q-12-2-22 4zM31 18q-4-14-16-14q10 4 16 14zM31 18q8-12 18-10q-10 2-18 10z" fill="#3f9a5a"/><circle cx="28" cy="22" r="3" fill="#9a6236"/></svg>`};
-  const deco=Array.from({length:NP+2},(_,k)=>decoW[R.id](k)).join('');
+  const deco='';
   const st=pos.map(p=>{const lk=isLocked(p.id),cls=lk?'lock':p.id===rnx?'next':d.includes(p.id)?'done':'';return `<button class="pst ${cls}" data-g="${p.id}" style="left:${p.x}%;top:${p.y}px" aria-label="${PNAME(p.id)}${cls==='done'?' (heute schon gespielt)':lk?' (noch zu)':''}"><span class="pc">${cls==='next'?GICON.play:GICON[p.id]}${lk?LOCKSVG:''}</span><span class="pl">${PNAME(p.id)}</span></button>`}).join('');
   const np=pos.find(p=>p.id===rnx),nkx=50;
   const msg=d.length?rnd(['Weiter geht\'s!','Noch eine Runde?','Du bist super!']):'Komm, wir spielen!';
   pm.style.height=H+'px';
-  pm.innerHTML=`<svg class="pway" viewBox="0 0 100 ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${dd}" fill="none" stroke="var(--pway,#f6e3b8)" stroke-width="34" stroke-linecap="round" vector-effect="non-scaling-stroke"/><path d="${dd}" fill="none" stroke="var(--pdash,#efd49c)" stroke-width="3" stroke-dasharray="2 14" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>${deco}${st}<div class="pnuki rnuki" style="left:${nkx}%;top:${np.y+RH*.5+22}px"><div class="bub">${msg}</div><button class="mascot" id="pathNuki" aria-label="Nuki antippen"></button></div>`;
+  pm.innerHTML=`<svg class="pway" viewBox="0 0 100 ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${dd}" fill="none" stroke="rgba(150,110,50,.28)" stroke-width="42" stroke-linecap="round" vector-effect="non-scaling-stroke"/><path d="${dd}" fill="none" stroke="var(--pway,#f6e3b8)" stroke-width="34" stroke-linecap="round" vector-effect="non-scaling-stroke"/><path d="${dd}" fill="none" stroke="var(--pdash,#efd49c)" stroke-width="3" stroke-dasharray="2 14" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>${deco}${st}<div class="pnuki rnuki" style="left:${nkx}%;top:${np.y+RH*.5+22}px"><div class="bub">${msg}</div><button class="mascot" id="pathNuki" aria-label="Nuki antippen"></button></div>`;
   setMood($('#pathNuki'),S.justOpened?'staunen':'normal');
-  fitBub();
+  fitBub();nukiDrag();
   if(S.justOpened){const jb=pm.querySelector(`.pst[data-g="${S.justOpened}"]`);S.justOpened=null;save();if(jb){jb.classList.add('opened');setTimeout(()=>{confetti(30);tone([523,784],.12,'triangle')},500)}}
   pm.querySelectorAll('.pst').forEach(b=>b.onclick=()=>{hush();const id=b.dataset.g;if(isLocked(id)){b.classList.remove('wob');void b.offsetWidth;b.classList.add('wob');tone([330,262],.1,'triangle');
     const want=PATH_ORDER[S.unl],nb=pm.querySelector(`.pst[data-g="${want}"]`);
