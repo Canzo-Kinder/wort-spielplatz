@@ -3714,5 +3714,5 @@ if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostnam
 </script>
 
 <script>(function(){const sp=document.getElementById('splash');if(!sp)return;let t0=performance.now();const weg=()=>{if(sp.classList.contains('weg'))return;sp.classList.add('weg');setTimeout(()=>sp.remove(),500)};
- const go=()=>setTimeout(weg,Math.max(0,1300-(performance.now()-t0)));if(document.readyState==='complete')go();else addEventListener('load',go,{once:true});sp.addEventListener('pointerdown',weg);setTimeout(weg,4000)})();</script>
+ const go=()=>setTimeout(weg,Math.max(0,4000-performance.now()));if(document.readyState==='complete')go();else addEventListener('load',go,{once:true});sp.addEventListener('pointerdown',()=>{if(performance.now()>1500)weg()});setTimeout(weg,7000)})();</script>
 </body></html>
