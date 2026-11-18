@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="theme-color" content="#8ccef6"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}img{max-width:100%}</style>
 <title>Nukis Wortwelt</title>
-<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" sizes="180x180" href="icon-180-v2.png"><link rel="icon" type="image/png" href="icon-192-v2.png"><meta name="theme-color" content="#8ccef6"><meta name="apple-mobile-web-app-title" content="Nukis Wortwelt">
+<link rel="preload" as="image" href="v/bg-wiese.webp"><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" sizes="180x180" href="icon-180-v2.png"><link rel="icon" type="image/png" href="icon-192-v2.png"><meta name="theme-color" content="#8ccef6"><meta name="apple-mobile-web-app-title" content="Nukis Wortwelt">
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>/* Schriften liegen in der App selbst (kein Google-Server) */@font-face{font-family:'Baloo 2';font-style:normal;font-weight:600;font-display:swap;src:url(f/baloo-600.woff2) format('woff2')}@font-face{font-family:'Baloo 2';font-style:normal;font-weight:700;font-display:swap;src:url(f/baloo-700.woff2) format('woff2')}@font-face{font-family:'Baloo 2';font-style:normal;font-weight:800;font-display:swap;src:url(f/baloo-800.woff2) format('woff2')}@font-face{font-family:'Nunito';font-style:normal;font-weight:600;font-display:swap;src:url(f/nunito-600.woff2) format('woff2')}@font-face{font-family:'Nunito';font-style:normal;font-weight:700;font-display:swap;src:url(f/nunito-700.woff2) format('woff2')}@font-face{font-family:'Nunito';font-style:normal;font-weight:800;font-display:swap;src:url(f/nunito-800.woff2) format('woff2')}</style>
 <style>
@@ -789,13 +789,14 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 <!-- ================= SPIELPFAD (Startseite) ================= -->
 </head>
 <body><div id="splash" aria-hidden="true"><style>
-#splash{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:linear-gradient(#8ccef6,#dff2ff 72%);overflow:hidden;transition:opacity .45s ease}
-#splash::after{content:"";position:absolute;left:-30%;right:-30%;bottom:-38vh;height:60vh;border-radius:50%;background:#aade8c}
+#splash{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:#9fd77a url(v/bg-wiese.webp) center top/auto 100% repeat-x;overflow:hidden;transition:opacity .45s ease}
+#splash::after{content:"";position:absolute;left:50%;top:48%;width:min(120vw,720px);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.55) 0,rgba(255,255,255,.25) 40%,rgba(255,255,255,0) 68%);pointer-events:none}
 #splash.weg{opacity:0;pointer-events:none}
-#splash .spl{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:-6vh}
+@media (min-aspect-ratio:1/1){#splash{background:#9fd77a url(v/karte-quer.webp) center/cover no-repeat}#splash::after{width:min(90vw,760px);background:radial-gradient(circle,rgba(255,255,255,.8) 0,rgba(255,255,255,.5) 38%,rgba(255,255,255,0) 68%)}}
+#splash .spl{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:-6vh}
 #splash .splnuki{width:min(46vmin,260px);height:auto;animation:splPop .7s cubic-bezier(.2,1.5,.4,1) both}
-#splash b{font-family:'Baloo 2',system-ui,sans-serif;font-weight:800;font-size:clamp(32px,9vmin,54px);color:#2b2f4a;line-height:1;animation:splUp .6s .25s ease-out both}
-#splash span{font-family:Nunito,system-ui,sans-serif;font-weight:800;font-size:clamp(15px,4vmin,20px);color:#4b5a7a;animation:splUp .6s .4s ease-out both}
+#splash b{font-family:'Baloo 2',system-ui,sans-serif;font-weight:800;font-size:clamp(32px,9vmin,54px);color:#2b2f4a;line-height:1;text-shadow:0 0 3px #fff,0 2px 0 #fff,0 0 14px rgba(255,255,255,.9);animation:splUp .6s .25s ease-out both}
+#splash span{font-family:Nunito,system-ui,sans-serif;font-weight:800;font-size:clamp(15px,4vmin,20px);color:#3b4766;background:rgba(255,255,255,.82);padding:4px 14px;border-radius:999px;animation:splUp .6s .4s ease-out both}
 #splash i{display:flex;gap:8px;margin-top:10px}#splash i::before,#splash i::after,#splash i em{content:"";width:10px;height:10px;border-radius:50%;background:#7c6cf2;animation:splDot 1s infinite}
 #splash i em{animation-delay:.15s}#splash i::after{animation-delay:.3s}
 @keyframes splPop{0%{transform:scale(.3) translateY(40px);opacity:0}100%{transform:none;opacity:1}}
