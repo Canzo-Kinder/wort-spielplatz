@@ -1,7 +1,7 @@
 <!doctype html>
-<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="theme-color" content="#8ccef6"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}img{max-width:100%}</style>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="theme-color" content="#46bdfd"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}img{max-width:100%}</style>
 <title>Nukis Wortwelt</title>
-<link rel="preload" as="image" href="v/bg-wiese.webp"><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" sizes="180x180" href="icon-180-v2.png"><link rel="icon" type="image/png" href="icon-192-v2.png"><meta name="theme-color" content="#8ccef6"><meta name="apple-mobile-web-app-title" content="Nukis Wortwelt">
+<link rel="preload" as="image" href="v/bg-wiese.webp"><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" sizes="180x180" href="icon-180-v2.png"><link rel="icon" type="image/png" href="icon-192-v2.png"><meta name="theme-color" content="#46bdfd"><meta name="apple-mobile-web-app-title" content="Nukis Wortwelt">
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>/* Schriften liegen in der App selbst (kein Google-Server) */@font-face{font-family:'Baloo 2';font-style:normal;font-weight:600;font-display:swap;src:url(f/baloo-600.woff2) format('woff2')}@font-face{font-family:'Baloo 2';font-style:normal;font-weight:700;font-display:swap;src:url(f/baloo-700.woff2) format('woff2')}@font-face{font-family:'Baloo 2';font-style:normal;font-weight:800;font-display:swap;src:url(f/baloo-800.woff2) format('woff2')}@font-face{font-family:'Nunito';font-style:normal;font-weight:600;font-display:swap;src:url(f/nunito-600.woff2) format('woff2')}@font-face{font-family:'Nunito';font-style:normal;font-weight:700;font-display:swap;src:url(f/nunito-700.woff2) format('woff2')}@font-face{font-family:'Nunito';font-style:normal;font-weight:800;font-display:swap;src:url(f/nunito-800.woff2) format('woff2')}</style>
 <style>
@@ -374,7 +374,7 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
 
 /* ================= NEUER LOOK „Bilderbuch-Pastell“ ================= */
 :root{--ink:#2b2f4a;--ink-soft:#4b5a7a;--grape:#7c6cf2;--coral:#ff7a59;--sun:#ffc542;--leaf:#3fae6a;--teal:#2bb3b1;--line:#dfe5f0;--shadow:0 5px 0 rgba(43,47,74,.12)}
-body{background:#e8f7ff}
+html,body{background:linear-gradient(#46bdfd 50%,#8fd16a 50%) fixed}
 #toast{position:fixed;z-index:40;border:0;border-radius:22px;box-shadow:0 8px 24px rgba(43,47,74,.18),0 4px 0 rgba(43,47,74,.08);bottom:calc(96px + env(safe-area-inset-bottom,0px));width:max-content;max-width:min(420px,calc(100% - 32px))}
 #toast .tText{font-size:17px}
 /* Spielpfad */
@@ -447,12 +447,12 @@ button#pathNuki{display:block;width:100%;padding:0;border:0;background:none;poin
 .kreg.ziel .kring{box-shadow:0 0 0 5px #fff,0 0 0 11px #ffc542,0 0 30px 12px rgba(255,197,66,.7)!important;transform:scale(1.08)}
 .pst.ziel .pc{transform:scale(1.14);box-shadow:0 0 0 6px #fff,0 0 0 12px #ffc542!important}
 #pathNuki{touch-action:none}
-#game{background:#9fd77a url(v/bg-wiese.webp) center top/auto 100% repeat-x!important}
+#game{background:#46bdfd url(v/bg-wiese.webp) center top/auto 100% repeat-x!important}
 @media (prefers-reduced-motion:reduce){.kcloud,.klamp,.kglitz,.kfly,.kfly .wl,.kfly .wr{animation:none!important}.kglitz{opacity:.6}}
 
-#path[data-reg=wiese]{background:#9fd77a url(v/bg-wiese.webp) center top/auto 100% repeat-x}
-#path[data-reg=wald]{background:#7fc070 url(v/bg-wald.webp) center top/auto 100% repeat-x;--pway:#f1dcaa;--pdash:#cdb27a}
-#path[data-reg=insel]{background:#f3d79a url(v/bg-insel.webp) center top/auto 100% repeat-x;--pway:#c98d55;--pdash:#8a5a2e}
+#path[data-reg=wiese]{background:#46bdfd url(v/bg-wiese.webp) center top/auto 100% repeat-x}
+#path[data-reg=wald]{background:#42bbfd url(v/bg-wald.webp) center top/auto 100% repeat-x;--pway:#f1dcaa;--pdash:#cdb27a}
+#path[data-reg=insel]{background:#3ab7fd url(v/bg-insel.webp) center top/auto 100% repeat-x;--pway:#c98d55;--pdash:#8a5a2e}
 .pmap.karte{max-width:none;margin:0}#path[data-reg=karte] .pscroll{overflow:hidden}
 .kbild{position:absolute;inset:0;width:100%;height:100%;border-radius:26px;display:block;user-select:none;-webkit-user-drag:none;pointer-events:none}
 .kreg{position:absolute;transform:translate(-50%,calc(var(--rs) / -2));display:flex;flex-direction:column;align-items:center;gap:3px;padding:0;-webkit-tap-highlight-color:transparent}
@@ -789,10 +789,10 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 <!-- ================= SPIELPFAD (Startseite) ================= -->
 </head>
 <body><div id="splash" aria-hidden="true"><style>
-#splash{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:#9fd77a url(v/bg-wiese.webp) center top/auto 100% repeat-x;overflow:hidden;transition:opacity .45s ease}
+#splash{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:#46bdfd url(v/bg-wiese.webp) center top/auto 100% repeat-x;overflow:hidden;transition:opacity .45s ease}
 #splash::after{content:"";position:absolute;left:50%;top:48%;width:min(120vw,720px);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.55) 0,rgba(255,255,255,.25) 40%,rgba(255,255,255,0) 68%);pointer-events:none}
 #splash.weg{opacity:0;pointer-events:none}
-@media (min-aspect-ratio:1/1){#splash{background:#9fd77a url(v/karte-quer.webp) center/cover no-repeat}#splash::after{width:min(90vw,760px);background:radial-gradient(circle,rgba(255,255,255,.8) 0,rgba(255,255,255,.5) 38%,rgba(255,255,255,0) 68%)}}
+@media (min-aspect-ratio:1/1){#splash{background:#56b7f3 url(v/karte-quer.webp) center/cover no-repeat}#splash::after{width:min(90vw,760px);background:radial-gradient(circle,rgba(255,255,255,.8) 0,rgba(255,255,255,.5) 38%,rgba(255,255,255,0) 68%)}}
 #splash .spl{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:-6vh}
 #splash .splnuki{width:min(46vmin,260px);height:auto;animation:splPop .7s cubic-bezier(.2,1.5,.4,1) both}
 #splash b{font-family:'Baloo 2',system-ui,sans-serif;font-weight:800;font-size:clamp(32px,9vmin,54px);color:#2b2f4a;line-height:1;text-shadow:0 0 3px #fff,0 2px 0 #fff,0 0 14px rgba(255,255,255,.9);animation:splUp .6s .25s ease-out both}
@@ -3594,7 +3594,7 @@ function renderKarte(){
   const SR=sc.getBoundingClientRect(),offX=SR.left-P.left,offY=SR.top-P.top;
   const rs=Math.round(Math.min(dw*L.rs*(land&&P.height<500?.75:1),170));
   {const need=offY+rs*.5-dh*L.park[1]/100;if(need>oy)oy=Math.min(need,P.height*.15)} /* Nukis Park nicht unter der Kopfleiste */
-  pa.style.background=`url(${L.src}) ${ox}px ${oy}px / ${dw}px ${dh}px no-repeat,linear-gradient(#bfe6fb 50%,#8fd16a 50%)`;
+  pa.style.background=`url(${L.src}) ${ox}px ${oy}px / ${dw}px ${dh}px no-repeat,linear-gradient(#56b7f3 50%,#8fd16a 50%)`;
   const A=([x,y])=>[ox+dw*x/100,oy+dh*y/100],pc=q=>{const [x,y]=A(q);return `left:${Math.round(x-offX)}px;top:${Math.round(y-offY)}px`},pa2=q=>{const [x,y]=A(q);return `left:${Math.round(x)}px;top:${Math.round(y)}px`};
   
   pm.classList.add('karte');pm.classList.toggle('klein',land&&P.height<500);pm.style.width=SR.width+'px';pm.style.height=SR.height+'px';pm.style.setProperty('--mw',Math.min(dw,P.width*1.1)+'px');pm.style.setProperty('--rs',rs+'px');
