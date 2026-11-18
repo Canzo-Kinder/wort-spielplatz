@@ -431,20 +431,23 @@ button#pathNuki{display:block;width:100%;padding:0;border:0;background:none;poin
 .pbtn[hidden]{display:none}
 #path[data-reg=wald]{background:linear-gradient(#cdeeff 0,#e8f7ff 220px,#a6d98a 220px,#7fc070 100%);--pway:#ead6a6;--pdash:#cdb27a}
 #path[data-reg=insel]{background:linear-gradient(#cdeeff 0,#e8f7ff 220px,#8fd6f4 220px,#6cc4ec 100%);--pway:#f6dc9a;--pdash:#d9b46a}
-.pmap.karte{max-width:none;margin:0 auto}
-.kart{position:absolute;left:0;top:0;width:100%;height:100%}
-.kreg{position:absolute;transform:translate(-50%,-36%);display:flex;flex-direction:column;align-items:center;gap:calc(4px * var(--u));-webkit-tap-highlight-color:transparent}
-.kreg .kc{width:calc(88px * var(--u));height:calc(88px * var(--u));border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 calc(6px * var(--u)) 0 #d5dbe8;position:relative;transition:transform .15s}
-.kreg:active .kc{transform:translateY(3px)}
-.kreg .kc>svg:first-child{width:80%;height:80%}
-.kreg .pl{font-family:var(--f-display);font-weight:800;font-size:calc(15px * var(--u));line-height:1.1;white-space:nowrap;background:rgba(255,255,255,.94);padding:calc(4px * var(--u)) calc(11px * var(--u));border-radius:12px;box-shadow:0 3px 0 rgba(43,47,74,.08)}
-.kreg .kprog{font-size:calc(10px * var(--u));letter-spacing:1px;line-height:1;color:#3fae6a;background:rgba(255,255,255,.85);border-radius:8px;padding:2px 6px}.kreg .kprog i{font-style:normal;color:#cfd6e4}
-.kreg.next .kc{background:#f3f0ff;box-shadow:0 calc(6px * var(--u)) 0 #5646c9,0 0 0 calc(10px * var(--u)) rgba(124,108,242,.32);animation:pnext 2.4s ease-in-out infinite}
-.kreg.lock .kc{background:#eef1f7;box-shadow:0 6px 0 #d7dce8}.kreg.lock .kc>svg:first-child{opacity:.4;filter:grayscale(1)}.kreg.lock .pl{opacity:.7}
-.kreg.wob{animation:wob .45s}.kreg.hop .kc{animation:hop .8s ease-out}.kreg.opened .kc{animation:opn 1s ease-out .3s both}
-.kpark .kc{width:calc(70px * var(--u));height:calc(70px * var(--u))}
-.ksign{position:absolute;transform:translate(-50%,-78%);width:calc(48px * var(--u));pointer-events:none}.ksign svg{width:100%;display:block}
-.pnuki.rnuki{width:84px}.pnuki.rnuki .bub{display:none}.pnuki.knuki{width:calc(84px * var(--u))}
+.pmap.karte{max-width:none;margin:4px auto 0;border-radius:26px;box-shadow:0 0 0 4px #fff,0 10px 28px rgba(43,47,74,.22);overflow:visible}
+.kbild{position:absolute;inset:0;width:100%;height:100%;border-radius:26px;display:block;user-select:none;-webkit-user-drag:none;pointer-events:none}
+.kreg{position:absolute;transform:translate(-50%,calc(var(--rs) / -2));display:flex;flex-direction:column;align-items:center;gap:3px;padding:0;-webkit-tap-highlight-color:transparent}
+.kreg .kring{width:var(--rs);height:var(--rs);border-radius:50%;position:relative;transition:transform .15s,background .3s}
+.kreg:active .kring{transform:scale(.95)}
+.kreg .pl{position:relative;z-index:2;margin-top:calc(var(--rs) * -.16);font-family:var(--f-display);font-weight:800;font-size:clamp(12px,calc(var(--mw) * .042),19px);line-height:1.1;white-space:nowrap;color:#1f2340;background:rgba(255,255,255,.95);padding:4px 12px;border-radius:999px;box-shadow:0 3px 0 rgba(43,47,74,.15)}
+.kreg .kprog{font-size:clamp(8px,calc(var(--mw) * .024),12px);letter-spacing:1px;line-height:1;color:#3fae6a;background:rgba(255,255,255,.9);border-radius:8px;padding:2px 6px}.kreg .kprog i{font-style:normal;color:#cfd6e4}
+.kreg.next .kring{box-shadow:0 0 0 4px rgba(255,255,255,.95),0 0 0 9px rgba(124,108,242,.55),0 0 26px 10px rgba(255,255,255,.6);animation:kpuls 1.8s ease-in-out infinite}
+.kreg.next .pl{background:var(--grape);color:#fff;box-shadow:0 3px 0 #5646c9}
+@keyframes kpuls{50%{transform:scale(1.06)}}
+.kreg.lock .kring{background:rgba(238,241,247,.55);-webkit-backdrop-filter:grayscale(1) brightness(1.05);backdrop-filter:grayscale(1) brightness(1.05)}
+.kreg.lock .kring .plk,.kbrlock .plk{position:absolute;left:50%;top:50%;right:auto;bottom:auto;transform:translate(-50%,-50%);width:38px!important;height:38px!important;padding:6px}
+.kbrlock{position:absolute;width:0;height:0;pointer-events:none}
+.kreg.lock .pl{opacity:.8}
+.kreg.wob{animation:wob .45s}.kreg.hop .kring{animation:hop .8s ease-out}.kreg.opened .kring{animation:opn 1s ease-out .3s both}
+.kpark .kring{width:calc(var(--rs) * .8);height:calc(var(--rs) * .8)}
+.pnuki.rnuki{width:84px}.pnuki.rnuki .bub{display:none}.pnuki.knuki{width:clamp(44px,calc(var(--mw) * .2),110px);transform:translate(-50%,-50%)}.pmap.klein .knuki .bub{display:none}.pmap.klein .knuki{width:46px}
 /* Spiele */
 #game{background:linear-gradient(#d9f2ff 0%,#f1faff 62%,#d7f0c2 62%,#c6e8a8 100%);background-attachment:local}
 #game .gtitle{color:var(--ink);text-shadow:none;font-size:18px}
@@ -3538,50 +3541,31 @@ const REGIONS=[
  {id:'insel',name:'Profi-Insel',ids:['vokal','artikel','zauber','plural','praep','merk']}];
 const regOf=id=>REGIONS.find(r=>r.ids.includes(id));
 let PREG=null; /* null = große Karte, sonst Gebiet-id */
-const REGART={
- wiese:'<svg viewBox="0 0 80 80" aria-hidden="true"><ellipse cx="40" cy="60" rx="32" ry="12" fill="#8fd16a"/><path d="M24 58V40M40 58V30M56 58V42" stroke="#4f9a45" stroke-width="3" stroke-linecap="round"/><g fill="#ff8fab"><circle cx="24" cy="36" r="6"/><circle cx="56" cy="38" r="6"/></g><g fill="#ffd166"><circle cx="40" cy="25" r="8"/></g><circle cx="24" cy="36" r="2.4" fill="#ffd166"/><circle cx="56" cy="38" r="2.4" fill="#ffd166"/><circle cx="40" cy="25" r="3" fill="#e8823a"/><path d="M14 30q6-8 12 0M58 22q4-6 9 0" fill="none" stroke="#7c6cf2" stroke-width="2.2" stroke-linecap="round"/></svg>',
- wald:'<svg viewBox="0 0 80 80" aria-hidden="true"><rect x="22" y="44" width="6" height="18" rx="2" fill="#9a6236"/><rect x="50" y="40" width="7" height="22" rx="2" fill="#9a6236"/><path d="M25 12L10 46h30z" fill="#3f9a5a"/><path d="M53 8L36 44h34z" fill="#2f8a4c"/><path d="M25 22L14 42h22z" fill="#56b46c"/><path d="M53 18L41 40h24z" fill="#48a862"/><path d="M34 64q0-8 7-8t7 8z" fill="#ef5b5b"/><rect x="39" y="63" width="4" height="7" rx="1.5" fill="#fff2df"/><circle cx="38" cy="60" r="1.3" fill="#fff"/><circle cx="44" cy="59" r="1.3" fill="#fff"/></svg>',
- insel:'<svg viewBox="0 0 80 80" aria-hidden="true"><ellipse cx="40" cy="62" rx="34" ry="11" fill="#5cc0ec"/><ellipse cx="40" cy="58" rx="24" ry="8" fill="#f6dc9a"/><path d="M33 58l3-38h8l3 38z" fill="#fff"/><path d="M34.5 44h11M35.5 32h9" stroke="#ef5b5b" stroke-width="5"/><rect x="34" y="14" width="12" height="7" rx="2" fill="#ffd166" stroke="#26303a" stroke-width="1.6"/><path d="M33 14h14l-7-7z" fill="#ef5b5b"/><path d="M14 52q4-3 8 0M58 52q4-3 8 0" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>'};
-const PARKART='<svg viewBox="0 0 80 80" aria-hidden="true"><path d="M14 66L24 18h32l10 48" fill="none" stroke="#e8823a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 18h40" stroke="#e8823a" stroke-width="5" stroke-linecap="round"/><path d="M34 18v26M46 18v26" stroke="#8a94a0" stroke-width="2.4"/><rect x="30" y="43" width="20" height="6" rx="2.5" fill="#7c6cf2"/><path d="M8 66h64" stroke="#8fd16a" stroke-width="5" stroke-linecap="round"/></svg>';
-const SIGNART='<svg viewBox="0 0 60 70" aria-hidden="true"><rect x="27" y="14" width="6" height="54" rx="2" fill="#9a6236"/><path d="M8 14h30l6 6-6 6H8z" fill="#ffc542" stroke="#26303a" stroke-width="2"/><path d="M52 30H22l-6 6 6 6h30z" fill="#7cc8ef" stroke="#26303a" stroke-width="2"/><path d="M30 46h22l5 5-5 5H30z" fill="#8fd16a" stroke="#26303a" stroke-width="2"/></svg>';
 /* glatte Kurve durch Punkte (Catmull-Rom) */
 function smooth(P){let d=`M${P[0][0]} ${P[0][1]}`;for(let i=0;i<P.length-1;i++){const p0=P[i-1]||P[i],p1=P[i],p2=P[i+1],p3=P[i+2]||p2;d+=` C${p1[0]+(p2[0]-p0[0])/6} ${p1[1]+(p2[1]-p0[1])/6} ${p2[0]-(p3[0]-p1[0])/6} ${p2[1]-(p3[1]-p1[1])/6} ${p2[0]} ${p2[1]}`}return d}
-const KLAY={
- hoch:{W:360,H:560,S:[180,512],P:[180,78],wiese:[180,318],wald:[72,200],insel:[300,196],B:[262,440],
-   ws:[[180,512],[180,318]],wp:[[180,318],[180,78]],wa:[[180,512],[104,430],[72,200]],in:[[180,512],[262,440],[310,330],[300,196]],
-   bach:[[248,-10],[236,140],[246,300],[262,440],[252,570]],NK:{wiese:[100,388],wald:[70,350],insel:[302,350]}},
- quer:{W:640,H:340,S:[320,300],P:[320,48],wiese:[320,172],wald:[128,180],insel:[518,170],B:[424,262],
-   ws:[[320,300],[320,172]],wp:[[320,172],[320,48]],wa:[[320,300],[200,280],[128,180]],in:[[320,300],[424,262],[500,232],[518,170]],
-   bach:[[440,-10],[418,110],[430,200],[424,262],[404,350]],NK:{wiese:[228,258],wald:[240,150],insel:[606,252]}}};
 function regState(r){const d=doneToday(),lk=r.ids.filter(isLocked).length,dn=r.ids.filter(id=>d.includes(id)).length;return {all:lk===r.ids.length,dn,n:r.ids.length,lk}}
 function fitBub(){const pn=$('#pMap .pnuki');if(!pn)return;requestAnimationFrame(()=>{const r=pn.getBoundingClientRect(),W=$('#pScroll').getBoundingClientRect(),bub=pn.querySelector('.bub'),bw=bub.offsetWidth,cx=r.left+r.width/2;let dx=0;if(cx-bw/2<W.left+8)dx=W.left+8-(cx-bw/2);if(cx+bw/2>W.right-8)dx=W.right-8-(cx+bw/2);bub.style.left=`calc(50% + ${dx}px)`})}
+const KBILD={
+ hoch:{src:'v/karte-hoch.webp',ar:688/1024,rs:.27,park:[51,17],wiese:[49,49],wald:[17,29],insel:[84,25],bridge:[84,45],NK:{wiese:[24,61],wald:[38,33],insel:[60,34]}},
+ quer:{src:'v/karte-quer.webp',ar:1344/752,rs:.15,park:[50,20],wiese:[50,52],wald:[16,40],insel:[85,30],bridge:[77,57],NK:{wiese:[38,84],wald:[33,26],insel:[66,30]}}};
 function renderKarte(){
-  const sc=$('#pScroll'),pm=$('#pMap');if(sc.clientHeight<60&&!renderKarte.w){renderKarte.w=1;requestAnimationFrame(()=>{renderKarte.w=0;if(!PREG)renderKarte()})}$('#path').dataset.reg='karte';
-  const land=sc.clientWidth>sc.clientHeight*1.15,L=KLAY[land?'quer':'hoch'];
-  const u=Math.min(sc.clientWidth/L.W,(sc.clientHeight-6)/L.H,land?1.6:1.5),w=Math.round(L.W*u),h=Math.round(L.H*u);
-  pm.classList.add('karte');pm.style.width=w+'px';pm.style.height=h+'px';pm.style.setProperty('--u',u);
-  const nx=nextStation(),nr=(regOf(nx)||REGIONS[0]).id,isl=regState(REGIONS[2]).all,pc=(x,y)=>`left:${x/L.W*100}%;top:${y/L.H*100}%`;
-  const road=(P,c='#f6e3b8')=>`<path d="${smooth(P)}" fill="none" stroke="${c}" stroke-width="22" stroke-linecap="round"/><path d="${smooth(P)}" fill="none" stroke="#efd49c" stroke-width="2.4" stroke-dasharray="2 12" stroke-linecap="round"/>`;
-  const [bx,by]=L.B,a=L.in[0],c=L.in[2],ang=Math.atan2(c[1]-a[1],c[0]-a[0])*180/Math.PI;
-  const bridge=`<g transform="translate(${bx} ${by}) rotate(${ang})"><rect x="-30" y="-15" width="60" height="30" rx="4" fill="#c98d55" stroke="#7a4a22" stroke-width="2.4"/>${[-20,-10,0,10,20].map(x=>`<path d="M${x} -14V14" stroke="#7a4a22" stroke-width="1.6"/>`).join('')}<path d="M-30 -17H30M-30 17H30" stroke="#7a4a22" stroke-width="4" stroke-linecap="round"/>${isl?`<g transform="rotate(${-ang})"><circle r="13" fill="#fff" stroke="#a9b3c9" stroke-width="2"/><rect x="-6" y="-2" width="12" height="9" rx="2.4" fill="#a9b3c9"/><path d="M-3.5 -2v-3a3.5 3.5 0 0 1 7 0v3" fill="none" stroke="#a9b3c9" stroke-width="2.2"/></g>`:''}</g>`;
-  const trees=(land?[[60,110],[40,210],[200,120],[84,290],[230,215]]:[[20,118],[128,128],[22,300],[124,280],[60,330]]).map(([x,y],k)=>`<g transform="translate(${x} ${y}) scale(${.8+k%3*.15})"><rect x="-3" y="4" width="6" height="14" rx="2" fill="#9a6236"/><path d="M0 -22L-15 8h30z" fill="${k%2?'#3f9a5a':'#2f8a4c'}"/></g>`).join('');
-  const flowers=(land?[[250,130],[392,140],[262,232],[376,236]]:[[120,282],[238,290],[124,372],[226,380]]).map(([x,y])=>`<g transform="translate(${x} ${y})"><ellipse cy="5" rx="14" ry="5" fill="#8fd16a"/><circle cx="-6" r="3.4" fill="#ff9fb7"/><circle cx="3" cy="-3" r="3.4" fill="#ffd166"/><circle cx="9" cy="1" r="3" fill="#ff9fb7"/></g>`).join('');
-  const [ix,iy]=L.insel;
-  const svg=`<svg class="kart" viewBox="0 0 ${L.W} ${L.H}" aria-hidden="true">
-   <ellipse cx="${ix}" cy="${iy+8}" rx="${land?110:70}" ry="${land?70:84}" fill="#7fd0f2"/><ellipse cx="${ix}" cy="${iy+6}" rx="${land?84:56}" ry="${land?54:68}" fill="#f6dc9a"/>
-   <path d="${smooth(L.bach)}" fill="none" stroke="#7fd0f2" stroke-width="26" stroke-linecap="round"/><path d="${smooth(L.bach)}" fill="none" stroke="#b9e8fb" stroke-width="5" stroke-dasharray="10 18" stroke-linecap="round"/>
-   ${trees}${flowers}${road(L.wp)}${road(L.ws)}${road(L.wa)}${road(L.in)}${bridge}</svg>`;
-  const regBtn=r=>{const s=regState(r),cl=[s.all&&lockOn()?'lock':'',r.id===nr?'next':''].join(' ');const [x,y]=L[r.id];
-    return `<button class="kreg ${cl} k-${r.id}" data-r="${r.id}" style="${pc(x,y)}" aria-label="${r.name}: ${s.dn} von ${s.n} heute gespielt"><span class="kc">${REGART[r.id]}${s.all&&lockOn()?LOCKSVG:''}</span><span class="pl">${r.name}</span><span class="kprog">${'●'.repeat(s.dn)}<i>${'●'.repeat(s.n-s.dn)}</i></span></button>`};
-  const [nkx,nky]=L.NK[nr];
-  pm.innerHTML=svg+`<div class="ksign" style="${pc(L.S[0],L.S[1])}">${SIGNART}</div>`+
-    `<button class="kreg kpark" data-r="park" style="${pc(L.P[0],L.P[1])}" aria-label="Nukis Park"><span class="kc">${PARKART}</span><span class="pl">Nukis Park</span></button>`+
+  const sc=$('#pScroll'),pm=$('#pMap');if(sc.clientHeight<60&&!renderKarte.w){renderKarte.w=1;requestAnimationFrame(()=>{renderKarte.w=0;if(!PREG)renderKarte()})}
+  $('#path').dataset.reg='karte';
+  const aw=sc.clientWidth-16,ah=sc.clientHeight-12,land=aw/ah>1.05,L=KBILD[land?'quer':'hoch'];
+  let w=Math.min(aw,ah*L.ar,land?1200:560),hh=w/L.ar;w=Math.round(w);hh=Math.round(hh);
+  pm.classList.add('karte');pm.classList.toggle('klein',w<600&&land);pm.style.width=w+'px';pm.style.height=hh+'px';pm.style.setProperty('--mw',w+'px');pm.style.setProperty('--rs',Math.round(w*L.rs)+'px');
+  const nx=nextStation(),nr=(regOf(nx)||REGIONS[0]).id,pc=([x,y])=>`left:${x}%;top:${y}%`,lk=r=>lockOn()&&regState(r).all;
+  const regBtn=r=>{const s=regState(r),cl=[lk(r)?'lock':'',r.id===nr?'next':''].join(' ');
+    return `<button class="kreg ${cl}" data-r="${r.id}" style="${pc(L[r.id])}" aria-label="${r.name}: ${s.dn} von ${s.n} heute gespielt"><span class="kring">${lk(r)?LOCKSVG:''}</span><span class="pl">${r.name}</span><span class="kprog">${'●'.repeat(s.dn)}<i>${'●'.repeat(s.n-s.dn)}</i></span></button>`};
+  pm.innerHTML=`<img class="kbild" src="${L.src}" alt="" draggable="false">`+
+    (lk(REGIONS[2])?`<span class="kbrlock" style="${pc(L.bridge)}">${LOCKSVG}</span>`:'')+
+    `<button class="kreg kpark" data-r="park" style="${pc(L.park)}" aria-label="Nukis Park"><span class="kring"></span><span class="pl">Nukis Park</span></button>`+
     REGIONS.map(regBtn).join('')+
-    `<div class="pnuki knuki" style="${pc(nkx,nky)}"><div class="bub">${doneToday().length?'Weiter geht\'s!':'Komm, wir spielen!'}</div><button class="mascot" id="pathNuki" aria-label="Nuki antippen"></button></div>`;
+    `<div class="pnuki knuki" style="${pc(L.NK[nr])}"><div class="bub">${doneToday().length?'Weiter geht\'s!':'Komm, wir spielen!'}</div><button class="mascot" id="pathNuki" aria-label="Nuki antippen"></button></div>`;
   setMood($('#pathNuki'),'normal');fitBub();
   if(S.justOpened){const r=regOf(S.justOpened);S.justOpened=null;save();const b=r&&pm.querySelector(`.kreg[data-r="${r.id}"]`);if(b){b.classList.add('opened');setTimeout(()=>{confetti(30);tone([523,784],.12,'triangle')},500)}}
   pm.querySelectorAll('.kreg').forEach(b=>b.onclick=()=>{hush();const id=b.dataset.r;if(id==='park'){openArcade();return}
-    const r=REGIONS.find(x=>x.id===id);if(lockOn()&&regState(r).all){b.classList.remove('wob');void b.offsetWidth;b.classList.add('wob');tone([330,262],.1,'triangle');
+    const r=REGIONS.find(x=>x.id===id);if(lk(r)){b.classList.remove('wob');void b.offsetWidth;b.classList.add('wob');tone([330,262],.1,'triangle');
       const nb=pm.querySelector(`.kreg[data-r="${(regOf(PATH_ORDER[S.unl])||REGIONS[0]).id}"]`);if(nb){nb.classList.remove('hop');void nb.offsetWidth;nb.classList.add('hop')}say('Komm, wir spielen zusammen!');return}
     tone([523,659,784],.07,'triangle',.1);PREG=id;renderPath();say(r.name+'!')});
   sc.scrollTop=0;
