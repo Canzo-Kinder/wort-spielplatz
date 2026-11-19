@@ -255,8 +255,13 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
 #vidOv .vidbox.playing .vidplay{opacity:0;transform:scale(.8);pointer-events:none}
 #vidOv .vidspin{position:absolute;left:50%;top:50%;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;border:7px solid rgba(255,255,255,.7);border-top-color:var(--grape,#7c6cf2);animation:vspin .9s linear infinite;pointer-events:none}
 @keyframes vspin{to{transform:rotate(360deg)}}
-#vidOv .vidbar{position:absolute;left:14px;right:14px;bottom:10px;height:7px;border-radius:7px;background:rgba(255,255,255,.65);overflow:hidden;pointer-events:none}
-#vidOv .vidbar i{display:block;height:100%;width:0;background:var(--grape,#7c6cf2);border-radius:7px}
+/* Fortschrittsbalken zum Ziehen: großer, unsichtbarer Tippbereich, sichtbare Schiene + runder Knopf */
+#vidOv .vidbar{position:absolute;left:8px;right:8px;bottom:-6px;height:44px;z-index:2;touch-action:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#vidOv .vidbar::before{content:"";position:absolute;left:12px;right:12px;top:50%;height:8px;margin-top:-4px;border-radius:8px;background:rgba(255,255,255,.75);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+#vidOv .vidbar .vtrack{position:absolute;left:12px;right:12px;top:50%;height:8px;margin-top:-4px;pointer-events:none}
+#vidOv .vidbar i{display:block;height:100%;width:0;background:var(--grape,#7c6cf2);border-radius:8px}
+#vidOv .vidbar b{position:absolute;top:50%;left:0;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;background:#fff;border:4px solid var(--grape,#7c6cf2);box-shadow:0 2px 5px rgba(0,0,0,.22);transition:transform .12s}
+#vidOv .vidbar.ziehen b{transform:scale(1.3)}
 #vidOv .vidpanel .row{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 28px);justify-content:center;pointer-events:none;margin:0}
 #vidOv .vidpanel .row .bigbtn{pointer-events:auto}
 #vidOv .vidx{position:absolute;top:calc(env(safe-area-inset-top,0px) + 14px);right:max(14px,env(safe-area-inset-right,0px));z-index:3;width:52px;height:52px;border-radius:16px;background:#fff;color:var(--ink);font-size:26px;font-weight:800;box-shadow:0 4px 0 rgba(0,0,0,.12)}
@@ -264,7 +269,7 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
 #vidOv{background-color:#46bdfd!important;background-image:linear-gradient(#46bdfd var(--bgy,0px),rgba(70,189,253,0) calc(var(--bgy,0px) + 60px)),url(v/bg-wiese.webp)!important;background-repeat:no-repeat,repeat-x!important;background-size:100% 100%,var(--bgw,100%) auto!important;background-position:0 0,calc(50% + var(--bgx,0px)) var(--bgy,0px)!important}
 #vidOv .vidtop,#vidOv .vidbot,#vidOv .vidrow{background:transparent!important}
 #vidOv video{-webkit-mask-image:linear-gradient(transparent 0,#000 5%,#000 90%,transparent 100%);mask-image:linear-gradient(transparent 0,#000 5%,#000 90%,transparent 100%)}
-@media (orientation:portrait){#vidOv .vidtop{flex:0 0 auto}}
+/* Hochkant: Video in der Bildschirmmitte (Wiese wird per vidFit() mitgeschoben) */
 @media (orientation:landscape){
   #vidOv video{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%)}
   #vidOv .vidtop{min-height:env(safe-area-inset-top,0px)}
@@ -272,6 +277,7 @@ button:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
   #vidOv .vidrow{flex:0 0 auto}
   #vidOv .vidbox{width:min(calc(100vw - 2*max(210px,env(safe-area-inset-right,0px) + 190px)),calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px)))}
   #vidOv .vidpanel .row{left:auto;right:max(18px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 22px)}
+  #vidOv .vidbar{bottom:calc(env(safe-area-inset-bottom,0px) + 4px)}
 }
 .overlay{position:fixed;inset:0;background:rgba(20,40,60,.55);display:grid;place-items:center;z-index:30;padding:20px max(16px,env(safe-area-inset-right,0px)) 20px max(16px,env(safe-area-inset-left,0px))}
 .panel{background:var(--paper);border-radius:30px;padding:24px 20px;width:min(440px,100%);text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center;box-shadow:0 10px 0 rgba(0,0,0,.15);max-height:100%;overflow:auto}
@@ -1243,7 +1249,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
       <video id="vidEl" playsinline webkit-playsinline preload="metadata" poster="v/erklaervideo.jpg" disablepictureinpicture disableremoteplayback x-webkit-airplay="deny"><source src="v/erklaervideo.mp4?v=11" type="video/mp4"></video>
       <button class="vidplay" id="vidPlay" aria-label="Abspielen"><svg viewBox="0 0 24 24"><path id="vidPlayIco" d="M8 5.5v13l11-6.5z"/></svg></button>
       <div class="vidspin" id="vidSpin" hidden></div>
-      <div class="vidbar"><i id="vidProg"></i></div>
+      <div class="vidbar" id="vidBar" role="slider" aria-label="Video vor- und zurückspulen" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0"><div class="vtrack"><i id="vidProg"></i><b id="vidKnob"></b></div></div>
     </div></div>
     <div class="vidbot"></div>
     <div class="row"><button class="bigbtn" id="btnCloseVid">Los geht's!</button></div>
@@ -1848,7 +1854,17 @@ function vidPlay(){const v=$('#vidEl');if(v.ended)v.currentTime=0;try{const pr=v
 (function(){const v=$('#vidEl');
   ['play','playing','pause','ended'].forEach(ev=>v.addEventListener(ev,vidState));
   v.addEventListener('waiting',()=>{$('#vidSpin').hidden=false});['playing','canplay','pause'].forEach(ev=>v.addEventListener(ev,()=>{$('#vidSpin').hidden=true}));
-  v.addEventListener('timeupdate',()=>{$('#vidProg').style.width=(v.duration?v.currentTime/v.duration*100:0)+'%'});
+  const bar=$('#vidBar');let zieht=false,warAn=false;
+  const zeig=q=>{q=Math.max(0,Math.min(1,q||0));$('#vidProg').style.width=q*100+'%';$('#vidKnob').style.left=q*100+'%';bar.setAttribute('aria-valuenow',Math.round(q*100))};
+  v.addEventListener('timeupdate',()=>{if(!zieht)zeig(v.duration?v.currentTime/v.duration:0)});
+  const pos=e=>{const r=bar.querySelector('.vtrack').getBoundingClientRect();return (e.clientX-r.left)/r.width};
+  const spring=q=>{q=Math.max(0,Math.min(1,q));zeig(q);if(v.duration){try{v.currentTime=q*v.duration*.999}catch(_){}}};
+  bar.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();zieht=true;warAn=!v.paused&&!v.ended;try{v.pause()}catch(_){}bar.classList.add('ziehen');try{bar.setPointerCapture(e.pointerId)}catch(_){}spring(pos(e))});
+  bar.addEventListener('pointermove',e=>{if(zieht){e.preventDefault();spring(pos(e))}});
+  const los=e=>{if(!zieht)return;zieht=false;bar.classList.remove('ziehen');if(warAn||v.ended)vidPlay();else vidState()};
+  bar.addEventListener('pointerup',los);bar.addEventListener('pointercancel',los);
+  bar.addEventListener('click',e=>e.stopPropagation());
+  bar.addEventListener('keydown',e=>{if(!v.duration)return;const d=e.key==='ArrowRight'?5:e.key==='ArrowLeft'?-5:0;if(d){e.preventDefault();v.currentTime=Math.max(0,Math.min(v.duration,v.currentTime+d))}});
   $('#vidBox').addEventListener('click',e=>{e.stopPropagation();if(v.paused||v.ended)vidPlay();else{v.pause()}});
 })();
 /* Wiese hinter dem Video so legen, dass ihr Horizont genau auf dem Horizont des Videos liegt */
@@ -1859,7 +1875,7 @@ function vidFit(){const o=$('#vidOv');if(o.hidden)return;const r=$('#vidBox').ge
 addEventListener('resize',vidFit);addEventListener('orientationchange',()=>setTimeout(vidFit,250));
 function openVid(){hush();$('#toast').hidden=true;const o=$('#vidOv'),v=$('#vidEl');o.hidden=false;vidFit();requestAnimationFrame(vidFit);
   try{vidThemeOld=vidTheme[0]&&vidTheme[0].content;vidTheme.forEach(m=>m.content='#46bdfd')}catch(e){}
-  $('#vidProg').style.width='0%';try{v.currentTime=0}catch(e){}vidPlay()}
+  $('#vidProg').style.width='0%';$('#vidKnob').style.left='0%';try{v.currentTime=0}catch(e){}vidPlay()}
 function closeVid(){const v=$('#vidEl');try{v.pause()}catch(e){}$('#vidOv').hidden=true;$('#vidSpin').hidden=true;try{if(vidThemeOld)vidTheme.forEach(m=>m.content=vidThemeOld)}catch(e){}$('#btnHelp').classList.remove('pulse');try{localStorage.setItem('ws-vid','1')}catch(e){}}
 try{if(!localStorage.getItem('ws-vid'))$('#btnHelp').classList.add('pulse')}catch(e){}
 $('#btnHelp').onclick=openVid;$('#btnCloseVid').onclick=closeVid;$('#vidX').onclick=closeVid;$('#vidOv').onclick=e=>{if(e.target.id==='vidOv')closeVid()};
