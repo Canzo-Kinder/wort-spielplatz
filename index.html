@@ -470,6 +470,12 @@ button#pathNuki{display:block;width:100%;padding:0;border:0;background:none;poin
 .kreg.wob{animation:wob .45s}.kreg.hop .kring{animation:hop .8s ease-out}.kreg.opened .kring{animation:opn 1s ease-out .3s both}
 .kpark .kring{width:calc(var(--rs) * .8);height:calc(var(--rs) * .8)}
 .pnuki.rnuki{width:84px}.pnuki.rnuki .bub{display:none}.pnuki.knuki{width:clamp(44px,calc(var(--mw) * .2),110px);transform:translate(-50%,-50%)}.pmap.klein .knuki .bub{display:none}.pmap.klein .knuki{width:46px}
+
+/* Leisten durchsichtig (Glas), damit das gemalte Bild durchscheint */
+.pnav{background:rgba(255,255,255,.34)!important;-webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);border:1.5px solid rgba(255,255,255,.65);box-shadow:0 6px 18px rgba(43,47,74,.16)!important}
+.pnav button{color:#2f3a5c!important;text-shadow:0 1px 0 rgba(255,255,255,.7)}.pnav button.on{color:#5b47e0!important;background:rgba(255,255,255,.55)!important}
+.pgoal{background:rgba(255,255,255,.32)!important;-webkit-backdrop-filter:blur(14px) saturate(1.4)!important;backdrop-filter:blur(14px) saturate(1.4)!important;border:1.5px solid rgba(255,255,255,.65);box-shadow:0 4px 14px rgba(43,47,74,.12)}
+.pgoal span{color:#1f2340;text-shadow:0 1px 0 rgba(255,255,255,.7)}.pgoal .gb{background:rgba(255,255,255,.55)!important}
 /* Spiele */
 #game{background:linear-gradient(#d9f2ff 0%,#f1faff 62%,#d7f0c2 62%,#c6e8a8 100%);background-attachment:local}
 #game .gtitle{color:var(--ink);text-shadow:none;font-size:18px}
