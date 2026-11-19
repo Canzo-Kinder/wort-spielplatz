@@ -1429,10 +1429,21 @@ let sayToken=0,unlocked=false;
 document.addEventListener('pointerdown',()=>{if(unlocked)return;unlocked=true;aSess('playback');try{player.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';player.play().catch(()=>{})}catch(e){}},{capture:true});
 function chunks(t){return (t.match(/[^.!?:]+[.!?:]?/g)||[]).map(x=>x.trim()).filter(Boolean)}
 function ckey(t){return t.toLowerCase().replace(/[^a-zäöüß0-9 ]/g,'').replace(/\s+/g,' ').trim()}
+/* iPhone-Safari meldet das Ende einer Aufnahme nicht immer ('ended' fehlt, v. a. bei geändertem Tempo).
+   Darum prüft ein Wächter selbst, ob die Aufnahme fertig ist, und startet eine hängende Aufnahme einmal neu. */
 function playFile(f,rate,tok){aSess('playback');return new Promise(res=>{
-  if(tok!==sayToken)return res();let done=false;const fin=()=>{if(!done){done=true;clearTimeout(t);player.onended=player.onerror=null;res()}};
+  if(tok!==sayToken)return res();let done=false,tries=0,lastT=-1,still=0,started=false;
+  const fin=()=>{if(!done){done=true;clearTimeout(t);clearInterval(w);player.onended=player.onerror=null;res()}};
   player.onended=fin;player.onerror=fin;const t=setTimeout(fin,9000);
-  try{player.src=f;player.playbackRate=rate;player.preservesPitch=true;player.webkitPreservesPitch=true;const p=player.play();if(p&&p.catch)p.catch(fin)}catch(e){fin()}
+  const go=()=>{try{const p=player.play();if(p&&p.catch)p.catch(()=>{if(tries++<1)setTimeout(go,250);else fin()})}catch(e){fin()}};
+  const w=setInterval(()=>{if(done)return;if(tok!==sayToken)return fin();const d=player.duration,c=player.currentTime;
+    if(c>0.05)started=true;
+    if(player.ended||(started&&d&&isFinite(d)&&c>=d-0.06)){fin();return}
+    if(c===lastT&&!player.paused&&started){if(++still>=4)fin()}else still=0;   /* steht still, obwohl fertig gespielt */
+    if(!started&&player.paused&&tries<1&&performance.now()-t0>1200){tries++;go()} /* hat gar nicht angefangen: nochmal starten */
+    lastT=c},150);
+  const t0=performance.now();
+  try{player.src=f;player.playbackRate=rate;player.preservesPitch=true;player.webkitPreservesPitch=true;go()}catch(e){fin()}
 })}
 /* iPhone: nach dem Mikrofon schaltet Safari auf Telefon-Modus (leise über die Hörmuschel). So geht der Ton wieder normal über den Lautsprecher. */
 function aSess(t){try{const a=navigator.audioSession;if(a&&a.type!==t)a.type=t}catch(e){}}
@@ -2779,8 +2790,10 @@ function renderPraep(){const T=G.task;G.rec=true;
 const MERKW=['Hund','Katze','Ball','Sonne','Haus','Auto','Baum','Fisch','Apfel','Mond','Stern','Blume','Schuh','Hut','Buch','Kuh','Maus','Ente','Banane','Tasse','Zug','Boot','Uhr','Brot'];
 function merkTask(i){const pool=MERKW.filter(w=>hasPic(w)&&ART[w]).map(w=>WX[w]);const g=G.L<=2?4:6,n=G.L<=2?2:G.L<=4?3:4;
   const grid=pickN(pool,g,[]);const seq=shuffle(grid.slice()).slice(0,n);return {grid,seq,step:0,target:seq[0],text:'Hör gut zu und merk es dir!'}}
-async function merkSpeak(T){const tk=sayToken;for(let k=0;k<T.seq.length;k++){const lead=k===0?'Tipp zuerst auf':k===T.seq.length-1&&T.seq.length>2?'und zum Schluss auf':'dann auf';
-  await say(lead);if(tk!==sayToken)return;await say(accArt(T.seq[k].w)+' '+T.seq[k].w+'.');if(tk!==sayToken)return;await wait(220)}}
+async function merkSpeak(T){const tk=sayToken;let txt='';for(let k=0;k<T.seq.length;k++){const lead=k===0?'Tipp zuerst auf':k===T.seq.length-1&&T.seq.length>2?'und zum Schluss auf':'dann auf';
+  const obj=accArt(T.seq[k].w)+' '+T.seq[k].w;txt+=(k?', ':'')+(k?lead:'Tipp zuerst auf')+' '+obj;bubble(txt+' …');
+  await say(lead);if(tk!==sayToken)return;await say(obj+'.');if(tk!==sayToken)return;await wait(220)}
+  bubble('Jetzt du! Was hast du dir gemerkt?')}
 function renderMerk(){const T=G.task;G.rec=true;
   $('#stage').innerHTML=`<div class="merk"><div class="speak"><button class="bigbtn" id="meHear">🔊 Nochmal hören</button></div>${cardsHTML(T.grid,'<i class="mnum"></i>')}</div>`;
   const hear=async()=>{hush();T.step=0;document.querySelectorAll('#stage .card').forEach(c=>{c.classList.remove('right','hint');c.querySelector('.mnum').textContent=''});const tk=sayToken;await say(T.text);if(tk===sayToken)await merkSpeak(T)};
