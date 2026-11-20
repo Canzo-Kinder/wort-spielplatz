@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="theme-color" content="#46bdfd"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}img{max-width:100%}</style>
 <title>Nukis Wortwelt</title>
-<link rel="preload" as="image" href="v/bg-wiese.webp"><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" sizes="180x180" href="icon-180-v2.png"><link rel="icon" type="image/png" href="icon-192-v2.png"><meta name="theme-color" content="#46bdfd"><meta name="apple-mobile-web-app-title" content="Nukis Wortwelt">
+<link rel="preload" as="image" href="v/bg-wiese.webp"><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" sizes="180x180" href="icon-180-v3.png"><link rel="icon" type="image/png" href="icon-192-v3.png"><meta name="theme-color" content="#46bdfd"><meta name="apple-mobile-web-app-title" content="Nukis Wortwelt">
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>/* Schriften liegen in der App selbst (kein Google-Server) */@font-face{font-family:'Baloo 2';font-style:normal;font-weight:600;font-display:swap;src:url(f/baloo-600.woff2) format('woff2')}@font-face{font-family:'Baloo 2';font-style:normal;font-weight:700;font-display:swap;src:url(f/baloo-700.woff2) format('woff2')}@font-face{font-family:'Baloo 2';font-style:normal;font-weight:800;font-display:swap;src:url(f/baloo-800.woff2) format('woff2')}@font-face{font-family:'Nunito';font-style:normal;font-weight:600;font-display:swap;src:url(f/nunito-600.woff2) format('woff2')}@font-face{font-family:'Nunito';font-style:normal;font-weight:700;font-display:swap;src:url(f/nunito-700.woff2) format('woff2')}@font-face{font-family:'Nunito';font-style:normal;font-weight:800;font-display:swap;src:url(f/nunito-800.woff2) format('woff2')}</style>
 <style>
@@ -2964,7 +2964,7 @@ async function berichtPDF(){
   const head=(str)=>{y+=4;if(y>262){doc.addPage();y=20}t(16,y,str,13,'bold',GR);y+=2;doc.setDrawColor(223,229,240);doc.setLineWidth(.4);doc.line(16,y,W-16,y);y+=6};
   // Kopf
   doc.setFillColor(223,242,255);doc.rect(0,0,W,38,'F');
-  const ic=await imgData('icon-192-v2.png');if(ic)doc.addImage(ic,'PNG',W-42,6,26,26);
+  const ic=await imgData('icon-192-v3.png');if(ic)doc.addImage(ic,'PNG',W-42,6,26,26);
   t(16,17,'Nukis Wortwelt',20,'bold');t(16,25,'Übungsbericht',13,'normal',MUT);
   const nm=(S.kindName||'').trim();t(16,32,(nm?nm+' · ':'')+'erstellt am '+new Date().toLocaleDateString('de-DE'),10,'normal',MUT);
   y=48;
